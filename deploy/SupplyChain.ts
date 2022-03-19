@@ -8,9 +8,15 @@ module.exports = async ({
   const { deployer } = await getNamedAccounts();
 
   // the following will only deploy "GenericMetaTxProcessor" if the contract was never deployed or if the code changed since last deployment
-  await deploy("Greeter", {
+  // await deploy("Greeter", {
+  //   from: deployer,
+  //   // gas: 4000000,
+  //   args: ["Greeting set from ./deploy/Greeter.ts"],
+  // });
+  // the following will only deploy "GenericMetaTxProcessor" if the contract was never deployed or if the code changed since last deployment
+  await deploy("SupplyChain", {
     from: deployer,
     // gas: 4000000,
-    args: ["Greeting set from ./deploy/Greeter.ts"],
   });
+
 };
