@@ -32,7 +32,7 @@ contract RoleManager is AccessControlEnumerable {
 
     function setPrivillegeSupplier(address account, string memory name) public 
         onlyRole(DEFAULT_ADMIN_ROLE)
-     {
+    {
          roleId++;
         _grantRole(SUPPLIER_ROLE, account);
         supplierRoles[account].name = name;

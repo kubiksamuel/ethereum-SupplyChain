@@ -9,7 +9,6 @@ contract SupplyChain is RoleManager("Administrator") {
 
     using SafeMath for uint256;
 
-    event SupplierWithdrewBalance(address receiver, uint256 amount);
     event BatchCreated(bytes32 batchId, string productName);
     event StageCompleted(bytes32 batchId, string stageName);
     event StageAdded(bytes32 batchId, uint stageCount, string stageName, address signatory, address supplier, uint supplierFee);
@@ -32,9 +31,7 @@ contract SupplyChain is RoleManager("Administrator") {
     bytes32[] public listOfIds;
 
     mapping(bytes32 => Batch) public batches;
-    mapping(address => uint256) private OwedBalances;
     mapping(bytes32 => mapping(uint256 => BatchStage)) public batchStages;
-
 
     struct BatchStage {
         uint256 id;
@@ -73,33 +70,6 @@ contract SupplyChain is RoleManager("Administrator") {
     }
 
 
-    /// @notice Default fallback for non-data related deposits
-    /// @dev no funds should be accepted to this contract
-    fallback() external payable {
-        revert("");
-    }
-
-    /// @notice Default receive for non-data related deposits
-    /// @dev no funds should be accepted to this contract
-    receive() external payable {
-        revert("");
-    }
-
-    /// @notice Withdraws the balance associated to the owner
-    /// @dev deliberately not checking isOwner as you may have been removed but should still get your funds
-    /// @dev setting balance to zero before send to prevent re-entry in case it is a contract address
-    function withdraw() public 
-        // nullBalance()
-    {
-        require(OwedBalances[msg.sender] > 0, "No ethers to withdraw");
-        uint256 balanceToSend = OwedBalances[msg.sender];
-        OwedBalances[msg.sender] = 0;
-
-       payable(msg.sender).transfer(balanceToSend);
-
-        emit SupplierWithdrewBalance(msg.sender, balanceToSend);
-    }
-
     function getListLength() public view returns (uint256) {
         return listOfIds.length;
     }
@@ -113,14 +83,13 @@ contract SupplyChain is RoleManager("Administrator") {
         stages = loadedStages;
     }
 
-
     function getSignatoryView() public view
         returns (AddressStageView[] memory states)
     {
 
         uint256 resultCount = 0;
         
-        for (uint256 i = 0; i < listOfIds.length; i++) {
+        for (uint256 i = 0; i < getListLength(); i++) {
             for (uint256 stage = 1; stage <= batches[listOfIds[i]].stageCount; stage++) {
                 if (
                     batchStages[listOfIds[i]][stage].signatory == msg.sender &&
@@ -131,71 +100,73 @@ contract SupplyChain is RoleManager("Administrator") {
             }
         }
 
-        AddressStageView[] memory results = new AddressStageView[](0);
+        AddressStageView[] memory results = new AddressStageView[](resultCount);
 
         if (resultCount == 0) {
             return results;
         }
 
-        results = new AddressStageView[](resultCount);
         uint256 index = 0;
 
-        for (uint256 i = 0; i < listOfIds.length; i++) {
+        for (uint256 i = 0; i < getListLength(); i++) {
             for (uint256 stage = 1; stage <= batches[listOfIds[i]].stageCount; stage++) {
                 if (
-                    batchStages[listOfIds[i]][batches[listOfIds[i]].stageCount].signatory == msg.sender &&
-                    batchStages[listOfIds[i]][batches[listOfIds[i]].stageCount].state == State.PREPARED
+                    batchStages[listOfIds[i]][stage].signatory == msg.sender &&
+                    batchStages[listOfIds[i]][stage].state == State.PREPARED
                 ) {
-                    results[index].stage = stage;
-                    results[index].batchId = listOfIds[i];
-                    results[index].supplierFee = batchStages[listOfIds[i]][batches[listOfIds[i]].stageCount].supplierFee;
-                    results[index].stageName = batchStages[listOfIds[i]][batches[listOfIds[i]].stageCount].name;
-                    results[index].productName = batches[listOfIds[i]].productName;
+                    AddressStageView memory stageView;
+                    stageView.batchId = listOfIds[i];
+                    stageView.productName= batches[listOfIds[i]].productName;
+                    stageView.stage = stage;
+                    stageView.stageName = batchStages[listOfIds[i]][batches[listOfIds[i]].stageCount].name;
+                    stageView.supplierFee = batchStages[listOfIds[i]][batches[listOfIds[i]].stageCount].supplierFee;
+                    results[index] = stageView;
                     index++;
                 }
             }
         }
-
         states = results;
     }
 
     function getSupplierView() public view
         returns (AddressStageView[] memory states)
     {
-      
         uint256 resultCount = 0;
         
-        for (uint256 i = 0; i < listOfIds.length; i++) {
+        for (uint256 i = 0; i < getListLength(); i++) {
             for (uint256 stage = 1; stage <= batches[listOfIds[i]].stageCount; stage++) {
                 if (
-                    batchStages[listOfIds[i]][batches[listOfIds[i]].stageCount].supplier == msg.sender && 
-                    batchStages[listOfIds[i]][batches[listOfIds[i]].stageCount].state == State.STARTED
-                    ) {
+                    batchStages[listOfIds[i]][stage].supplier == msg.sender &&
+                    batchStages[listOfIds[i]][stage].state == State.STARTED
+                ) {
                     resultCount++;
                 }
             }
         }
 
-        AddressStageView[] memory results = new AddressStageView[](0);
+
+        AddressStageView[] memory results = new AddressStageView[](resultCount);
 
         if (resultCount == 0) {
             return results;
         }
 
-        results = new AddressStageView[](resultCount);
         uint256 index = 0;
 
-        for (uint256 i = 0; i < listOfIds.length; i++) {
+        
+        for (uint256 i = 0; i < getListLength(); i++) {
             for (uint256 stage = 1; stage <= batches[listOfIds[i]].stageCount; stage++) {
                 if (
-                    batchStages[listOfIds[i]][batches[listOfIds[i]].stageCount].supplier == msg.sender && 
-                    batchStages[listOfIds[i]][batches[listOfIds[i]].stageCount].state == State.STARTED
-                    ) {
-                    results[index].stage = stage;
-                    results[index].batchId = listOfIds[i];
-                    results[index].supplierFee = batchStages[listOfIds[i]][batches[listOfIds[i]].stageCount].supplierFee;
-                    results[index].stageName = batchStages[listOfIds[i]][batches[listOfIds[i]].stageCount].name;
-                    results[index].productName = batches[listOfIds[i]].productName;
+                    batchStages[listOfIds[i]][stage].supplier == msg.sender &&
+                    batchStages[listOfIds[i]][stage].state == State.STARTED
+                ) {
+                    AddressStageView memory stageView;
+                    stageView.batchId = listOfIds[i];
+                    stageView.productName= batches[listOfIds[i]].productName;
+                    stageView.stage = stage;
+                    stageView.stageName = batchStages[listOfIds[i]][batches[listOfIds[i]].stageCount].name;
+                    stageView.supplierFee = batchStages[listOfIds[i]][batches[listOfIds[i]].stageCount].supplierFee;
+                    results[index] = stageView;
                     index++;
                 }
             }
@@ -207,13 +178,6 @@ contract SupplyChain is RoleManager("Administrator") {
         returns (BatchStage memory state)
     {
         state = batchStages[batchId][stage];
-    }
-
-    function getBalance() public view
-        onlyRole(SUPPLIER_ROLE)
-        returns (uint256 balance)
-    {
-        balance = OwedBalances[msg.sender];
     }
 
     function startStage(bytes32 batchId, address supplier, address signatory, uint256 supplierFee, string memory name, uint256 dateReceive) public payable
@@ -251,7 +215,7 @@ contract SupplyChain is RoleManager("Administrator") {
                     overpaidAmount = msg.value - batchStages[batchId][batches[batchId].stageCount].supplierFee;
                     payable(msg.sender).transfer(overpaidAmount);
                 }
-            OwedBalances[batchStages[batchId][stage].supplier] = OwedBalances[batchStages[batchId][stage].supplier].add(msg.value-overpaidAmount);
+                payable(batchStages[batchId][stage].supplier).transfer(msg.value-overpaidAmount);
         }
     }
 
