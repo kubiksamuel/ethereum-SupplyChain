@@ -1,18 +1,23 @@
 import React, { useContext, useEffect, useState } from "react";
 import { SupplyChainContext } from "./../hardhat/SymfoniContext";
 
-interface Props {}
+// interface Props {
+//   "name": string;
+// }
 
-export const SupplyChain: React.FC<Props> = () => {
+// {name}:Props
+
+export const SupplyChain = () => {
   const suppllychain = useContext(SupplyChainContext);
   const [currentAddress, setCurrentAddress] = useState("");
   const [message, setMessage] = useState("");
   // const [inputGreeting, setInputGreeting] = useState("");
   useEffect(() => {
-    const doAsync = async () => {
+    const doAsync =  async () => {
       if (!suppllychain.instance) return;
       console.log("SupplyChain is deployed at ", suppllychain.instance.address);
-      setMessage(await suppllychain.instance.DEFAULT_ADMIN_ROLE());
+      // console.log("Supply chain admin is: ",  suppllychain.instance.signatoryRoles("0"));
+      setMessage(await suppllychain.instance.roles(0));
     };
     doAsync();
   }, [suppllychain]);

@@ -11,6 +11,8 @@ contract RoleManager is AccessControlEnumerable {
     bytes32 public constant SIGNATORY_ROLE = keccak256("SIGNATORY_ROLE");
     uint256 public roleId;
 
+    event memberAdded(address account, string name, string rola);
+
     mapping(address => RoleInfo) public supplierRoles;
     mapping(address => RoleInfo) public signatoryRoles;
     address[] public roles;
@@ -38,6 +40,7 @@ contract RoleManager is AccessControlEnumerable {
         supplierRoles[account].name = name;
         supplierRoles[account].id = roleId;
         roles.push(account);
+        emit memberAdded(account, name, "supplier");
     }
 
     function setPrivillegeSignatory(address account, string memory name) public
@@ -48,5 +51,6 @@ contract RoleManager is AccessControlEnumerable {
         signatoryRoles[account].name = name;
         signatoryRoles[account].id = roleId;
         roles.push(account);
+        emit memberAdded(account, name, "signator");
     }
 }
