@@ -116,7 +116,7 @@ describe("SupplyChain", function () {
   });
 
   it("Start stage 2", async function () {
-    const supplierFee = ethers.utils.parseEther("1");
+    const supplierFee = ethers.utils.parseEther("1.0");
     const stage2dateReceive = 2000;
     const startStage1Tx = await supplychain.connect(signatory1).startStage(batchId, supplier1.address, signatory2.address, 
       supplierFee, stage2Name, stage2dateReceive, {value: ethers.utils.parseEther("0")});

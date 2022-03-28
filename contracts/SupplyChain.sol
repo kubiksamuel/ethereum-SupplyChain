@@ -69,7 +69,6 @@ contract SupplyChain is RoleManager("Administrator") {
         _;
     }
 
-
     function getListLength() public view returns (uint256) {
         return listOfIds.length;
     }
@@ -222,6 +221,7 @@ contract SupplyChain is RoleManager("Administrator") {
     function createBatch(string memory productName, address signatory, uint256 dateCreation, string memory docHash) public 
         onlyRole(DEFAULT_ADMIN_ROLE)
      {
+        require(hasRole(SIGNATORY_ROLE, signatory) , "Member doesnt have signatory privillege");
         bytes32 batchId;
         batchId = keccak256(abi.encodePacked(msg.sender, block.timestamp));
         listOfIds.push(batchId);

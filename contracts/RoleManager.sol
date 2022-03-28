@@ -27,6 +27,7 @@ contract RoleManager is AccessControlEnumerable {
         roleId = 1;
         _grantRole(DEFAULT_ADMIN_ROLE, msg.sender);
         _grantRole(SIGNATORY_ROLE, msg.sender);
+        _grantRole(SUPPLIER_ROLE, msg.sender);
         signatoryRoles[msg.sender].name = name;
         signatoryRoles[msg.sender].id = roleId;
         roles.push(msg.sender);

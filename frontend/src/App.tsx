@@ -7,7 +7,9 @@ import { Symfoni } from "./hardhat/SymfoniContext";
 // import { Greeter } from './components/Greeter';
 import { FormCreateBatch } from './components/FormCreateBatch';
 import { FormPrivillege } from './components/FormPrivillege';
+import { FormStartStage } from './components/FormStartStage';
 import { SupplyChain } from './components/SupplyChain';
+import { FormAddDocument } from './components/FormAddDocument';
 import { Button } from 'react-bootstrap';
 
 
@@ -20,7 +22,9 @@ function App() {
         Pridaj clena
       </h1>
         <Symfoni autoInit={true} >
-        <FormCreateBatch></FormCreateBatch>
+          {/* <FormStartStage></FormStartStage> */}
+        {/* <FormCreateBatch></FormCreateBatch> */}
+        <FormAddDocument></FormAddDocument>
         {/* <FormPrivillege></FormPrivillege> */}
           <SupplyChain></SupplyChain>
         </Symfoni>
