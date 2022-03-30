@@ -37,6 +37,10 @@
   }
 }
 
+.metamaskImage:hover {
+  opacity: 0.4;
+}
+
 /* .formCreateBatch {
   display: flex;
   padding: 20px;

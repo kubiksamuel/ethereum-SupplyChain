@@ -1,7 +1,8 @@
 import React, { useContext, useEffect, useState } from 'react';
 import logo from './logo.svg';
+import metamaskLogin from './img/loginMetamask.png';
 import './App.css';
-import { Symfoni, SupplyChainContext, CurrentAddressContext } from "./hardhat/SymfoniContext";
+import { Symfoni, SupplyChainContext, CurrentAddressContext, ProviderContext } from "./hardhat/SymfoniContext";
 // import { SupplyChain } from './hardhat/typechain/SupplyChain';
 // import { Greeter } from './components/Greeter';
 // import { Greeter } from './components/Greeter';
@@ -19,16 +20,42 @@ import { ethers } from 'ethers';
 
 const App = () => {
   let [loading, setLoading] = useState(false);
+  let [adminLogin, setAdminLogin] = useState(false);
+  let [signatoryLogin, setSignatoryLogin] = useState(false);
+  let [supplierLogin, setSupplierLogin] = useState(false);
   let supplychain = useContext(SupplyChainContext);
   let currentAccount = useContext(CurrentAddressContext);
 
 
   const login = async () => {
+    //Ked sa budem chciet prihlasit este raz
+    setAdminLogin(false);
+    setSignatoryLogin(false);
+    setSupplierLogin(false);
+
     const provider = new ethers.providers.Web3Provider(window.ethereum, "any");
     // Prompt user for account connections
     await provider.send("eth_requestAccounts", []);
     const signer = provider.getSigner();
-    console.log("Logged account:", await signer.getAddress());
+    let signerAddress = await signer.getAddress();
+    if(supplychain.instance) {
+      let adminRole = await supplychain.instance.DEFAULT_ADMIN_ROLE();
+      let signatorRole = await supplychain.instance.SIGNATORY_ROLE();
+      let supplierRole = await supplychain.instance.SUPPLIER_ROLE();
+      if(await supplychain.instance.hasRole(adminRole, signerAddress)){
+        console.log("Account has Admin Role")
+        setAdminLogin(true);
+      } else if(await supplychain.instance.hasRole(signatorRole, signerAddress)){
+        console.log("Account has Signatory Role")
+        setSignatoryLogin(true);
+      }else if(await supplychain.instance.hasRole(supplierRole, signerAddress)){
+        console.log("Account has Supplier Role")
+        setSupplierLogin(true);
+      }
+    }
+    
+    console.log("Logged account:", signerAddress);
+
 
   }
 
@@ -37,7 +64,6 @@ const App = () => {
     console.log("SUPPLY INSTANCE: " + supplychain.instance);
   }, [supplychain]);
 
-
   return (
 
       <div className="App">
@@ -45,8 +71,12 @@ const App = () => {
        <h1>
          Supply Chain
        </h1>
-       <Button onClick={login}>Login</Button>
-       {loading ? <TableOfBatches></TableOfBatches>
+       <img src={metamaskLogin} alt="metamask_login" className='metamaskImage' onClick={login}/>
+
+       {loading ? adminLogin === true ? <TableOfBatches></TableOfBatches> :
+                  signatoryLogin === true ? <div>Signatory</div> : 
+                  supplierLogin === true ? <div>SupplierLogin</div> :
+                  <div>Neexistuje rola pre dany ucet</div>
        : <div>Loading...</div>
        }
        {/* <Symfoni autoInit={true}>
@@ -58,7 +88,7 @@ const App = () => {
        {/* <Button onClick={renderGen}></Button> */}
 
            {/* <FormStartStage></FormStartStage> */}
-         <FormCreateBatch></FormCreateBatch>
+         {/* <FormCreateBatch></FormCreateBatch> */}
          {/* <FormAddDocument></FormAddDocument> */}
          {/* <FormPrivillege></FormPrivillege> */}
            {/* <SupplyChain></SupplyChain> */}

@@ -75,8 +75,6 @@ export const TableOfBatches = () => {
 
     return (
         <div>
-            <Button type="button" onClick={getBatchesItems}>Submit</Button>
-
             <Table striped bordered hover variant="dark">
             <thead>
                 <tr>
