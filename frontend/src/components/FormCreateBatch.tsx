@@ -6,6 +6,7 @@ import { useRef, useContext, useState } from "react";
 import ReactDOM from "react-dom";
 import { ContractReceipt, ContractTransaction } from 'ethers';
 import * as ipfs from '../functionality/Ipfs';
+import { TableOfBatches } from './TableOfBatches';
 
 
 export const FormCreateBatch = () => {

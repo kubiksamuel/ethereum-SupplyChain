@@ -27,13 +27,6 @@ const ipfs = create({ host: 'ipfs.infura.io', port: 5001, protocol: 'https' });
 
 
 export const addToIPFS = async (noteToUpload: string) => {
-    // console.log("ADD TO IPFS FILE: ", fileToUpload.webkitRelativePath);
-    // console.log(noteToUpload);
     const uploadedNotes = await ipfs.add(noteToUpload);
     return uploadedNotes.path;
-    // console.log(file);
-    //   for await (const result of  ipfs.add(fileToUpload)) {
-//     console.log("Hash suboru: ", result);
-//     return result
-//   }
 }

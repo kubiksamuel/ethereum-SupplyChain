@@ -1,5 +1,7 @@
 import React, { useContext, useEffect, useState } from "react";
 import { SupplyChainContext } from "./../hardhat/SymfoniContext";
+import { ethers } from "ethers";
+import { Button } from "react-bootstrap";
 
 // interface Props {
 //   "name": string;
@@ -15,9 +17,15 @@ export const SupplyChain = () => {
   useEffect(() => {
     const doAsync =  async () => {
       if (!suppllychain.instance) return;
+      const provider = new ethers.providers.Web3Provider(window.ethereum, "any");
+    // Prompt user for account connections
+    await provider.send("eth_requestAccounts", []);
+    const signer = provider.getSigner();
+    console.log("Account:", await signer.getAddress());
       console.log("SupplyChain is deployed at ", suppllychain.instance.address);
+      
       // console.log("Supply chain admin is: ",  suppllychain.instance.signatoryRoles("0"));
-      setMessage(await suppllychain.instance.roles(0));
+      setMessage(await signer.getAddress());
     };
     doAsync();
   }, [suppllychain]);
@@ -37,9 +45,28 @@ export const SupplyChain = () => {
   //     setInputGreeting("");
   //   }
   // };
+  const Login = () => {
+    const doAsync =  async () => {
+      if (!suppllychain.instance) return;
+      const provider = new ethers.providers.Web3Provider(window.ethereum, "any");
+    // Prompt user for account connections
+    await provider.send("eth_requestAccounts", []);
+    const signer = provider.getSigner();
+    console.log("Account:", await signer.getAddress());
+      console.log("SupplyChain is deployed at ", suppllychain.instance.address);
+      
+      // console.log("Supply chain admin is: ",  suppllychain.instance.signatoryRoles("0"));
+      setMessage(await signer.getAddress());
+    };
+    doAsync();
+  }
+
+
+
   return (
     <div>
       <p>{message}</p>
+      <Button onClick={Login}>Prihlas sa</Button>
       {/* <input
         value={inputGreeting}
         onChange={(e) => setInputGreeting(e.target.value)}
