@@ -10,8 +10,11 @@ import { start } from 'repl';
 import { ethers } from 'ethers';
 
 
+interface IfirstChildProps {
+    currentBatchId: string
+}
 
-export const FormStartStage = () => {
+export const FormStartStage: React.FC<IfirstChildProps> = ({currentBatchId}) => {
     const supplychain = useContext(SupplyChainContext);
     const temporaryBatchId = useRef<HTMLInputElement>(null);
     const addressSupplierInput= useRef<HTMLInputElement>(null);
@@ -59,7 +62,7 @@ export const FormStartStage = () => {
             <fieldset >
                 <Form.Group className="mb-3">
                     <Form.Label htmlFor="disabledTextInput">Docasne batchId:</Form.Label>
-                        <Form.Control id="disabledTextInput" placeholder="" ref={temporaryBatchId}/>
+                        <Form.Control id="disabledTextInput" value={currentBatchId} ref={temporaryBatchId}/>
                 </Form.Group>
                 <Form.Group className="mb-3">
                     <Form.Label htmlFor="supplierAddress">Adresa vyrobcu:</Form.Label>

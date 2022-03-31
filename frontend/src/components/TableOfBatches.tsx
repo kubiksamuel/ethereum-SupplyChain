@@ -98,5 +98,3 @@ export const TableOfBatches = () => {
         </div>
     );
 }
-
-

@@ -11,6 +11,9 @@ import { FormPrivillege } from './components/FormPrivillege';
 import { FormStartStage } from './components/FormStartStage';
 import { FormAddDocument } from './components/FormAddDocument';
 import { TableOfBatches } from './components/TableOfBatches';
+import { SignatoryDomain } from './components/SignatoryDomain';
+
+import { TableOfSignatoryBatches } from './components/TableOfSignatoryBatches';
 import { SupplyChain } from './components/SupplyChain';
 import { Button } from 'react-bootstrap';
 import ReactDOM from "react-dom";
@@ -84,9 +87,10 @@ const App = () => {
       {/* <TableOfBatches></TableOfBatches> */}
        {/* autoInit={true}  */}
        {/* <Symfoni autoInit={true}> */}
+       <SignatoryDomain></SignatoryDomain>
          {/* <SupplyChain></SupplyChain> */}
        {/* <Button onClick={renderGen}></Button> */}
-
+          {/* <TableOfSignatoryBatches></TableOfSignatoryBatches> */}
            {/* <FormStartStage></FormStartStage> */}
          {/* <FormCreateBatch></FormCreateBatch> */}
          {/* <FormAddDocument></FormAddDocument> */}

@@ -45,3 +45,12 @@
   display: flex;
   padding: 20px;
 } */
+
+td {
+  padding: 15px !important;
+}
+
+.pinkClass {
+  background-color: wheat !important;
+  border-radius: 10px;
+}
