@@ -37,13 +37,13 @@ export const TableOfSignatoryBatches: React.FC<IfirstChildProps> = ({selectBatch
     //     });
     // }
 
-    // useEffect(() => {
-    //     // while(!supplychain.instance){
+    useEffect(() => {
+        // while(!supplychain.instance){
             
-    //     // }
-    //      getBatchesItems();
-    //   },[supplychain.instance, currentBatchId]); 
-      //
+        // }
+         getBatchesItems();
+      },[supplychain.instance]); 
+
 
 
        const getBatchesItems = async () => {
@@ -82,7 +82,7 @@ export const TableOfSignatoryBatches: React.FC<IfirstChildProps> = ({selectBatch
 
     return (
         <div>
-            <Button onClick={getBatchesItems}>Submit console</Button>
+            {/* <Button onClick={getBatchesItems}>Submit console</Button> */}
             <Table striped bordered hover variant="dark">
             <thead>
                 <tr>
@@ -102,7 +102,7 @@ export const TableOfSignatoryBatches: React.FC<IfirstChildProps> = ({selectBatch
                 <td>{batch.productName}</td>
                 <td>{batch.stageName}</td>
                 <td>{batch.stageOrder}</td>
-                <td key={batch.productName} ><div className={"pinkClass"}>{batch.supplierFee}</div></td>
+                <td key={batch.productName} ><div className={"pinkClass"}>{ethers.utils.formatEther(batch.supplierFee)}</div></td>
                 <td><Button onClick={() =>{
                     printBatchId(batch.batchId);
                     selectBatch(batch.batchId);

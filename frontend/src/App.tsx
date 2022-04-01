@@ -12,6 +12,9 @@ import { FormStartStage } from './components/FormStartStage';
 import { FormAddDocument } from './components/FormAddDocument';
 import { TableOfBatches } from './components/TableOfBatches';
 import { SignatoryDomain } from './components/SignatoryDomain';
+import { SupplierDomain } from './components/SupplierDomain';
+import * as ipfs from './functionality/Ipfs';
+
 
 import { TableOfSignatoryBatches } from './components/TableOfSignatoryBatches';
 import { SupplyChain } from './components/SupplyChain';
@@ -19,6 +22,7 @@ import { Button } from 'react-bootstrap';
 import ReactDOM from "react-dom";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { ethers } from 'ethers';
+import { AdminDomain } from './components/AdminDomain';
 
 
 const App = () => {
@@ -30,11 +34,15 @@ const App = () => {
   let currentAccount = useContext(CurrentAddressContext);
 
 
+
   const login = async () => {
     //Ked sa budem chciet prihlasit este raz
     setAdminLogin(false);
     setSignatoryLogin(false);
     setSupplierLogin(false);
+    const ipfsString =  await ipfs.getFromIPFS("QmeM1QANpBQPhovuHDaFeDdtcjhiYmSgSsAW2hRdkfD7jc");
+
+
 
     const provider = new ethers.providers.Web3Provider(window.ethereum, "any");
     // Prompt user for account connections
@@ -76,9 +84,9 @@ const App = () => {
        </h1>
        <img src={metamaskLogin} alt="metamask_login" className='metamaskImage' onClick={login}/>
 
-       {loading ? adminLogin === true ? <TableOfBatches></TableOfBatches> :
-                  signatoryLogin === true ? <div>Signatory</div> : 
-                  supplierLogin === true ? <div>SupplierLogin</div> :
+       {loading ? adminLogin === true ? <AdminDomain></AdminDomain> :
+                  signatoryLogin === true ? <SignatoryDomain></SignatoryDomain> : 
+                  supplierLogin === true ? <SupplierDomain></SupplierDomain> :
                   <div>Neexistuje rola pre dany ucet</div>
        : <div>Loading...</div>
        }
@@ -87,7 +95,7 @@ const App = () => {
       {/* <TableOfBatches></TableOfBatches> */}
        {/* autoInit={true}  */}
        {/* <Symfoni autoInit={true}> */}
-       <SignatoryDomain></SignatoryDomain>
+       {/* <SignatoryDomain></SignatoryDomain> */}
          {/* <SupplyChain></SupplyChain> */}
        {/* <Button onClick={renderGen}></Button> */}
           {/* <TableOfSignatoryBatches></TableOfSignatoryBatches> */}

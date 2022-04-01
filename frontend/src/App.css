@@ -54,3 +54,12 @@ td {
   background-color: wheat !important;
   border-radius: 10px;
 }
+
+.stageCard {
+  border: 3px solid black;
+  background-color: wheat;
+  color: black;
+  text-align: left;
+  width: 100%;
+  padding: 15px;
+}

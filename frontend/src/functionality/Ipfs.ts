@@ -2,6 +2,7 @@
 // const { globSource } = ipfsAPI;
 // const ipfs = ipfsAPI({host: 'ipfs.infura.io', port: '5001', protocol: 'https' })
 import { create} from 'ipfs-http-client'
+import { Children } from 'react';
 const ipfs = create({ host: 'ipfs.infura.io', port: 5001, protocol: 'https' });
 // connect to the default API address http://localhost:5001
 
@@ -10,19 +11,20 @@ const ipfs = create({ host: 'ipfs.infura.io', port: 5001, protocol: 'https' });
 //const ipfs = ipfsAPI({host: 'localhost', port: '5001', protocol: 'http' })
 
 
-// const getFromIPFS = async (hashToGet: string) => {
-//     const file = await ipfs.get(hashToGet);
-//     console.log(file);
-// //   for await (const file of ipfs.get(hashToGet)) {
-// //     console.log(file.path)
-// //     if (!file.content) continue;
-// //     for await (const chunk of file.content) {
-// //       const content = chunk;
-// //       console.log(content)
-// //       return content
-// //     }
-// //   }
-// }
+export const getFromIPFS = async (hashToGet: string) => {
+    const stream = ipfs.cat(hashToGet)
+    let data;
+    let stageNotes = '';
+    let counter = 0;
+    for await (const chunk of stream) {
+        for(let i = 0; i < chunk.length; i++) {
+            stageNotes += String.fromCharCode(chunk[i]);
+        }   
+    }
+    let index = 0;
+    console.log("IPFS getter return :" + stageNotes);
+    return stageNotes;
+}
 
 
 

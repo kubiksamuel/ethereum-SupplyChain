@@ -18,12 +18,17 @@ interface Batch {
     supplierFee: string;
   }
 
+interface IfirstChildProps {
+    selectBatch: (arg: string) => void
+}
 
-export const TableOfSupplierBatches = () => {
+
+export const TableOfSupplierBatches: React.FC<IfirstChildProps> = ({selectBatch}) => {
     const supplychain = useContext(SupplyChainContext);
-    const [currentBatchId, setCurrentBatchId] = useState("");
+    // const [currentBatchId, setCurrentBatchId] = useState("");
     const [batchList, setBatchList] = useState<Array<Batch>>([]);
     const [buttonTitle, setButtonTitle] = useState("");
+    const batchIdCell = useRef("");
 
     // if(supplychain.instance){
     //     supplychain.instance.on("BatchCreated", (batchId, productName) => {
@@ -32,13 +37,13 @@ export const TableOfSupplierBatches = () => {
     //     });
     // }
 
-    // useEffect(() => {
-    //     // while(!supplychain.instance){
+    useEffect(() => {
+        // while(!supplychain.instance){
             
-    //     // }
-    //      getBatchesItems();
-    //   },[supplychain.instance, currentBatchId]); 
-      //
+        // }
+         getBatchesItems();
+      },[supplychain.instance]); 
+
 
 
        const getBatchesItems = async () => {
@@ -59,24 +64,6 @@ export const TableOfSupplierBatches = () => {
                     let batchItem: Batch = {batchId: batchId, productName: productName, stageOrder: stageOrder, stageName: stageName, supplierFee: supplierFee};
                     console.log("Batch: " + batchItem);
                     batchParsedList.push(batchItem)
-
-                    // let batch = await supplychain.instance.batches(_batchId);
-                    // let _productName = batch.productName.toString();
-                    // let stage = await supplychain.instance.batchStages(_batchId, batch[3].toNumber());
-                    // let _stageName = stage.name;
-                    // let batchItem: Batch = {batchId: _batchId, productName: _productName, stageName: _stageName.toString()}
-                    // console.log(stageName.name);
-
-                    // const batchToReceive = await supplychain.connect(signatory2).getSignatoryView();
-                    // expect(batchToReceive.length).to.equal(2);
-                
-                    // expect(batchToReceive[0].batchId).to.equal(batchId);
-                    // expect(batchToReceive[0].productName).to.equal(productName);
-                    // expect(batchToReceive[0].stageName).to.equal(stage2Name);
-                    // expect(batchToReceive[0].stage).to.equal(2);
-                    // expect(batchToReceive[0].supplierFee).to.equal(ethers.utils.parseEther("1"));
-
-                    // let currentStageName = await supplychain.instance.batchStages(batchId, )
                 }
                 setBatchList(batchParsedList);
             } catch {
@@ -89,16 +76,10 @@ export const TableOfSupplierBatches = () => {
         console.log("Button: " + batchId);
      }
 
-//0x3a29d55240ac7bee227031e99145c06379bc38eccc9fd284e379afdd74ba3e62
-//0xdc0139ade58967564f05e409f527e73079686e7b21fade2366fbc1f526a6b16d
-
-    // const [batchList, setBatchList] = useState(0);
-    // const [newBatch , setNewBatch] = useState(0);
-
 
     return (
         <div>
-            <Button onClick={getBatchesItems}>Submit console</Button>
+            {/* <Button onClick={getBatchesItems}>Submit console</Button> */}
             <Table striped bordered hover variant="dark">
             <thead>
                 <tr>
@@ -106,7 +87,7 @@ export const TableOfSupplierBatches = () => {
                 <th>Názov produktu</th>
                 <th>Názov etapy</th>
                 <th>Poradie etapy</th>
-                <th>Platba za etapu</th>
+                <th>Odmena za etapu</th>
                 <th>Akcie</th>
                 </tr>
             </thead>
@@ -114,12 +95,17 @@ export const TableOfSupplierBatches = () => {
             {
             batchList.map(batch => (
             <tr key={batch.batchId}>
-                <td>{batch.batchId}</td>
+                <td>{batch.batchId.slice(0,14)}...</td>
                 <td>{batch.productName}</td>
                 <td>{batch.stageName}</td>
                 <td>{batch.stageOrder}</td>
-                <td>{batch.supplierFee}</td>
-                <td><Button onClick={() => printBatchId(batch.batchId)} >Vybaviť</Button></td>
+                <td key={batch.productName} ><div className={"pinkClass"}>{ethers.utils.formatEther(batch.supplierFee)}</div></td>
+                <td><Button onClick={() =>{
+                    printBatchId(batch.batchId);
+                    selectBatch(batch.batchId);
+                
+                } 
+                    } >Vybaviť</Button></td>
             </tr>
             ))}
             </tbody>
@@ -127,5 +113,8 @@ export const TableOfSupplierBatches = () => {
         </div>
     );
 }
+
+// <td key="Questions" styles={{ background: value > 0.25 ? 'green' : 'red' }}>
+// <td key="Questions" className={value > 0.25 ? 'greenclass' : 'redclass' }>
 
 

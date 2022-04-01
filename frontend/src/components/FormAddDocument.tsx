@@ -8,8 +8,11 @@ import { ContractReceipt, ContractTransaction } from 'ethers';
 import * as ipfs from '../functionality/Ipfs';
 import { Buffer } from 'buffer';
 
+interface FormAddDocumentProps {
+    currentBatchId: string
+}
 
-export const FormAddDocument = () => {
+export const FormAddDocument: React.FC<FormAddDocumentProps> = ({currentBatchId}) => {
     const supplychain = useContext(SupplyChainContext);
     const temporaryBatchId = useRef<HTMLInputElement>(null);
     const textInput = useRef<HTMLTextAreaElement>(null);
@@ -43,7 +46,7 @@ export const FormAddDocument = () => {
             <fieldset >
                 <Form.Group className="mb-3">
                     <Form.Label htmlFor="disabledTextInput">Docasne batchId:</Form.Label>
-                        <Form.Control id="disabledTextInput" placeholder="" ref={temporaryBatchId}/>
+                        <Form.Control id="disabledTextInput" value={currentBatchId} readOnly ref={temporaryBatchId}/>
                 </Form.Group>
                  <Form.Group className="mb-3" controlId="exampleForm.ControlTextarea1">
                     <Form.Label>Poznamky k produktu</Form.Label>

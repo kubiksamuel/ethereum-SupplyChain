@@ -10,11 +10,11 @@ import { start } from 'repl';
 import { ethers } from 'ethers';
 
 
-interface IfirstChildProps {
+interface FormStartStageProps {
     currentBatchId: string
 }
 
-export const FormStartStage: React.FC<IfirstChildProps> = ({currentBatchId}) => {
+export const FormStartStage: React.FC<FormStartStageProps> = ({currentBatchId}) => {
     const supplychain = useContext(SupplyChainContext);
     const temporaryBatchId = useRef<HTMLInputElement>(null);
     const addressSupplierInput= useRef<HTMLInputElement>(null);
