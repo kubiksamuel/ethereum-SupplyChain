@@ -6,12 +6,16 @@ import { TableOfSignatoryBatches } from './TableOfSignatoryBatches';
 import { FormStartStage } from './FormStartStage';
 import { StageCard } from './StageCard';
 import { SupplyChainContext } from "./../hardhat/SymfoniContext";
+import arrow from '../img/arrow.png';
+
 
 import { Button, Stack } from 'react-bootstrap';
 import ReactDOM from "react-dom";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { ethers } from 'ethers';
 import * as ipfs from '../functionality/Ipfs';
+import * as dateParser from '../functionality/DateParser';
+
 
 
 interface StackOfStagesProps {
@@ -24,7 +28,7 @@ interface Stage {
     supplierFee: string;
     dateReceive: string;
     dateDone: string;
-    state: string;
+    state: number;
     signatory: string;
     supplier: string;
     stageNotes: string;
@@ -57,6 +61,10 @@ export const StackOfStages: React.FC<StackOfStagesProps> = ({currentBatchId}) =>
 //     });
 // }    
 
+const parseDate = () => {
+
+}
+
 const printStages = async() => {
     if (!supplychain.instance) throw Error("SupplyChain instance not ready");
     if (supplychain.instance) {
@@ -68,9 +76,10 @@ const printStages = async() => {
                 let stageName = stage.name;
                 let stageOrder = stage.id.toNumber();
                 let supplierFee = stage.supplierFee.toString();
-                let dateReceive = stage.dateReceive.toString();
-                let dateDone = stage.dateDone.toString();
-                let state = stage.state == 0? "Vybavuje sa" : stage.state == 1 ? "Vybavene, caka na prevzatie"  : "Ukoncene";
+                let dateReceive = dateParser.parseDate(stage.dateReceive.toNumber());
+
+                let dateDone =  dateParser.parseDate(stage.dateDone.toNumber());
+                let state = stage.state;
                 let signatory = stage.signatory.toString();
                 let supplier = stage.supplier.toString();
                 let stageNotes = "";
@@ -95,6 +104,7 @@ const printStages = async() => {
         {stageList.map(stage => (
         <StageCard key={stage.stageOrder} stage={stage}></StageCard>
         ))}
+       {/* <img src={arrow} alt="arrow"/> */}
      </Stack>
         // <Button onClick={printStages}></Button>
   );

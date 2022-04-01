@@ -56,10 +56,12 @@ td {
 }
 
 .stageCard {
-  border: 3px solid black;
-  background-color: wheat;
+  border: 5px solid black;
+  border-radius: 10px;
+  background-color: white;
   color: black;
   text-align: left;
   width: 100%;
   padding: 15px;
 }
+
