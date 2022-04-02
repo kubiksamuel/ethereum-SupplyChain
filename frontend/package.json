@@ -20,6 +20,7 @@
     "react": "^16.14.0",
     "react-bootstrap": "^2.2.1",
     "react-dom": "^16.14.0",
+    "react-qr-reader": "^3.0.0-beta-1",
     "react-scripts": "3.4.3",
     "typescript": "^3.9.7",
     "web3modal": "^1.9.1"

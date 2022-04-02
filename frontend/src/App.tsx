@@ -13,6 +13,10 @@ import { FormAddDocument } from './components/FormAddDocument';
 import { TableOfBatches } from './components/TableOfBatches';
 import { SignatoryDomain } from './components/SignatoryDomain';
 import { SupplierDomain } from './components/SupplierDomain';
+import { QrcodeReader } from './components/QrcodeReader';
+import { QrReader } from 'react-qr-reader';
+
+
 import * as ipfs from './functionality/Ipfs';
 
 import { HeaderMenu } from './components/HeaderMenu';
@@ -87,6 +91,9 @@ const App = () => {
          Supply Chain
        </h1> */}
        {loading && <img src={metamaskLogin} alt="metamask_login" className='metamaskImage' id='loginImg' onClick={login}/>} 
+      {/* <div>
+      <QrReader constraints={{facingMode: 'user' }} containerStyle={{width: "200px", height: "200px"}}></QrReader>
+      </div> */}
 
        {currentAccount ? adminLogin === true ? <div><HeaderMenu currentAccount={currentAccount}></HeaderMenu><AdminDomain></AdminDomain></div>  :
                   signatoryLogin === true ? <div><HeaderMenu currentAccount={currentAccount}></HeaderMenu><SignatoryDomain></SignatoryDomain></div>  : 
