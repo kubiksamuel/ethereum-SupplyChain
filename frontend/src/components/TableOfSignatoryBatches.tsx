@@ -19,7 +19,7 @@ interface Batch {
   }
 
 interface IfirstChildProps {
-    selectBatch: (arg: string) => void
+    selectBatch: (currentBatchId: string, stageFee: string ) => void
 }
 
 
@@ -105,8 +105,7 @@ export const TableOfSignatoryBatches: React.FC<IfirstChildProps> = ({selectBatch
                 <td key={batch.productName} ><div className={"pinkClass"}>{ethers.utils.formatEther(batch.supplierFee)}</div></td>
                 <td><Button onClick={() =>{
                     printBatchId(batch.batchId);
-                    selectBatch(batch.batchId);
-                
+                    selectBatch(batch.batchId, batch.supplierFee);    
                 } 
                     } >Prevziať</Button></td>
             </tr>

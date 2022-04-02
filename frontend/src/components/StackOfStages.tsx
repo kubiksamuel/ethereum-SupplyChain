@@ -7,7 +7,8 @@ import { FormStartStage } from './FormStartStage';
 import { StageCard } from './StageCard';
 import { SupplyChainContext } from "./../hardhat/SymfoniContext";
 import arrow from '../img/arrow.png';
-
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faAnglesDown } from '@fortawesome/free-solid-svg-icons'
 
 import { Button, Stack } from 'react-bootstrap';
 import ReactDOM from "react-dom";
@@ -29,8 +30,10 @@ interface Stage {
     dateReceive: string;
     dateDone: string;
     state: number;
-    signatory: string;
-    supplier: string;
+    signatoryAddress: string;
+    signatoryName: string;
+    supplierAddress: string;
+    supplierName: string;
     stageNotes: string;
 }   
 
@@ -80,14 +83,19 @@ const printStages = async() => {
 
                 let dateDone =  dateParser.parseDate(stage.dateDone.toNumber());
                 let state = stage.state;
-                let signatory = stage.signatory.toString();
-                let supplier = stage.supplier.toString();
+                let signatoryAddress = stage.signatory.toString();
+                let signatory = await supplychain.instance.signatoryRoles(signatoryAddress);
+                let signatoryName = signatory.name.toString();
+                let supplierAddress = stage.supplier.toString();
+                let supplier = await supplychain.instance.supplierRoles(supplierAddress);
+                let supplierName = supplier.name.toString();
                 let stageNotes = "";
                 if(stage.state != 0) {
                     stageNotes = await ipfs.getFromIPFS(stage.docHash);
                 }
                 let stageItem: Stage = {stageName: stageName, stageOrder: stageOrder, supplierFee: supplierFee, dateReceive: dateReceive, dateDone: dateDone,
-                                            state: state, signatory: signatory, supplier: supplier, stageNotes: stageNotes};
+                    state: state, signatoryAddress: signatoryAddress, signatoryName: signatoryName,
+                     supplierAddress: supplierAddress, supplierName: supplierName, stageNotes: stageNotes};
                 
                 console.log(Object.entries(stageItem).flat())        
                 stageParsedList.push(stageItem)
@@ -102,11 +110,12 @@ const printStages = async() => {
   return (
     <Stack gap={3}>
         {stageList.map(stage => (
-        <StageCard key={stage.stageOrder} stage={stage}></StageCard>
+        <div key={stage.stageOrder}>
+        {stage.stageOrder>1 && <FontAwesomeIcon icon={faAnglesDown} size="lg"/>}
+        <StageCard stage={stage}></StageCard>
+        </div>
         ))}
-       {/* <img src={arrow} alt="arrow"/> */}
      </Stack>
-        // <Button onClick={printStages}></Button>
   );
 }
 

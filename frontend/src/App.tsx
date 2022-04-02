@@ -15,7 +15,7 @@ import { SignatoryDomain } from './components/SignatoryDomain';
 import { SupplierDomain } from './components/SupplierDomain';
 import * as ipfs from './functionality/Ipfs';
 
-
+import { HeaderMenu } from './components/HeaderMenu';
 import { TableOfSignatoryBatches } from './components/TableOfSignatoryBatches';
 import { SupplyChain } from './components/SupplyChain';
 import { Button } from 'react-bootstrap';
@@ -23,15 +23,16 @@ import ReactDOM from "react-dom";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { ethers } from 'ethers';
 import { AdminDomain } from './components/AdminDomain';
+import Identicon from 'identicon.js';
 
 
 const App = () => {
-  let [loading, setLoading] = useState(false);
-  let [adminLogin, setAdminLogin] = useState(false);
-  let [signatoryLogin, setSignatoryLogin] = useState(false);
-  let [supplierLogin, setSupplierLogin] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [adminLogin, setAdminLogin] = useState(false);
+  const [signatoryLogin, setSignatoryLogin] = useState(false);
+  const [supplierLogin, setSupplierLogin] = useState(false);
+  const [currentAccount, setCurrentAccount] = useState("");
   let supplychain = useContext(SupplyChainContext);
-  let currentAccount = useContext(CurrentAddressContext);
 
 
 
@@ -40,15 +41,14 @@ const App = () => {
     setAdminLogin(false);
     setSignatoryLogin(false);
     setSupplierLogin(false);
-    const ipfsString =  await ipfs.getFromIPFS("QmeM1QANpBQPhovuHDaFeDdtcjhiYmSgSsAW2hRdkfD7jc");
-
-
+    console.log("LOGIIIN");
 
     const provider = new ethers.providers.Web3Provider(window.ethereum, "any");
     // Prompt user for account connections
     await provider.send("eth_requestAccounts", []);
     const signer = provider.getSigner();
     let signerAddress = await signer.getAddress();
+    console.log(currentAccount + "  ==  " + signerAddress);
     if(supplychain.instance) {
       let adminRole = await supplychain.instance.DEFAULT_ADMIN_ROLE();
       let signatorRole = await supplychain.instance.SIGNATORY_ROLE();
@@ -56,18 +56,22 @@ const App = () => {
       if(await supplychain.instance.hasRole(adminRole, signerAddress)){
         console.log("Account has Admin Role")
         setAdminLogin(true);
+        setLoading(false);
       } else if(await supplychain.instance.hasRole(signatorRole, signerAddress)){
         console.log("Account has Signatory Role")
         setSignatoryLogin(true);
+        setLoading(false);
       }else if(await supplychain.instance.hasRole(supplierRole, signerAddress)){
         console.log("Account has Supplier Role")
         setSupplierLogin(true);
+        setLoading(false);
       }
+      setCurrentAccount(signerAddress);
+
     }
-    
+
+
     console.log("Logged account:", signerAddress);
-
-
   }
 
   useEffect(() => {
@@ -78,18 +82,19 @@ const App = () => {
   return (
 
       <div className="App">
-       <header className="App-header">
+       {/* <header className="App-header">
        <h1>
          Supply Chain
-       </h1>
-       <img src={metamaskLogin} alt="metamask_login" className='metamaskImage' onClick={login}/>
+       </h1> */}
+       {loading && <img src={metamaskLogin} alt="metamask_login" className='metamaskImage' id='loginImg' onClick={login}/>} 
 
-       {loading ? adminLogin === true ? <AdminDomain></AdminDomain> :
-                  signatoryLogin === true ? <SignatoryDomain></SignatoryDomain> : 
-                  supplierLogin === true ? <SupplierDomain></SupplierDomain> :
+       {currentAccount ? adminLogin === true ? <div><HeaderMenu currentAccount={currentAccount}></HeaderMenu><AdminDomain></AdminDomain></div>  :
+                  signatoryLogin === true ? <div><HeaderMenu currentAccount={currentAccount}></HeaderMenu><SignatoryDomain></SignatoryDomain></div>  : 
+                  supplierLogin === true ? <div><HeaderMenu currentAccount={currentAccount}></HeaderMenu><SupplierDomain></SupplierDomain></div>  :
                   <div>Neexistuje rola pre dany ucet</div>
-       : <div>Loading...</div>
+                  : <div>Zvolte ucet a prihlaste sa</div>
        }
+       {/* <a href="https://www.flaticon.com/free-icons/product" title="product icons">Product icons created by Freepik - Flaticon</a> */}
        {/* <Symfoni autoInit={true}>
         </Symfoni> */}
       {/* <TableOfBatches></TableOfBatches> */}
@@ -105,7 +110,7 @@ const App = () => {
          {/* <FormPrivillege></FormPrivillege> */}
            {/* <SupplyChain></SupplyChain> */}
          {/* </Symfoni> */}
-       </header>
+       {/* </header> */}
     </div>
 
 

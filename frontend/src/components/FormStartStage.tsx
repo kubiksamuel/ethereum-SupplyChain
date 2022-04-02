@@ -11,10 +11,11 @@ import { ethers } from 'ethers';
 
 
 interface FormStartStageProps {
-    currentBatchId: string
+    currentBatchId: string;
+    currentStageFee: string;
 }
 
-export const FormStartStage: React.FC<FormStartStageProps> = ({currentBatchId}) => {
+export const FormStartStage: React.FC<FormStartStageProps> = ({currentBatchId, currentStageFee}) => {
     const supplychain = useContext(SupplyChainContext);
     const temporaryBatchId = useRef<HTMLInputElement>(null);
     const addressSupplierInput= useRef<HTMLInputElement>(null);
@@ -40,7 +41,8 @@ export const FormStartStage: React.FC<FormStartStageProps> = ({currentBatchId}) 
         if (supplychain.instance) {
             let startStageTx: ContractTransaction;
             try{
-                startStageTx = await supplychain.instance.startStage(batchId, addressSupplier, addressSignatory, stagePrice, stageName, date);
+                startStageTx = await supplychain.instance.startStage(batchId, addressSupplier, addressSignatory, stagePrice, stageName, date,
+                                                                         {value: currentStageFee});
                 const receipt: ContractReceipt = await startStageTx.wait();
 
                 // @ts-ignore

@@ -12,13 +12,16 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { ethers } from 'ethers';
 
 
+
 export const SignatoryDomain = () => {
     const [currentBatchId, setCurrentBatchId] = useState("");
+    const [currentStageFee, setCurrentStageFee] = useState("");
     const supplychain = useContext(SupplyChainContext);
 
     
-    const selectBatch = (batchId: string):void => {
+    const selectBatch = (batchId: string, stageFee: string):void => {
         setCurrentBatchId(batchId);
+        setCurrentStageFee(stageFee)
    }
 
    if(supplychain.instance){
@@ -32,7 +35,7 @@ export const SignatoryDomain = () => {
 
   return (
       <div className="App">
-        {currentBatchId ? <FormStartStage currentBatchId={currentBatchId}></FormStartStage> :
+        {currentBatchId ? <FormStartStage currentBatchId={currentBatchId} currentStageFee={currentStageFee} ></FormStartStage> :
         <TableOfSignatoryBatches selectBatch={selectBatch}></TableOfSignatoryBatches>
         }
         </div>

@@ -1,6 +1,10 @@
 import * as React from 'react';
 import { Form, Button, Table } from 'react-bootstrap'
 import { SupplyChainContext, Symfoni } from "./../hardhat/SymfoniContext";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faClipboardList } from '@fortawesome/free-solid-svg-icons'
+import { faBoxOpen } from '@fortawesome/free-solid-svg-icons'
+
 
 import { useRef, useContext, useState, useEffect } from "react";
 import ReactDOM from "react-dom";
@@ -15,6 +19,8 @@ interface Batch {
     batchId: string;
     productName: string;
     stageName: string;
+    isFinished: boolean;
+    stageCount: number;
   }
 
 interface Stage {
@@ -68,7 +74,10 @@ export const TableOfBatches: React.FC<TableOfBatchesProps> = ({selectBatch}) => 
                 let _productName = batch.productName.toString();
                 let stage = await supplychain.instance.batchStages(_batchId, batch[3].toNumber());
                 let _stageName = stage.name;
-                let batchItem: Batch = {batchId: _batchId, productName: _productName, stageName: _stageName.toString()}
+                let isFinished = batch.isFinished;
+                let stageCount = batch.stageCount.toNumber()
+                let batchItem: Batch = {batchId: _batchId, productName: _productName, stageName: _stageName.toString(), isFinished: isFinished,
+                                        stageCount: stageCount}
                 batchParsedList.push(batchItem)
                 // console.log(stageName.name);
                 console.log(batch.batchId);
@@ -80,50 +89,23 @@ export const TableOfBatches: React.FC<TableOfBatchesProps> = ({selectBatch}) => 
             console.log("Nastala neocakavana chyba");
         }
     }
-    };
+};
 
-
-
-    const printStages = async(batchId: string) => {
-        if (!supplychain.instance) throw Error("SupplyChain instance not ready");
-        if (supplychain.instance) {
-            try{
-                const batchParsedList = [];
-                const numberOfStages = ((await supplychain.instance.batches(batchId)).stageCount).toNumber();
-                for(let i = 1; i <= numberOfStages; i++){
-                    const stage = await supplychain.instance.batchStages(batchId, i);
-                    let stageName = stage.name;
-                    let stageOrder = stage.id.toNumber();
-                    let supplierFee = stage.supplierFee.toString();
-                    let dateReceive = stage.dateReceive.toString();
-                    let dateDone = stage.dateDone.toString();
-                    let state = stage.state == 0? "Vybavuje sa" : stage.state == 1 ? "Vybavene, caka na prevzatie"  : "Ukoncene";
-                    let signatory = stage.signatory.toString();
-                    let supplier = stage.supplier.toString();
-                    let stageNotes = "";
-                    if(stage.state != 0) {
-                        stageNotes = await ipfs.getFromIPFS(stage.docHash);
-                    }
-                    let stageItem: Stage = {stageName: stageName, stageOrder: stageOrder, supplierFee: supplierFee, dateReceive: dateReceive, dateDone: dateDone,
-                                                state: state, signatory: signatory, supplier: supplier, stageNotes: stageNotes};
-                    
-                    console.log(Object.entries(stageItem).flat())        
-                    // batchParsedList.push(batchItem)
-                }
-                // setBatchList(batchParsedList);
-            } catch {
-                console.log("Nastala neocakavana chyba");
-            }
+const receiveFinishedBatch = async (batchId: string, stageCount: number) => {
+    if (!supplychain.instance) throw Error("SupplyChain instance not ready");
+    if (supplychain.instance) {
+        try{
+            let supplierFee = (await supplychain.instance.batchStages(batchId, stageCount)).supplierFee;
+            let completeFinalStageTx: ContractTransaction;
+                completeFinalStageTx = await supplychain.instance.completeFinalStage(batchId, {value: supplierFee});
+                const receipt: ContractReceipt = await completeFinalStageTx.wait();
+                // @ts-ignore
+                console.log("Prevzaty balik s batch id:" , receipt.events[0].args[0]);
+        } catch {
+            console.log("Nastala neocakavana chyba");
         }
     }
-
-
-    const printBatchId = (batchId: string) => {
-        console.log("Button: " + batchId);
-     }
-
-    // const [batchList, setBatchList] = useState(0);
-    // const [newBatch , setNewBatch] = useState(0);
+};
 
 
     return (
@@ -144,12 +126,17 @@ export const TableOfBatches: React.FC<TableOfBatchesProps> = ({selectBatch}) => 
                     <td>{batch.batchId}</td>
                     <td>{batch.productName}</td>
                     <td>{batch.stageName}</td>
-                    <td><Button onClick={() =>{
-                    printBatchId(batch.batchId);
-                    selectBatch(batch.batchId);
-            
-                } 
-                    } >Prevziať</Button></td>
+                    <td><FontAwesomeIcon onClick={() =>{
+                            selectBatch(batch.batchId);
+                        } 
+                            } icon={faClipboardList} />
+                    {
+                        batch.isFinished && <FontAwesomeIcon onClick={() =>{
+                            receiveFinishedBatch(batch.batchId, batch.stageCount);
+                        } 
+                            } icon={faBoxOpen} />
+                    }
+                    </td>
                 </tr>
                 ))}
                 </tbody>
