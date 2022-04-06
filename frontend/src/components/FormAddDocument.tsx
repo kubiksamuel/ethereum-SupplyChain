@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Form, Button } from 'react-bootstrap'
+import { Form, Button, CloseButton } from 'react-bootstrap'
 import { SupplyChainContext, Symfoni } from "./../hardhat/SymfoniContext";
 
 import { useRef, useContext, useState } from "react";
@@ -9,16 +9,18 @@ import * as ipfs from '../functionality/Ipfs';
 import { Buffer } from 'buffer';
 
 interface FormAddDocumentProps {
-    currentBatchId: string
+    currentBatchId: string;
+    changeClassName: (classComponentName: string) => void;
+    selectBatch: (batchId: string) => void; 
 }
 
-export const FormAddDocument: React.FC<FormAddDocumentProps> = ({currentBatchId}) => {
+export const FormAddDocument: React.FC<FormAddDocumentProps> = ({currentBatchId, changeClassName, selectBatch}) => {
     const supplychain = useContext(SupplyChainContext);
     const temporaryBatchId = useRef<HTMLInputElement>(null);
     const textInput = useRef<HTMLTextAreaElement>(null);
 
 
-    const createBatch = async (
+    const addDocument = async (
         e: React.MouseEvent<HTMLButtonElement, MouseEvent>
       ) => {
         e.preventDefault();    
@@ -42,8 +44,18 @@ export const FormAddDocument: React.FC<FormAddDocumentProps> = ({currentBatchId}
 
     return (
         <Form>
-            <h2>Stage ukonceny</h2>
+            <div className="bg-dark p-1 closeButton">
+                <CloseButton onClick={() =>{
+                                selectBatch("");
+                                changeClassName("App");
+                            }}  variant="white" />
+            </div>
+            <div className='formHeader'>
+                <h3>Pridať údaje k etape:</h3>
+            </div>
+            <hr/>
             <fieldset >
+                <div className='formInputs'>
                 <Form.Group className="mb-3">
                     <Form.Label htmlFor="disabledTextInput">Docasne batchId:</Form.Label>
                         <Form.Control id="disabledTextInput" value={currentBatchId} readOnly ref={temporaryBatchId}/>
@@ -52,7 +64,11 @@ export const FormAddDocument: React.FC<FormAddDocumentProps> = ({currentBatchId}
                     <Form.Label>Poznamky k produktu</Form.Label>
                     <Form.Control as="textarea" rows={10} cols={40} ref={textInput}/>
                 </Form.Group>
-                <Button type="button" onClick={(e) => createBatch(e)}>Submit</Button>
+                </div>
+                <hr/>
+                <div className='submitButton'>
+                    <Button type="button" onClick={(e) => addDocument(e)}>Potvrdiť</Button>
+                </div>
             </fieldset>
         </Form>
 

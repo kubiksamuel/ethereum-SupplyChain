@@ -76,6 +76,14 @@ export const AdminDomain = () => {
     setTableBatches(showTable);
   }
 
+  const resetState = () => {
+    setFormCreateBatch(false);
+    setFormPrivillege(false);
+    setTableBatches(false);
+    setTableBatches(false);
+    setSelectedBatchId("");
+  } 
+
   const changeClassName = (classComponentName: string):void => {
       setClassComponentName(classComponentName);
   }
@@ -98,7 +106,7 @@ export const AdminDomain = () => {
     <div>
       <div className={classComponentName}>
         <AdminInfohead changeFormCreateBatchState={changeFormCreateBatchState} changeFormPrivillegeState={changeFormPrivillegeState} changeClassName={changeClassName} 
-        batchCounter={batchCounter} userCounter={userCounter}
+        batchCounter={batchCounter} userCounter={userCounter} resetState={resetState}
           changeTableUsersState={changeTableUsersState} changeTableBatchesState={changeTableBatchesState} selectBatch={selectBatch}></AdminInfohead>
         {selectedBatchId ? <StackOfStages selectedBatchId={selectedBatchId}></StackOfStages> :
         tableBatches ? <TableOfBatches batchCounter={batchCounter} selectBatch={selectBatch}></TableOfBatches> :

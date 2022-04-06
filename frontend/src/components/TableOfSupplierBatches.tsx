@@ -18,12 +18,13 @@ interface Batch {
     supplierFee: string;
   }
 
-interface IfirstChildProps {
-    selectBatch: (arg: string) => void
+interface TableOfSupplierBatchesProps {
+    selectBatch: (arg: string) => void;
+    changeClassName: (classComponentName: string) => void;
 }
 
 
-export const TableOfSupplierBatches: React.FC<IfirstChildProps> = ({selectBatch}) => {
+export const TableOfSupplierBatches: React.FC<TableOfSupplierBatchesProps> = ({selectBatch, changeClassName}) => {
     const supplychain = useContext(SupplyChainContext);
     // const [currentBatchId, setCurrentBatchId] = useState("");
     const [batchList, setBatchList] = useState<Array<Batch>>([]);
@@ -103,7 +104,7 @@ export const TableOfSupplierBatches: React.FC<IfirstChildProps> = ({selectBatch}
                 <td><Button onClick={() =>{
                     printBatchId(batch.batchId);
                     selectBatch(batch.batchId);
-                
+                    changeClassName("belowLayer");
                 } 
                     } >Vybaviť</Button></td>
             </tr>

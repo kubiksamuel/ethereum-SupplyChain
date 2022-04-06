@@ -14,11 +14,16 @@ import { FormAddDocument } from './FormAddDocument';
 
 export const SupplierDomain = () => {
     const [currentBatchId, setCurrentBatchId] = useState("");
+    const [classComponentName, setClassComponentName] = useState("App");
     const supplychain = useContext(SupplyChainContext);
     
     const selectBatch = (batchId: string):void => {
         setCurrentBatchId(batchId);
-   }
+    }  
+
+    const changeClassName = (classComponentName: string):void => {
+      setClassComponentName(classComponentName);
+    }
 
    if(supplychain.instance){
     supplychain.instance.on("BatchStageDocumentAdded", (batchId, stageName, docHash) => {
@@ -30,11 +35,12 @@ export const SupplierDomain = () => {
 }    
 
   return (
-      <div className="App">
-        {currentBatchId ? <FormAddDocument currentBatchId={currentBatchId}></FormAddDocument> :
-        <TableOfSupplierBatches selectBatch={selectBatch}></TableOfSupplierBatches>
-        }
-        </div>
+    <div>
+      <div className={classComponentName}>
+        <TableOfSupplierBatches selectBatch={selectBatch} changeClassName={changeClassName}></TableOfSupplierBatches>
+      </div>
+      {currentBatchId && <FormAddDocument currentBatchId={currentBatchId} selectBatch={selectBatch} changeClassName={changeClassName}></FormAddDocument> }
+    </div>
   );
 }
 

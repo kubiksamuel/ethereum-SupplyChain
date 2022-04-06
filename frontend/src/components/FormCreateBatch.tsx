@@ -51,22 +51,22 @@ export const FormCreateBatch: React.FC<FormCreateBatchProps> = ({changeFormCreat
                             }}  variant="white" />
             </div>
             <div className='formHeader'>
-                <h3>Pridanie používateľa</h3>
+                <h3>Pridať šaržu</h3>
             </div>
             <hr/>
             <fieldset >
                 <div className='formInputs'>
                 <Form.Group className="mb-3">
-                    <Form.Label htmlFor="productName">Nazov produktu:</Form.Label>
-                        <Form.Control id="productName" placeholder="" ref={nameInput}/>
+                    <Form.Label htmlFor="productName">Názov produktu:</Form.Label>
+                        <Form.Control id="productName" placeholder="Produkt A" ref={nameInput}/>
                 </Form.Group>
                 <Form.Group className="mb-3">
-                     <Form.Label htmlFor="signatoryAddress">Adresa schvalovatela:</Form.Label>
-                     <Form.Control id="signatoryAddress" placeholder="" ref={addressInput} />
+                     <Form.Label htmlFor="signatoryAddress">Adresa schvaľovateľa:</Form.Label>
+                     <Form.Control id="signatoryAddress" placeholder="0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266" ref={addressInput} />
                  </Form.Group>
                  <Form.Group className="mb-3" controlId="exampleForm.ControlTextarea1">
-                    <Form.Label>Poznamky k produktu</Form.Label>
-                    <Form.Control as="textarea" rows={10} cols={40} ref={textInput}/>
+                    <Form.Label>Poznámky k produktu</Form.Label>
+                    <Form.Control as="textarea" placeholder='Poznámky k produktu...' rows={10} cols={40} ref={textInput}/>
                 </Form.Group>
                 </div>
                 <hr/>

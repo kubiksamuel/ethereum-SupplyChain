@@ -15,13 +15,19 @@ import { ethers } from 'ethers';
 export const SignatoryDomain = () => {
     const [currentBatchId, setCurrentBatchId] = useState("");
     const [currentStageFee, setCurrentStageFee] = useState("");
+    const [classComponentName, setClassComponentName] = useState("App");
+    // const [formStartStage, setFormStartStage] = useState(false);
     const supplychain = useContext(SupplyChainContext);
 
     
     const selectBatch = (batchId: string, stageFee: string):void => {
         setCurrentBatchId(batchId);
         setCurrentStageFee(stageFee)
-   }
+    }
+
+    const changeClassName = (classComponentName: string):void => {
+      setClassComponentName(classComponentName);
+    } 
 
    if(supplychain.instance){
     supplychain.instance.on("StageCompleted", (batchId, stageName) => {
@@ -33,11 +39,13 @@ export const SignatoryDomain = () => {
 }    
 
   return (
-      <div className="App">
-        {currentBatchId ? <FormStartStage currentBatchId={currentBatchId} currentStageFee={currentStageFee} ></FormStartStage> :
-        <TableOfSignatoryBatches selectBatch={selectBatch}></TableOfSignatoryBatches>
-        }
-        </div>
+    <div>     
+      <div className={classComponentName}>
+        <TableOfSignatoryBatches changeClassName={changeClassName} selectBatch={selectBatch}></TableOfSignatoryBatches>
+      </div>
+      {currentBatchId && <FormStartStage selectBatch={selectBatch} currentBatchId={currentBatchId} currentStageFee={currentStageFee} changeClassName={changeClassName}></FormStartStage>}
+  </div>
+
   );
 }
 

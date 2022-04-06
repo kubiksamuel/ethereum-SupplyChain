@@ -38,6 +38,10 @@ const App = () => {
   const [currentAccount, setCurrentAccount] = useState("");
   let supplychain = useContext(SupplyChainContext);
 
+  const changeAccount = (account: string, loadingState: boolean) => {
+    setCurrentAccount(account);
+    setLoading(loadingState);
+  }
 
 
   const login = async () => {
@@ -90,18 +94,17 @@ const App = () => {
        <h1>
          Supply Chain
        </h1> */}
-       {loading && <img src={metamaskLogin} alt="metamask_login" className='metamaskImage' id='loginImg' onClick={login}/>} 
+       {loading && <div className='loginPage'><h2>Prihlásenie do zásobovacieho systému</h2><img src={metamaskLogin} alt="metamask_login" className='metamaskImage' id='loginImg' onClick={login}/></div>} 
       {/* <div>
       <QrReader constraints={{facingMode: 'user' }} containerStyle={{width: "200px", height: "200px"}}></QrReader>
       </div> */}
 
-       {currentAccount ? adminLogin === true ? <div><HeaderMenu currentAccount={currentAccount}></HeaderMenu><AdminDomain></AdminDomain></div>  :
-                  signatoryLogin === true ? <div><HeaderMenu currentAccount={currentAccount}></HeaderMenu><SignatoryDomain></SignatoryDomain></div>  : 
-                  supplierLogin === true ? <div><HeaderMenu currentAccount={currentAccount}></HeaderMenu><SupplierDomain></SupplierDomain></div>  :
-                  <div>Neexistuje rola pre dany ucet</div>
-                  : <div>Zvolte ucet a prihlaste sa</div>
+       {currentAccount ? adminLogin === true ? <div><HeaderMenu changeAccount={changeAccount} currentAccount={currentAccount}></HeaderMenu><AdminDomain></AdminDomain><Footer></Footer></div>  :
+                  signatoryLogin === true ? <div><HeaderMenu changeAccount={changeAccount} currentAccount={currentAccount}></HeaderMenu><SignatoryDomain></SignatoryDomain><Footer></Footer></div>  : 
+                  supplierLogin === true ? <div><HeaderMenu changeAccount={changeAccount} currentAccount={currentAccount}></HeaderMenu><SupplierDomain></SupplierDomain><Footer></Footer></div>  :
+                  <div className="alert alert-warning" role="alert">Neexistuje žiadna rola pre adresu. <br/> Zmeňte účet v Metamask peňaženke{currentAccount}</div>
+                  : <div></div>
        }
-      <Footer></Footer>
        {/* <Symfoni autoInit={true}>
         </Symfoni> */}
       {/* <TableOfBatches></TableOfBatches> */}

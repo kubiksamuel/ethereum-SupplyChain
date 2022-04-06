@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Form, Button, FormControl, InputGroup} from 'react-bootstrap'
+import { Form, Button, FormControl, InputGroup, CloseButton} from 'react-bootstrap'
 import { SupplyChainContext, Symfoni } from "./../hardhat/SymfoniContext";
 
 import { useRef, useContext, useState } from "react";
@@ -13,9 +13,11 @@ import { ethers } from 'ethers';
 interface FormStartStageProps {
     currentBatchId: string;
     currentStageFee: string;
+    changeClassName: (classComponentName: string) => void;
+    selectBatch: (batchId: string, stageFee: string) => void; 
 }
 
-export const FormStartStage: React.FC<FormStartStageProps> = ({currentBatchId, currentStageFee}) => {
+export const FormStartStage: React.FC<FormStartStageProps> = ({currentBatchId, currentStageFee, changeClassName, selectBatch}) => {
     const supplychain = useContext(SupplyChainContext);
     const temporaryBatchId = useRef<HTMLInputElement>(null);
     const addressSupplierInput= useRef<HTMLInputElement>(null);
@@ -60,29 +62,44 @@ export const FormStartStage: React.FC<FormStartStageProps> = ({currentBatchId, c
 
     return (
         <Form>
-            <h2>Objednavka produktu</h2>
+            <div className="bg-dark p-1 closeButton">
+                <CloseButton onClick={() =>{
+                                selectBatch("", "")
+                                changeClassName("App");
+                            }}  variant="white" />
+            </div>
+            <div className='formHeader'>
+                <h3>Objednavka produktu</h3>
+            </div>
+            <hr/>
             <fieldset >
+                <div className='formInputs'>
                 <Form.Group className="mb-3">
-                    <Form.Label htmlFor="disabledTextInput">Docasne batchId:</Form.Label>
-                        <Form.Control id="disabledTextInput" value={currentBatchId} ref={temporaryBatchId}/>
+                    <Form.Label htmlFor="disabledTextInput">Id šarže:</Form.Label>
+                        <Form.Control id="disabledTextInput" readOnly value={currentBatchId} ref={temporaryBatchId}/>
                 </Form.Group>
                 <Form.Group className="mb-3">
-                    <Form.Label htmlFor="supplierAddress">Adresa vyrobcu:</Form.Label>
+                    <Form.Label htmlFor="supplierAddress">Adresa výrobcu:</Form.Label>
                         <Form.Control id="supplierAddress" placeholder="" ref={addressSupplierInput}/>
                 </Form.Group>
                 <Form.Group className="mb-3">
-                     <Form.Label htmlFor="signatoryAddress">Adresa schvalovatela:</Form.Label>
+                     <Form.Label htmlFor="signatoryAddress">Adresa schvaľovateľa:</Form.Label>
                      <Form.Control id="signatoryAddress" placeholder="" ref={addressSignatoryInput} />
                  </Form.Group>
                  <Form.Group className="mb-3">
-                     <Form.Label htmlFor="stageName">Nazov novej etapy: </Form.Label>
+                     <Form.Label htmlFor="stageName">Názov novej etapy: </Form.Label>
                      <Form.Control id="stageName" placeholder="" ref={stageNameInput} />
                  </Form.Group>
                  <Form.Group className="mb-3">
                      <Form.Label htmlFor="supplierFee">Cena etapy v Ether: </Form.Label>
                      <Form.Control id="supplierFee" placeholder="1.2345" ref={stagePriceInput} />
                  </Form.Group>
-                <Button type="button" onClick={(e) => createBatch(e)}>Submit</Button>
+                 </div>
+                <hr/>
+                <div className='submitButton'>
+                    <Button type="button" onClick={(e) => createBatch(e)}>Submit</Button>
+                </div>
+
             </fieldset>
         </Form>
 

@@ -22,12 +22,13 @@ interface AdminInfoheadProps {
     changeTableBatchesState: (arg: boolean) => void;
     selectBatch: (arg: string) => void;
     changeClassName: (arg: string) => void;
+    resetState: () => void;
     batchCounter: number;
     userCounter: number;
 }
 
 export const AdminInfohead: React.FC<AdminInfoheadProps> = ({changeFormCreateBatchState, changeFormPrivillegeState, changeTableUsersState,
-    changeTableBatchesState, selectBatch, changeClassName, batchCounter, userCounter}) => {
+    changeTableBatchesState, selectBatch, changeClassName, resetState, batchCounter, userCounter}) => {
     const [currentBatchId, setCurrentBatchId] = useState("");
     const supplychain = useContext(SupplyChainContext);
 
@@ -56,14 +57,13 @@ export const AdminInfohead: React.FC<AdminInfoheadProps> = ({changeFormCreateBat
                     <div className='buttonGroup'>
                         <ButtonGroup vertical>
                             <Button onClick={() =>{
-                                selectBatch("");
+                                resetState();
                                 changeFormPrivillegeState(true);
                                 changeClassName("belowLayer");
                             }} variant="outline-primary">Pridať</Button>
                             <Button onClick={() =>{
-                                selectBatch("");
+                                resetState();
                                 changeTableUsersState(true);
-                                changeTableBatchesState(false);
                                 changeClassName("App");
                             }} variant="outline-info">Zobraziť</Button>
                         </ButtonGroup >
@@ -84,14 +84,13 @@ export const AdminInfohead: React.FC<AdminInfoheadProps> = ({changeFormCreateBat
                     <div className='buttonGroup'>
                         <ButtonGroup vertical>
                         <Button onClick={() =>{
-                                selectBatch("");
+                                resetState();
                                 changeFormCreateBatchState(true);
                                 changeClassName("belowLayer");
                             }} variant="outline-primary">Pridať</Button>
                             <Button onClick={() =>{
-                                selectBatch("");
+                                resetState();
                                 changeTableBatchesState(true);
-                                changeTableUsersState(false);
                                 changeClassName("App");
                             }} variant="outline-info">Zobraziť</Button>
                         </ButtonGroup >

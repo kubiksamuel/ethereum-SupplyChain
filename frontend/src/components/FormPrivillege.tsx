@@ -57,7 +57,7 @@ export const FormPrivillege: React.FC<FormPrivillegeProps> = ({changeFormPrivill
                             }}  variant="white" />
             </div>
             <div className='formHeader'>
-                <h3>Pridanie používateľa</h3>
+                <h3>Pridať používateľa</h3>
             </div>
             <hr/>
             <fieldset >
