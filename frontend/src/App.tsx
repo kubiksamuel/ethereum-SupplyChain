@@ -13,8 +13,9 @@ import { FormAddDocument } from './components/FormAddDocument';
 import { TableOfBatches } from './components/TableOfBatches';
 import { SignatoryDomain } from './components/SignatoryDomain';
 import { SupplierDomain } from './components/SupplierDomain';
-import { QrcodeReader } from './components/QrcodeReader';
-import { QrReader } from 'react-qr-reader';
+import { Footer } from './components/Footer';
+// import { QrcodeReader } from './components/QrcodeReader';
+// import { QrReader } from 'react-qr-reader';
 
 
 import * as ipfs from './functionality/Ipfs';
@@ -24,7 +25,6 @@ import { TableOfSignatoryBatches } from './components/TableOfSignatoryBatches';
 import { SupplyChain } from './components/SupplyChain';
 import { Button } from 'react-bootstrap';
 import ReactDOM from "react-dom";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { ethers } from 'ethers';
 import { AdminDomain } from './components/AdminDomain';
 import Identicon from 'identicon.js';
@@ -101,7 +101,7 @@ const App = () => {
                   <div>Neexistuje rola pre dany ucet</div>
                   : <div>Zvolte ucet a prihlaste sa</div>
        }
-       {/* <a href="https://www.flaticon.com/free-icons/product" title="product icons">Product icons created by Freepik - Flaticon</a> */}
+      <Footer></Footer>
        {/* <Symfoni autoInit={true}>
         </Symfoni> */}
       {/* <TableOfBatches></TableOfBatches> */}

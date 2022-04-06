@@ -26,8 +26,8 @@ describe("SupplyChain", function () {
     expect(contractAddress).not.to.equal('');
     expect(contractAddress).not.to.equal(null);
     expect(contractAddress).not.to.equal(undefined);
-    expect((await supplychain.signatoryRoles(admin.address)).name).to.equal("Administrator");
-    expect((await supplychain.signatoryRoles(admin.address)).id).to.equal(1);
+    expect((await supplychain.rolesInfo(admin.address)).name).to.equal("Administrator");
+    expect((await supplychain.rolesInfo(admin.address)).id).to.equal(1);
   });
 
   it("Set role to addresses", async function () {
@@ -57,16 +57,16 @@ describe("SupplyChain", function () {
 
 
     expect(await supplychain.hasRole(supplychain.SIGNATORY_ROLE(), signatory1.address)).to.equal(true);
-    expect((await supplychain.signatoryRoles(signatory1.address)).name).to.equal(signatory1Name);
-    expect((await supplychain.signatoryRoles(signatory1.address)).id).to.equal(2);
+    expect((await supplychain.rolesInfo(signatory1.address)).name).to.equal(signatory1Name);
+    expect((await supplychain.rolesInfo(signatory1.address)).id).to.equal(2);
 
     expect(await supplychain.hasRole(supplychain.SIGNATORY_ROLE(), signatory2.address)).to.equal(true);
-    expect((await supplychain.signatoryRoles(signatory2.address)).name).to.equal(signatory2Name);
-    expect((await supplychain.signatoryRoles(signatory2.address)).id).to.equal(3);
-
+    expect((await supplychain.rolesInfo(signatory2.address)).name).to.equal(signatory2Name);
+    expect((await supplychain.rolesInfo(signatory2.address)).id).to.equal(3);
+    
     expect(await supplychain.hasRole(supplychain.SUPPLIER_ROLE(), supplier1.address)).to.equal(true);
-    expect((await supplychain.supplierRoles(supplier1.address)).name).to.equal(supplier1Name);
-    expect((await supplychain.supplierRoles(supplier1.address)).id).to.equal(4);
+    expect((await supplychain.rolesInfo(supplier1.address)).name).to.equal(supplier1Name);
+    expect((await supplychain.rolesInfo(supplier1.address)).id).to.equal(4);
   });
 
   it("Create main batch", async function () {

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Form, Button } from 'react-bootstrap'
+import { Form, Button, CloseButton } from 'react-bootstrap'
 import { SupplyChainContext, Symfoni } from "./../hardhat/SymfoniContext";
 
 import { useRef, useContext, useState } from "react";
@@ -8,14 +8,17 @@ import { ContractReceipt, ContractTransaction } from 'ethers';
 import * as ipfs from '../functionality/Ipfs';
 import { TableOfBatches } from './TableOfBatches';
 
+interface FormCreateBatchProps {
+    changeFormCreateBatchState: (arg: boolean) => void;
+    changeClassName: (arg: string) => void;
+}
 
-export const FormCreateBatch = () => {
+export const FormCreateBatch: React.FC<FormCreateBatchProps> = ({changeFormCreateBatchState, changeClassName}) => {
     const supplychain = useContext(SupplyChainContext);
     const addressInput= useRef<HTMLInputElement>(null);
     const nameInput = useRef<HTMLInputElement>(null);
     const textInput = useRef<HTMLTextAreaElement>(null);
 
-    //0x489744f8f0b5c95e1643c6a7e907a904ce2ee749ab7ca33c5d9c3d6e837f2b12
     const createBatch = async (
         e: React.MouseEvent<HTMLButtonElement, MouseEvent>
       ) => {
@@ -41,8 +44,18 @@ export const FormCreateBatch = () => {
 
     return (
         <Form>
-            <h2>Objednavka produktu</h2>
+            <div className="bg-dark p-1 closeButton">
+                <CloseButton onClick={() =>{
+                                changeFormCreateBatchState(false);
+                                changeClassName("App");
+                            }}  variant="white" />
+            </div>
+            <div className='formHeader'>
+                <h3>Pridanie používateľa</h3>
+            </div>
+            <hr/>
             <fieldset >
+                <div className='formInputs'>
                 <Form.Group className="mb-3">
                     <Form.Label htmlFor="productName">Nazov produktu:</Form.Label>
                         <Form.Control id="productName" placeholder="" ref={nameInput}/>
@@ -55,7 +68,11 @@ export const FormCreateBatch = () => {
                     <Form.Label>Poznamky k produktu</Form.Label>
                     <Form.Control as="textarea" rows={10} cols={40} ref={textInput}/>
                 </Form.Group>
-                <Button type="button" onClick={(e) => createBatch(e)}>Submit</Button>
+                </div>
+                <hr/>
+                <div className='submitButton'>
+                    <Button variant="outline-primary" type="button" onClick={(e) => createBatch(e)}>Submit</Button>
+                </div>
             </fieldset>
         </Form>
 

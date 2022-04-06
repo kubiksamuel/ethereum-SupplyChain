@@ -1,5 +1,6 @@
 .App {
   text-align: center;
+  height: 100vh;
 }
 
 .App-logo {
@@ -65,3 +66,82 @@ td {
   margin: 10px;
 }
 
+.adminInfohead {
+  display: flex;
+  justify-content: space-around;
+  width: 100%;
+}
+
+.adminInfoitem {
+  /* display: flex; */
+  border: 2px solid black;
+  width: 100%;
+  margin: 10px;
+  padding: 10px;
+  /* justify-content: center; */
+}
+
+.adminInfobody {
+  display: flex;
+  justify-content: space-around;
+}
+
+
+.adminInfocounter {
+  font-size: 300%;
+}
+
+.Table {
+  margin: 20px;
+  padding: 20px;
+}
+
+Form {
+  opacity: 1;
+  border: 4px solid #FFC43D;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  width: 45%;
+  /* height: 65%; */
+  z-index:99;
+  background-color: white;
+  transform: translate(-50%, -50%);
+}
+
+.formHeader {
+  text-align: left;
+  padding-top: 7px;
+  padding-left: 10px;
+  text-decoration: underline;
+}
+
+.formInputs {
+  text-align: left;
+  padding: 15px;
+}
+
+.submitButton {
+  text-align: right;
+  padding: 15px;
+}
+
+.closeButton {
+  text-align: right;
+}
+
+.belowLayer {
+  z-index: 1;
+  opacity: 0.3;
+}
+
+.StagesWrapper {
+  margin: 25px;
+}
+
+.footer {
+  flex-shrink: 0;
+  text-align: center;
+  background-color: black;
+  color: white;
+}

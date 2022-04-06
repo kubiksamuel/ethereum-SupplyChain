@@ -8,12 +8,10 @@ import { FormStartStage } from './FormStartStage';
 import { SupplyChainContext } from "../hardhat/SymfoniContext";
 import { Badge } from 'react-bootstrap'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { fa } from '@fortawesome/free-solid-svg-icons'
 
 
 import { Accordion, Button, Stack } from 'react-bootstrap';
 import ReactDOM from "react-dom";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { ethers } from 'ethers';
 import * as ipfs from '../functionality/Ipfs';
 
@@ -50,7 +48,7 @@ export const StageCard: React.FC<StackOfStagesProps> = ({stage}) => {
             <hr/>         
             <div><b>Datum prijatia:</b> {stage.dateReceive}</div>
             <hr/>
-            <div><b>Príjmateľ/Schvľovateľ:</b> {stage.signatoryName} ({stage.signatoryAddress})</div>
+            <div><b>Príjmateľ/Schvaľovateľ:</b> {stage.signatoryName} ({stage.signatoryAddress})</div>
             <hr/>
             {stage.stageOrder > 1 && <div><b>Výrobca:</b> {stage.supplierAddress} ({stage.signatoryName})</div>}
             {stage.stageOrder > 1 && <hr/>}

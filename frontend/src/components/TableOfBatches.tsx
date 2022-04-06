@@ -36,32 +36,32 @@ interface Stage {
   }
 
 interface TableOfBatchesProps {
-    selectBatch: (arg: string) => void
+    selectBatch: (arg: string) => void;
+    batchCounter: number;
 }
 
-export const TableOfBatches: React.FC<TableOfBatchesProps> = ({selectBatch}) => {
+export const TableOfBatches: React.FC<TableOfBatchesProps> = ({selectBatch, batchCounter}) => {
     const supplychain = useContext(SupplyChainContext);
-    const [currentBatchId, setCurrentBatchId] = useState("");
+    // const [currentBatchId, setCurrentBatchId] = useState("");
     const [batchList, setBatchList] = useState<Array<Batch>>([]);
 
-    if(supplychain.instance){
-        supplychain.instance.on("BatchCreated", (batchId, productName) => {
-            setCurrentBatchId(batchId);
-            console.log("Odchyteny event s argumentami: " + batchId, productName);
-        });
-    }
+    // if(supplychain.instance){
+    //     supplychain.instance.on("BatchCreated", (batchId, productName) => {
+    //         setCurrentBatchId(batchId);
+    //         console.log("Odchyteny event s argumentami: " + batchId, productName);
+    //     });
+    // }
 
     useEffect(() => {
         // while(!supplychain.instance){
             
         // }
          getBatchesItems();
-      },[supplychain.instance, currentBatchId]); 
+      },[supplychain.instance, batchCounter]); 
       //
 
 
     const getBatchesItems = async () => {
-    console.log("ASYNC");
     if (!supplychain.instance) throw Error("SupplyChain instance not ready");
     if (supplychain.instance) {
         try{
@@ -109,7 +109,7 @@ const receiveFinishedBatch = async (batchId: string, stageCount: number) => {
 
 
     return (
-        <div>
+        <div className='Table'>
             <Table striped bordered hover variant="dark">
                 <thead>
                     <tr>

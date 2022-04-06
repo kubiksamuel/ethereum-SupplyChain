@@ -11,10 +11,11 @@ contract RoleManager is AccessControlEnumerable {
     bytes32 public constant SIGNATORY_ROLE = keccak256("SIGNATORY_ROLE");
     uint256 public roleId;
 
-    event memberAdded(address account, string name, string rola);
+    event MemberAdded(address account, string name, string role);
 
-    mapping(address => RoleInfo) public supplierRoles;
-    mapping(address => RoleInfo) public signatoryRoles;
+    // mapping(address => RoleInfo) public supplierRoles;
+    // mapping(address => RoleInfo) public signatoryRoles;
+    mapping(address => RoleInfo) public rolesInfo;
     address[] public roles;
 
     struct RoleInfo {
@@ -28,8 +29,8 @@ contract RoleManager is AccessControlEnumerable {
         _grantRole(DEFAULT_ADMIN_ROLE, msg.sender);
         _grantRole(SIGNATORY_ROLE, msg.sender);
         _grantRole(SUPPLIER_ROLE, msg.sender);
-        signatoryRoles[msg.sender].name = name;
-        signatoryRoles[msg.sender].id = roleId;
+        rolesInfo[msg.sender].name = name;
+        rolesInfo[msg.sender].id = roleId;
         roles.push(msg.sender);
     }
 
@@ -38,10 +39,10 @@ contract RoleManager is AccessControlEnumerable {
     {
          roleId++;
         _grantRole(SUPPLIER_ROLE, account);
-        supplierRoles[account].name = name;
-        supplierRoles[account].id = roleId;
+        rolesInfo[account].name = name;
+        rolesInfo[account].id = roleId;
         roles.push(account);
-        emit memberAdded(account, name, "supplier");
+        emit MemberAdded(account, name, "supplier");
     }
 
     function setPrivillegeSignatory(address account, string memory name) public
@@ -49,9 +50,9 @@ contract RoleManager is AccessControlEnumerable {
     {
         roleId++;
         _grantRole(SIGNATORY_ROLE, account);
-        signatoryRoles[account].name = name;
-        signatoryRoles[account].id = roleId;
+        rolesInfo[account].name = name;
+        rolesInfo[account].id = roleId;
         roles.push(account);
-        emit memberAdded(account, name, "signator");
+        emit MemberAdded(account, name, "signator");
     }
 }

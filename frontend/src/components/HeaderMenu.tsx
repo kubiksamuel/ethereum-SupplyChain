@@ -14,9 +14,9 @@ export const HeaderMenu: React.FC<HeaderMenuProps> = ({currentAccount}) => {
     return (    
         <Navbar bg="dark" variant="dark">
         <Container>
-        <Navbar.Brand href="#home">
+        <Navbar.Brand href='#' onClick={() => {console.log("ahoj")}}>
                 <img
-                alt=""
+                alt="logoSupply"
                 src={logoSupply}
                 width="30"
                 height="30"

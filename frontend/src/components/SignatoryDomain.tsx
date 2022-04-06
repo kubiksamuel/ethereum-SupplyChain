@@ -8,7 +8,6 @@ import { SupplyChainContext } from "./../hardhat/SymfoniContext";
 
 import { Button } from 'react-bootstrap';
 import ReactDOM from "react-dom";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { ethers } from 'ethers';
 
 

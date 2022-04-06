@@ -12,7 +12,6 @@ import { faAnglesDown } from '@fortawesome/free-solid-svg-icons'
 
 import { Button, Stack } from 'react-bootstrap';
 import ReactDOM from "react-dom";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { ethers } from 'ethers';
 import * as ipfs from '../functionality/Ipfs';
 import * as dateParser from '../functionality/DateParser';
@@ -20,7 +19,7 @@ import * as dateParser from '../functionality/DateParser';
 
 
 interface StackOfStagesProps {
-    currentBatchId: string
+    selectedBatchId: string
 }
 
 interface Stage {
@@ -37,7 +36,7 @@ interface Stage {
     stageNotes: string;
 }   
 
-export const StackOfStages: React.FC<StackOfStagesProps> = ({currentBatchId}) => {
+export const StackOfStages: React.FC<StackOfStagesProps> = ({selectedBatchId}) => {
     // const [currentBatchId, setCurrentBatchId] = useState("");
     const supplychain = useContext(SupplyChainContext);
     const [stageList, setStageList] = useState<Array<Stage>>([]);
@@ -64,35 +63,35 @@ export const StackOfStages: React.FC<StackOfStagesProps> = ({currentBatchId}) =>
 //     });
 // }    
 
-const parseDate = () => {
-
-}
 
 const printStages = async() => {
     if (!supplychain.instance) throw Error("SupplyChain instance not ready");
     if (supplychain.instance) {
         try{
+            console.log("Selected Batch: " + selectedBatchId);
             const stageParsedList = [];
-            const numberOfStages = ((await supplychain.instance.batches(currentBatchId)).stageCount).toNumber();
+            const numberOfStages = ((await supplychain.instance.batches(selectedBatchId)).stageCount).toNumber();
             for(let i = 1; i <= numberOfStages; i++){
-                const stage = await supplychain.instance.batchStages(currentBatchId, i);
+                const stage = await supplychain.instance.batchStages(selectedBatchId, i);
                 let stageName = stage.name;
                 let stageOrder = stage.id.toNumber();
                 let supplierFee = stage.supplierFee.toString();
                 let dateReceive = dateParser.parseDate(stage.dateReceive.toNumber());
 
                 let dateDone =  dateParser.parseDate(stage.dateDone.toNumber());
+
                 let state = stage.state;
                 let signatoryAddress = stage.signatory.toString();
-                let signatory = await supplychain.instance.signatoryRoles(signatoryAddress);
+                let signatory = await supplychain.instance.rolesInfo(signatoryAddress);
                 let signatoryName = signatory.name.toString();
                 let supplierAddress = stage.supplier.toString();
-                let supplier = await supplychain.instance.supplierRoles(supplierAddress);
+                let supplier = await supplychain.instance.rolesInfo(supplierAddress);
                 let supplierName = supplier.name.toString();
                 let stageNotes = "";
                 if(stage.state != 0) {
                     stageNotes = await ipfs.getFromIPFS(stage.docHash);
                 }
+
                 let stageItem: Stage = {stageName: stageName, stageOrder: stageOrder, supplierFee: supplierFee, dateReceive: dateReceive, dateDone: dateDone,
                     state: state, signatoryAddress: signatoryAddress, signatoryName: signatoryName,
                      supplierAddress: supplierAddress, supplierName: supplierName, stageNotes: stageNotes};
@@ -102,20 +101,22 @@ const printStages = async() => {
             }
             setStageList(stageParsedList);
         } catch {
-            console.log("Nastala neocakavana chyba");
+            console.log("Nastala neocakavana chybaaaa");
         }
     }
 }
 
   return (
-    <Stack gap={3}>
-        {stageList.map(stage => (
-        <div key={stage.stageOrder}>
-        {stage.stageOrder>1 && <FontAwesomeIcon icon={faAnglesDown} size="lg"/>}
-        <StageCard stage={stage}></StageCard>
-        </div>
-        ))}
-     </Stack>
+      <div className="StagesWrapper">
+        <Stack gap={3}>
+            {stageList.map(stage => (
+            <div key={stage.stageOrder}>
+            {stage.stageOrder>1 && <FontAwesomeIcon icon={faAnglesDown} size="lg"/>}
+            <StageCard stage={stage}></StageCard>
+            </div>
+            ))}
+        </Stack>
+     </div>
   );
 }
 
