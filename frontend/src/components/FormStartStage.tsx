@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { Form, Button, FormControl, InputGroup, CloseButton} from 'react-bootstrap'
-import { SupplyChainContext, Symfoni } from "./../hardhat/SymfoniContext";
+import { CurrentAddressContext, SupplyChainContext, Symfoni } from "./../hardhat/SymfoniContext";
 
 import { useRef, useContext, useState } from "react";
 import ReactDOM from "react-dom";
@@ -10,18 +10,27 @@ import { start } from 'repl';
 import { ethers } from 'ethers';
 
 
+interface User {
+    userId: number;
+    userAddress: string;
+    userName: string;
+    signatoryRole: boolean;
+    supplierRole: boolean;
+  }
+
 interface FormStartStageProps {
     currentBatchId: string;
     currentStageFee: string;
     changeClassName: (classComponentName: string) => void;
     selectBatch: (batchId: string, stageFee: string) => void; 
+    userList: Array<User>;
 }
 
-export const FormStartStage: React.FC<FormStartStageProps> = ({currentBatchId, currentStageFee, changeClassName, selectBatch}) => {
+export const FormStartStage: React.FC<FormStartStageProps> = ({currentBatchId, currentStageFee, changeClassName, selectBatch, userList}) => {
     const supplychain = useContext(SupplyChainContext);
     const temporaryBatchId = useRef<HTMLInputElement>(null);
-    const addressSupplierInput= useRef<HTMLInputElement>(null);
-    const addressSignatoryInput= useRef<HTMLInputElement>(null);
+    const addressSupplierInput= useRef<HTMLSelectElement>(null);
+    const addressSignatoryInput= useRef<HTMLSelectElement>(null);
     const stageNameInput= useRef<HTMLInputElement>(null);
     const stagePriceInput= useRef<HTMLInputElement>(null);
 
@@ -79,12 +88,26 @@ export const FormStartStage: React.FC<FormStartStageProps> = ({currentBatchId, c
                         <Form.Control id="disabledTextInput" readOnly value={currentBatchId} ref={temporaryBatchId}/>
                 </Form.Group>
                 <Form.Group className="mb-3">
-                    <Form.Label htmlFor="supplierAddress">Adresa výrobcu:</Form.Label>
-                        <Form.Control id="supplierAddress" placeholder="" ref={addressSupplierInput}/>
+                    <Form.Label htmlFor="signatoryAddress">Schvaľovateľ:</Form.Label>
+                     <Form.Select id="signatoryAddress" ref={addressSignatoryInput} >
+                     { 
+                        userList.map(user => (
+                            user.signatoryRole && <option key={user.userAddress} value={user.userAddress}>{user.userName}</option>
+                        ))}
+                     </Form.Select>
+                    {/* <Form.Label htmlFor="supplierAddress">Adresa výrobcu:</Form.Label>
+                        <Form.Control id="supplierAddress" placeholder="" ref={addressSupplierInput}/> */}
                 </Form.Group>
                 <Form.Group className="mb-3">
-                     <Form.Label htmlFor="signatoryAddress">Adresa schvaľovateľa:</Form.Label>
-                     <Form.Control id="signatoryAddress" placeholder="" ref={addressSignatoryInput} />
+                    <Form.Label htmlFor="supplierAddress">Výrobcu:</Form.Label>
+                     <Form.Select id="supplierAddress" ref={addressSupplierInput} >
+                     { 
+                        userList.map(user => (
+                            user.supplierRole && <option key={user.userAddress} value={user.userAddress}>{user.userName}</option>
+                        ))}
+                     </Form.Select>
+                     {/* <Form.Label htmlFor="signatoryAddress">Adresa schvaľovateľa:</Form.Label>
+                    //  <Form.Control id="signatoryAddress" placeholder="" ref={addressSignatoryInput} /> */}
                  </Form.Group>
                  <Form.Group className="mb-3">
                      <Form.Label htmlFor="stageName">Názov novej etapy: </Form.Label>

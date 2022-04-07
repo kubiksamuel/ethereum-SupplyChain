@@ -37,22 +37,26 @@ contract RoleManager is AccessControlEnumerable {
     function setPrivillegeSupplier(address account, string memory name) public 
         onlyRole(DEFAULT_ADMIN_ROLE)
     {
-         roleId++;
         _grantRole(SUPPLIER_ROLE, account);
         rolesInfo[account].name = name;
-        rolesInfo[account].id = roleId;
-        roles.push(account);
+        if(rolesInfo[account].id == 0) {
+            roleId++;
+            rolesInfo[account].id = roleId;
+            roles.push(account);
+        }
         emit MemberAdded(account, name, "supplier");
     }
 
     function setPrivillegeSignatory(address account, string memory name) public
         onlyRole(DEFAULT_ADMIN_ROLE) 
     {
-        roleId++;
         _grantRole(SIGNATORY_ROLE, account);
         rolesInfo[account].name = name;
-        rolesInfo[account].id = roleId;
-        roles.push(account);
+        if(rolesInfo[account].id == 0) {
+            roleId++;
+            rolesInfo[account].id = roleId;
+            roles.push(account);
+        }
         emit MemberAdded(account, name, "signator");
     }
 }

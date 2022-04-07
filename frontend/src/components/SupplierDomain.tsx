@@ -15,6 +15,7 @@ import { FormAddDocument } from './FormAddDocument';
 export const SupplierDomain = () => {
     const [currentBatchId, setCurrentBatchId] = useState("");
     const [classComponentName, setClassComponentName] = useState("App");
+    const [changedBatch, setChangedBatch] = useState("");
     const supplychain = useContext(SupplyChainContext);
     
     const selectBatch = (batchId: string):void => {
@@ -28,7 +29,7 @@ export const SupplierDomain = () => {
    if(supplychain.instance){
     supplychain.instance.on("BatchStageDocumentAdded", (batchId, stageName, docHash) => {
         if(batchId == currentBatchId) {
-          setCurrentBatchId("");
+          setChangedBatch("");
         }
         console.log("Odchyteny event s argumentami: " + batchId, stageName, docHash);
     });
@@ -37,7 +38,7 @@ export const SupplierDomain = () => {
   return (
     <div>
       <div className={classComponentName}>
-        <TableOfSupplierBatches selectBatch={selectBatch} changeClassName={changeClassName}></TableOfSupplierBatches>
+        <TableOfSupplierBatches changedBatch={changedBatch} selectBatch={selectBatch} changeClassName={changeClassName}></TableOfSupplierBatches>
       </div>
       {currentBatchId && <FormAddDocument currentBatchId={currentBatchId} selectBatch={selectBatch} changeClassName={changeClassName}></FormAddDocument> }
     </div>

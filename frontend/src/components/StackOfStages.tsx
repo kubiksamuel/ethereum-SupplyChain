@@ -108,6 +108,7 @@ const printStages = async() => {
 
   return (
       <div className="StagesWrapper">
+        <h2>ID šarže: {selectedBatchId}</h2>
         <Stack gap={3}>
             {stageList.map(stage => (
             <div key={stage.stageOrder}>

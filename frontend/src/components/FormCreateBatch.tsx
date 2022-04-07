@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { Form, Button, CloseButton } from 'react-bootstrap'
-import { SupplyChainContext, Symfoni } from "./../hardhat/SymfoniContext";
+import { CurrentAddressContext, SupplyChainContext, Symfoni } from "./../hardhat/SymfoniContext";
 
 import { useRef, useContext, useState } from "react";
 import ReactDOM from "react-dom";
@@ -8,16 +8,27 @@ import { ContractReceipt, ContractTransaction } from 'ethers';
 import * as ipfs from '../functionality/Ipfs';
 import { TableOfBatches } from './TableOfBatches';
 
+
+interface User {
+    userId: number;
+    userAddress: string;
+    userName: string;
+    signatoryRole: boolean;
+    supplierRole: boolean;
+  }
+
 interface FormCreateBatchProps {
     changeFormCreateBatchState: (arg: boolean) => void;
     changeClassName: (arg: string) => void;
+    userList: Array<User>;
 }
 
-export const FormCreateBatch: React.FC<FormCreateBatchProps> = ({changeFormCreateBatchState, changeClassName}) => {
+export const FormCreateBatch: React.FC<FormCreateBatchProps> = ({changeFormCreateBatchState, changeClassName, userList}) => {
     const supplychain = useContext(SupplyChainContext);
-    const addressInput= useRef<HTMLInputElement>(null);
+    const addressInput= useRef<HTMLSelectElement>(null);
     const nameInput = useRef<HTMLInputElement>(null);
     const textInput = useRef<HTMLTextAreaElement>(null);
+    console.log("Userlist" + userList);
 
     const createBatch = async (
         e: React.MouseEvent<HTMLButtonElement, MouseEvent>
@@ -61,8 +72,15 @@ export const FormCreateBatch: React.FC<FormCreateBatchProps> = ({changeFormCreat
                         <Form.Control id="productName" placeholder="Produkt A" ref={nameInput}/>
                 </Form.Group>
                 <Form.Group className="mb-3">
-                     <Form.Label htmlFor="signatoryAddress">Adresa schvaľovateľa:</Form.Label>
-                     <Form.Control id="signatoryAddress" placeholder="0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266" ref={addressInput} />
+                    <Form.Label htmlFor="memberRole">Schvaľovateľa:</Form.Label>
+                     <Form.Select id="memberRole" ref={addressInput} >
+                     { 
+                        userList.map(user => (
+                            user.signatoryRole && <option key={user.userAddress} value={user.userAddress}>{user.userName}</option>
+                        ))}
+                     </Form.Select>
+                     {/* <Form.Label htmlFor="signatoryAddress">Adresa schvaľovateľa:</Form.Label>
+                     <Form.Control id="signatoryAddress" placeholder="0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266" ref={addressInput} /> */}
                  </Form.Group>
                  <Form.Group className="mb-3" controlId="exampleForm.ControlTextarea1">
                     <Form.Label>Poznámky k produktu</Form.Label>

@@ -31,6 +31,7 @@ import Identicon from 'identicon.js';
 
 
 const App = () => {
+  const signerAddress = useContext(CurrentAddressContext)[0];
   const [loading, setLoading] = useState(false);
   const [adminLogin, setAdminLogin] = useState(false);
   const [signatoryLogin, setSignatoryLogin] = useState(false);
@@ -102,7 +103,7 @@ const App = () => {
        {currentAccount ? adminLogin === true ? <div><HeaderMenu changeAccount={changeAccount} currentAccount={currentAccount}></HeaderMenu><AdminDomain></AdminDomain><Footer></Footer></div>  :
                   signatoryLogin === true ? <div><HeaderMenu changeAccount={changeAccount} currentAccount={currentAccount}></HeaderMenu><SignatoryDomain></SignatoryDomain><Footer></Footer></div>  : 
                   supplierLogin === true ? <div><HeaderMenu changeAccount={changeAccount} currentAccount={currentAccount}></HeaderMenu><SupplierDomain></SupplierDomain><Footer></Footer></div>  :
-                  <div className="alert alert-warning" role="alert">Neexistuje žiadna rola pre adresu. <br/> Zmeňte účet v Metamask peňaženke{currentAccount}</div>
+                  <div className="alert alert-warning" role="alert">Neexistuje žiadna rola pre adresu {currentAccount}. <br/> Zmeňte účet v Metamask peňaženke.</div>
                   : <div></div>
        }
        {/* <Symfoni autoInit={true}>

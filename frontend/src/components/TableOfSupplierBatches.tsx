@@ -21,10 +21,11 @@ interface Batch {
 interface TableOfSupplierBatchesProps {
     selectBatch: (arg: string) => void;
     changeClassName: (classComponentName: string) => void;
+    changedBatch: string;
 }
 
 
-export const TableOfSupplierBatches: React.FC<TableOfSupplierBatchesProps> = ({selectBatch, changeClassName}) => {
+export const TableOfSupplierBatches: React.FC<TableOfSupplierBatchesProps> = ({selectBatch, changeClassName, changedBatch}) => {
     const supplychain = useContext(SupplyChainContext);
     // const [currentBatchId, setCurrentBatchId] = useState("");
     const [batchList, setBatchList] = useState<Array<Batch>>([]);
@@ -43,7 +44,7 @@ export const TableOfSupplierBatches: React.FC<TableOfSupplierBatchesProps> = ({s
             
         // }
          getBatchesItems();
-      },[supplychain.instance]); 
+      },[changedBatch]); 
 
 
 
@@ -96,7 +97,7 @@ export const TableOfSupplierBatches: React.FC<TableOfSupplierBatchesProps> = ({s
             {
             batchList.map(batch => (
             <tr key={batch.batchId}>
-                <td>{batch.batchId.slice(0,14)}...</td>
+                <td>{batch.batchId}</td>
                 <td>{batch.productName}</td>
                 <td>{batch.stageName}</td>
                 <td>{batch.stageOrder}</td>

@@ -91,10 +91,11 @@ contract SupplyChain is RoleManager("Administrator") {
         for (uint256 i = 0; i < getListLength(); i++) {
             for (uint256 stage = 1; stage <= batches[listOfIds[i]].stageCount; stage++) {
                 if (
-                    batchStages[listOfIds[i]][stage].signatory == msg.sender &&
-                    batchStages[listOfIds[i]][stage].state == State.PREPARED
+                    batchStages[listOfIds[i]][stage].signatory == msg.sender 
+                    // && batchStages[listOfIds[i]][stage].state == State.PREPARED
                 ) {
                     resultCount++;
+                    break;
                 }
             }
         }
@@ -110,8 +111,8 @@ contract SupplyChain is RoleManager("Administrator") {
         for (uint256 i = 0; i < getListLength(); i++) {
             for (uint256 stage = 1; stage <= batches[listOfIds[i]].stageCount; stage++) {
                 if (
-                    batchStages[listOfIds[i]][stage].signatory == msg.sender &&
-                    batchStages[listOfIds[i]][stage].state == State.PREPARED
+                    batchStages[listOfIds[i]][stage].signatory == msg.sender 
+                    // && batchStages[listOfIds[i]][stage].state == State.PREPARED
                 ) {
                     AddressStageView memory stageView;
                     stageView.batchId = listOfIds[i];
@@ -121,6 +122,7 @@ contract SupplyChain is RoleManager("Administrator") {
                     stageView.supplierFee = batchStages[listOfIds[i]][batches[listOfIds[i]].stageCount].supplierFee;
                     results[index] = stageView;
                     index++;
+                    break;
                 }
             }
         }
@@ -135,10 +137,11 @@ contract SupplyChain is RoleManager("Administrator") {
         for (uint256 i = 0; i < getListLength(); i++) {
             for (uint256 stage = 1; stage <= batches[listOfIds[i]].stageCount; stage++) {
                 if (
-                    batchStages[listOfIds[i]][stage].supplier == msg.sender &&
-                    batchStages[listOfIds[i]][stage].state == State.STARTED
+                    batchStages[listOfIds[i]][stage].supplier == msg.sender 
+                    // && batchStages[listOfIds[i]][stage].state == State.STARTED
                 ) {
                     resultCount++;
+                    break;
                 }
             }
         }
@@ -156,8 +159,8 @@ contract SupplyChain is RoleManager("Administrator") {
         for (uint256 i = 0; i < getListLength(); i++) {
             for (uint256 stage = 1; stage <= batches[listOfIds[i]].stageCount; stage++) {
                 if (
-                    batchStages[listOfIds[i]][stage].supplier == msg.sender &&
-                    batchStages[listOfIds[i]][stage].state == State.STARTED
+                    batchStages[listOfIds[i]][stage].supplier == msg.sender 
+                    // && batchStages[listOfIds[i]][stage].state == State.STARTED
                 ) {
                     AddressStageView memory stageView;
                     stageView.batchId = listOfIds[i];
@@ -167,6 +170,7 @@ contract SupplyChain is RoleManager("Administrator") {
                     stageView.supplierFee = batchStages[listOfIds[i]][batches[listOfIds[i]].stageCount].supplierFee;
                     results[index] = stageView;
                     index++;
+                    break;
                 }
             }
         }
