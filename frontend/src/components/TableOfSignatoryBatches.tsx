@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Form, Button, Table } from 'react-bootstrap'
+import { Form, Button, Table, OverlayTrigger, Tooltip } from 'react-bootstrap'
 import { SupplyChainContext, Symfoni } from "./../hardhat/SymfoniContext";
 
 import { useRef, useContext, useState, useEffect } from "react";
@@ -9,6 +9,8 @@ import * as ipfs from '../functionality/Ipfs';
 import { Buffer } from 'buffer';
 import { ethers } from 'ethers';
 import * as usersGetter from '../functionality/UsersGetter';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faClipboardList, faPeopleCarryBox } from '@fortawesome/free-solid-svg-icons';
 
 
 interface Batch {
@@ -24,10 +26,11 @@ interface TableOfSignatoryBatchesProps {
     selectBatch: (currentBatchId: string, stageFee: string ) => void;
     changeClassName: (classComponentName: string) => void;
     changedSignatoryBatch: string;
+    changeFormStartStageState: (showTable: boolean) => void;
 }
 
 
-export const TableOfSignatoryBatches: React.FC<TableOfSignatoryBatchesProps> = ({selectBatch, changeClassName, changedSignatoryBatch}) => {
+export const TableOfSignatoryBatches: React.FC<TableOfSignatoryBatchesProps> = ({selectBatch, changeClassName, changedSignatoryBatch, changeFormStartStageState}) => {
     const supplychain = useContext(SupplyChainContext);
     // const [currentBatchId, setCurrentBatchId] = useState("");
     const [batchList, setBatchList] = useState<Array<Batch>>([]);
@@ -44,7 +47,7 @@ export const TableOfSignatoryBatches: React.FC<TableOfSignatoryBatchesProps> = (
     useEffect(() => {
         console.log("USEEFFECT V SIGNATORY");
         // while(!supplychain.instance){
-        usersGetter.getBatchesItems(supplychain, "signatory").then((batchParsedList) => {
+        usersGetter.getBatchesItems(supplychain, "supplier").then((batchParsedList) => {
             if(batchParsedList) {
                 setBatchList(batchParsedList);
 
@@ -113,12 +116,44 @@ export const TableOfSignatoryBatches: React.FC<TableOfSignatoryBatchesProps> = (
                 <td>{batch.productName}</td>
                 <td>{batch.stageName}</td>
                 <td>{batch.stageOrder}</td>
-                <td key={batch.productName} ><div className={"pinkClass"}>{ethers.utils.formatEther(batch.supplierFee)}</div></td>
-                <td>{batch.toProccess &&  <Button onClick={() =>{
-                    printBatchId(batch.batchId);
-                    selectBatch(batch.batchId, batch.supplierFee);    
-                    changeClassName("belowLayer");
-                    }}>Prevziať</Button>}</td>
+                <td key={batch.productName} ><div>{ethers.utils.formatEther(batch.supplierFee)}</div></td>
+                <td><div className='actions'>
+                    <OverlayTrigger
+                    placement="top"
+                    overlay={
+                        <Tooltip id="tooltip-top">
+                        Prezrieť  <strong>etapy</strong>
+                        </Tooltip>
+                    }>
+                        <Button className='iconButtons' variant="light" onClick={() =>{selectBatch(batch.batchId, batch.supplierFee);}}><FontAwesomeIcon size="lg" icon={faClipboardList}/></Button>
+                    </OverlayTrigger>
+
+                    
+                    {batch.toProccess && 
+                //  <Button onClick={() =>{
+                //     printBatchId(batch.batchId);
+                //     selectBatch(batch.batchId, batch.supplierFee);    
+                //     changeClassName("belowLayer");
+                //     }}>Prevziať</Button>
+                    
+                    <OverlayTrigger
+                    placement="top"
+                    overlay={
+                        <Tooltip id="tooltip-top">
+                        Prevziať <strong>šaržu</strong> a odovzdať ďalej.  
+                        </Tooltip>
+                    }>
+                        <Button className='iconButtons' variant="light" onClick={() =>{
+                            printBatchId(batch.batchId);
+                            selectBatch(batch.batchId, batch.supplierFee);    
+                            changeClassName("belowLayer");
+                            changeFormStartStageState(true);
+                    }}><FontAwesomeIcon size="lg" icon={faPeopleCarryBox}/></Button>
+                    </OverlayTrigger>}
+                    </div>
+                    </td>
+
+
             </tr>
             ))}
             </tbody>

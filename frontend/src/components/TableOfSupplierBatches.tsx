@@ -116,7 +116,8 @@ export const TableOfSupplierBatches: React.FC<TableOfSupplierBatchesProps> = ({s
                     selectBatch(batch.batchId);
                     changeClassName("belowLayer");
                 } 
-                    } >Vybaviť</Button>}</td>
+                    } >Vybaviť</Button>}
+                    </td>
             </tr>
             ))}
             </tbody>

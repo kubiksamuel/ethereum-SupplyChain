@@ -107,8 +107,8 @@ const App = () => {
       </div> */}
 
        {currentAccount ? adminLogin === true ? <div><HeaderMenu changeAccount={changeAccount} currentAccount={currentAccount}></HeaderMenu><AdminDomain></AdminDomain><Footer></Footer></div>  :
-                  signatoryLogin === true  ? <div><HeaderMenu changeAccount={changeAccount} currentAccount={currentAccount}></HeaderMenu><SignatoryDomain></SignatoryDomain><Footer></Footer></div>  : 
-                  supplierLogin === true ? <div><HeaderMenu changeAccount={changeAccount} currentAccount={currentAccount}></HeaderMenu><SupplierDomain></SupplierDomain><Footer></Footer></div>  :
+                  signatoryLogin === true || supplierLogin === true  ? <div><HeaderMenu changeAccount={changeAccount} currentAccount={currentAccount}></HeaderMenu><SignatoryDomain></SignatoryDomain><Footer></Footer></div>  : 
+                  // supplierLogin === true ? <div><HeaderMenu changeAccount={changeAccount} currentAccount={currentAccount}></HeaderMenu><SupplierDomain></SupplierDomain><Footer></Footer></div>  :
                   <div className="alert alert-warning" role="alert">Neexistuje žiadna rola pre adresu {currentAccount}. <br/> Zmeňte účet v Metamask peňaženke.</div>
                   : <div></div>
        }

@@ -93,7 +93,6 @@ contract SupplyChain is RoleManager("Administrator") {
             for (uint256 stage = 1; stage <= batches[listOfIds[i]].stageCount; stage++) {
                 if (
                     batchStages[listOfIds[i]][stage].signatory == msg.sender 
-                    // && batchStages[listOfIds[i]][stage].state == State.PREPARED
                 ) {
                     resultCount++;
                     break;
@@ -116,17 +115,7 @@ contract SupplyChain is RoleManager("Administrator") {
             for (uint256 stage = 1; stage <= batches[listOfIds[i]].stageCount; stage++) {
                 if (
                     batchStages[listOfIds[i]][stage].signatory == msg.sender 
-                    // && batchStages[listOfIds[i]][stage].state == State.PREPARED
                 ) {
-                    // if(isIncluded && batchStages[listOfIds[i]][stage].state == State.PREPARED) {
-                    //     stageView.toProccess = true;
-
-                    //     stageView.batchId = listOfIds[i];
-                    //     stageView.productName= batches[listOfIds[i]].productName;
-                    //     stageView.stage = stage;
-                    //     stageView.stageName = batchStages[listOfIds[i]][batches[listOfIds[i]].stageCount].name;
-                    //     stageView.supplierFee = batchStages[listOfIds[i]][batches[listOfIds[i]].stageCount].supplierFee;
-                    // } else {
                     if (batchStages[listOfIds[i]][stage].state == State.PREPARED) {
                         stageView.toProccess = true;    
                     }
@@ -136,8 +125,6 @@ contract SupplyChain is RoleManager("Administrator") {
                     stageView.stage = stage;
                     stageView.stageName = batchStages[listOfIds[i]][batches[listOfIds[i]].stageCount].name;
                     stageView.supplierFee = batchStages[listOfIds[i]][batches[listOfIds[i]].stageCount].supplierFee;
-                    // }
-
                 }
             }
             if(isIncluded) {
@@ -157,7 +144,6 @@ contract SupplyChain is RoleManager("Administrator") {
             for (uint256 stage = 1; stage <= batches[listOfIds[i]].stageCount; stage++) {
                 if (
                     batchStages[listOfIds[i]][stage].supplier == msg.sender 
-                    // && batchStages[listOfIds[i]][stage].state == State.STARTED
                 ) {
                     resultCount++;
                     break;
@@ -181,17 +167,7 @@ contract SupplyChain is RoleManager("Administrator") {
             for (uint256 stage = 1; stage <= batches[listOfIds[i]].stageCount; stage++) {
                 if (
                     batchStages[listOfIds[i]][stage].supplier == msg.sender 
-                    // && batchStages[listOfIds[i]][stage].state == State.PREPARED
                 ) {
-                    // if(isIncluded && batchStages[listOfIds[i]][stage].state == State.PREPARED) {
-                    //     stageView.toProccess = true;
-
-                    //     stageView.batchId = listOfIds[i];
-                    //     stageView.productName= batches[listOfIds[i]].productName;
-                    //     stageView.stage = stage;
-                    //     stageView.stageName = batchStages[listOfIds[i]][batches[listOfIds[i]].stageCount].name;
-                    //     stageView.supplierFee = batchStages[listOfIds[i]][batches[listOfIds[i]].stageCount].supplierFee;
-                    // } else {
                     if (batchStages[listOfIds[i]][stage].state == State.STARTED) {
                         stageView.toProccess = true;    
                     }
@@ -201,8 +177,6 @@ contract SupplyChain is RoleManager("Administrator") {
                     stageView.stage = stage;
                     stageView.stageName = batchStages[listOfIds[i]][batches[listOfIds[i]].stageCount].name;
                     stageView.supplierFee = batchStages[listOfIds[i]][batches[listOfIds[i]].stageCount].supplierFee;
-                    // }
-
                 }
             }
             if(isIncluded) {
@@ -269,7 +243,7 @@ contract SupplyChain is RoleManager("Administrator") {
         batches[batchId].productName = productName;
         emit BatchCreated(batchId, productName);
 
-        addNewStage(batchId, "Order stage", signatory, address(0), 0, dateCreation);
+        addNewStage(batchId, "Etapa objednania", signatory, address(0), 0, dateCreation);
         addBatchStageDocument(batchId, docHash, dateCreation);
     }
 

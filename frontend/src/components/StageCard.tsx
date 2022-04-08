@@ -50,7 +50,7 @@ export const StageCard: React.FC<StackOfStagesProps> = ({stage}) => {
             <hr/>
             <div><b>Príjmateľ/Schvaľovateľ:</b> {stage.signatoryName} ({stage.signatoryAddress})</div>
             <hr/>
-            {stage.stageOrder > 1 && <div><b>Výrobca:</b> {stage.supplierAddress} ({stage.signatoryName})</div>}
+            {stage.stageOrder > 1 && <div><b>Výrobca:</b> {stage.supplierName} ({stage.supplierAddress})</div>}
             {stage.stageOrder > 1 && <hr/>}
             {stage.state > 0 && <div><b>Datum vybavenia:</b> {stage.dateDone}</div>}
             {stage.state > 0 && <hr/>}

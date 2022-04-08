@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Form, Button, Table } from 'react-bootstrap'
+import { Form, Button, Table, OverlayTrigger, Tooltip, Overlay } from 'react-bootstrap'
 import { SupplyChainContext, Symfoni } from "./../hardhat/SymfoniContext";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faClipboardList } from '@fortawesome/free-solid-svg-icons'
@@ -21,6 +21,7 @@ interface Batch {
     stageName: string;
     isFinished: boolean;
     stageCount: number;
+    stageState: number;
   }
 
 interface Stage {
@@ -36,11 +37,13 @@ interface Stage {
   }
 
 interface TableOfBatchesProps {
+    finishBatch: () => void;
+    batchesType: string;
     selectBatch: (arg: string) => void;
     batchCounter: number;
 }
 
-export const TableOfBatches: React.FC<TableOfBatchesProps> = ({selectBatch, batchCounter}) => {
+export const TableOfBatches: React.FC<TableOfBatchesProps> = ({finishBatch, batchesType, selectBatch, batchCounter}) => {
     const supplychain = useContext(SupplyChainContext);
     // const [currentBatchId, setCurrentBatchId] = useState("");
     const [batchList, setBatchList] = useState<Array<Batch>>([]);
@@ -69,18 +72,23 @@ export const TableOfBatches: React.FC<TableOfBatchesProps> = ({selectBatch, batc
             const listLengthBN = await supplychain.instance.getListLength();
             const listLength = listLengthBN.toNumber();
             for(let i = 0; i < listLength; i++){
-                let _batchId = await supplychain.instance.listOfIds(i);
-                let batch = await supplychain.instance.batches(_batchId);
-                let _productName = batch.productName.toString();
-                let stage = await supplychain.instance.batchStages(_batchId, batch[3].toNumber());
-                let _stageName = stage.name;
+                let batchId = await supplychain.instance.listOfIds(i);
+                let batch = await supplychain.instance.batches(batchId);
                 let isFinished = batch.isFinished;
                 let stageCount = batch.stageCount.toNumber()
-                let batchItem: Batch = {batchId: _batchId, productName: _productName, stageName: _stageName.toString(), isFinished: isFinished,
-                                        stageCount: stageCount}
-                batchParsedList.push(batchItem)
-                // console.log(stageName.name);
-                console.log(batch.batchId);
+                const stageState = (await supplychain.instance.batchStages(batchId, stageCount)).state;
+
+                if((batchesType == "finished" && isFinished && stageState == 2) || (batchesType == "inProccess" && (!isFinished || stageState != 2))) {
+                    let _productName = batch.productName.toString();
+                    let stage = await supplychain.instance.batchStages(batchId, batch[3].toNumber());
+                    let _stageName = stage.name;
+                    let batchItem: Batch = {batchId: batchId, productName: _productName, stageName: _stageName.toString(), isFinished: isFinished,
+                                            stageCount: stageCount, stageState: stageState}
+                    batchParsedList.push(batchItem)
+                    // console.log(stageName.name);
+                    console.log(batch.batchId);
+                } 
+
 
                 // let currentStageName = await supplychain.instance.batchStages(batchId, )
             }
@@ -99,6 +107,7 @@ const receiveFinishedBatch = async (batchId: string, stageCount: number) => {
             let completeFinalStageTx: ContractTransaction;
                 completeFinalStageTx = await supplychain.instance.completeFinalStage(batchId, {value: supplierFee});
                 const receipt: ContractReceipt = await completeFinalStageTx.wait();
+                finishBatch();
                 // @ts-ignore
                 console.log("Prevzaty balik s batch id:" , receipt.events[0].args[0]);
         } catch {
@@ -126,16 +135,34 @@ const receiveFinishedBatch = async (batchId: string, stageCount: number) => {
                     <td>{batch.batchId}</td>
                     <td>{batch.productName}</td>
                     <td>{batch.stageName}</td>
-                    <td><FontAwesomeIcon onClick={() =>{
-                            selectBatch(batch.batchId);
-                        } 
-                            } icon={faClipboardList} />
-                    {
-                        batch.isFinished && batch.stageCount == 1 && <FontAwesomeIcon onClick={() =>{
-                            receiveFinishedBatch(batch.batchId, batch.stageCount);
-                        } 
-                            } icon={faBoxOpen} />
+                    <td>
+                    <div className='actions'>
+                    <OverlayTrigger
+                    placement="top"
+                    overlay={
+                        <Tooltip id="tooltip-top">
+                        Prezrieť  <strong>etapy</strong>
+                        </Tooltip>
+                    }>
+                        <Button className='iconButtons' variant="light" onClick={() =>{selectBatch(batch.batchId);}}><FontAwesomeIcon size="lg" icon={faClipboardList}/></Button>
+                    </OverlayTrigger>
+
+                   
+                    {   
+                        batch.isFinished && batch.stageState == 1 && 
+
+                <OverlayTrigger
+                    placement="top"
+                    overlay={
+                        <Tooltip id="tooltip-top">
+                        Prevziať <strong>šaržu</strong>
+                        </Tooltip>
+                    }>
+                        <Button className='iconButtons' variant="light" onClick={() =>{receiveFinishedBatch(batch.batchId, batch.stageCount);}}><FontAwesomeIcon size="lg" icon={faBoxOpen}/></Button>
+                    </OverlayTrigger>  
                     }
+                    </div>
+
                     </td>
                 </tr>
                 ))}

@@ -25,9 +25,11 @@ interface FormStartStageProps {
     changeClassName: (classComponentName: string) => void;
     selectBatch: (batchId: string, stageFee: string) => void; 
     userList: Array<User>;
+    changeFormStartStageState: (showTable: boolean) => void;
 }
 
-export const FormStartStage: React.FC<FormStartStageProps> = ({setProccessedBatch, currentBatchId, currentStageFee, changeClassName, selectBatch, userList}) => {
+export const FormStartStage: React.FC<FormStartStageProps> = ({setProccessedBatch, currentBatchId, currentStageFee, changeClassName, selectBatch,
+     userList, changeFormStartStageState}) => {
     const supplychain = useContext(SupplyChainContext);
     const temporaryBatchId = useRef<HTMLInputElement>(null);
     const addressSupplierInput= useRef<HTMLSelectElement>(null);
@@ -77,6 +79,7 @@ export const FormStartStage: React.FC<FormStartStageProps> = ({setProccessedBatc
                 <CloseButton onClick={() =>{
                                 selectBatch("", "")
                                 changeClassName("App");
+                                changeFormStartStageState(false);
                             }}  variant="white" />
             </div>
             <div className='formHeader'>

@@ -18,13 +18,13 @@ interface User {
   }
 
 interface FormCreateBatchProps {
-    addBatchCounter: () => void;
+    addInProccessBatchCounter: () => void;
     changeFormCreateBatchState: (arg: boolean) => void;
     changeClassName: (arg: string) => void;
     userList: Array<User>;
 }
 
-export const FormCreateBatch: React.FC<FormCreateBatchProps> = ({addBatchCounter, changeFormCreateBatchState, changeClassName, userList}) => {
+export const FormCreateBatch: React.FC<FormCreateBatchProps> = ({addInProccessBatchCounter, changeFormCreateBatchState, changeClassName, userList}) => {
     const supplychain = useContext(SupplyChainContext);
     const addressInput= useRef<HTMLSelectElement>(null);
     const nameInput = useRef<HTMLInputElement>(null);
@@ -46,7 +46,7 @@ export const FormCreateBatch: React.FC<FormCreateBatchProps> = ({addBatchCounter
             try{
                 createBatchTx = await supplychain.instance.createBatch(name, address, date, ipfsHash);
                 const receipt: ContractReceipt = await createBatchTx.wait();
-                addBatchCounter();
+                addInProccessBatchCounter();
                 // @ts-ignore
                 console.log("Batch id:" , receipt.events[2].args[0], "Nazov stagu: ", receipt.events[2].args[1], "Ipfs hash: " , receipt.events[2].args[2]);
             } catch {

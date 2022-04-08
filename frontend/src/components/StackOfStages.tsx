@@ -91,6 +91,7 @@ const printStages = async() => {
                 if(stage.state != 0) {
                     stageNotes = await ipfs.getFromIPFS(stage.docHash);
                 }
+                console.log("Stage: " + state);
 
                 let stageItem: Stage = {stageName: stageName, stageOrder: stageOrder, supplierFee: supplierFee, dateReceive: dateReceive, dateDone: dateDone,
                     state: state, signatoryAddress: signatoryAddress, signatoryName: signatoryName,

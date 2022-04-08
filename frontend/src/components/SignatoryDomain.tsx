@@ -11,6 +11,7 @@ import * as usersGetter from '../functionality/UsersGetter';
 import { Button } from 'react-bootstrap';
 import ReactDOM from "react-dom";
 import { ethers } from 'ethers';
+import { StackOfStages } from './StackOfStages';
 
 interface User {
   userId: number;
@@ -29,8 +30,11 @@ export const SignatoryDomain = () => {
     const [currentStageFee, setCurrentStageFee] = useState("");
     const [classComponentName, setClassComponentName] = useState("App");
     const [userList, setUserList] = useState<Array<User>>([]);
-    // const [formStartStage, setFormStartStage] = useState(false);
+    const [formStartStage, setFormStartStage] = useState(false);
     const supplychain = useContext(SupplyChainContext);
+
+    const [tableFinishedBatches, setTableFinishedBatches] = useState(false);
+    const [tableInProccessBatches, setTableInProccessBatches] = useState(false);
 
     
     const selectBatch = (batchId: string, stageFee: string):void => {
@@ -45,6 +49,10 @@ export const SignatoryDomain = () => {
     const setProccessedBatch = (batchId: string):void => {
       setSignatoryChangedBatch(batchId);
     }
+
+    const changeFormStartStageState = (showForm: boolean):void => {
+      setFormStartStage(showForm);
+    } 
 
 //    if(supplychain.instance){
 //     supplychain.instance.on("StageCompleted", (batchId, stageName) => {
@@ -119,9 +127,12 @@ export const SignatoryDomain = () => {
   return (
     <div>     
       <div className={classComponentName}>
-        <TableOfSignatoryBatches changedSignatoryBatch={changedSignatoryBatch} changeClassName={changeClassName} selectBatch={selectBatch}></TableOfSignatoryBatches>
+      {currentBatchId && !formStartStage ?<StackOfStages selectedBatchId={currentBatchId}></StackOfStages> :
+        <TableOfSignatoryBatches changedSignatoryBatch={changedSignatoryBatch} changeClassName={changeClassName} selectBatch={selectBatch}
+          changeFormStartStageState={changeFormStartStageState}></TableOfSignatoryBatches>}
       </div>
-      {currentBatchId && <FormStartStage setProccessedBatch={setProccessedBatch} userList={userList} selectBatch={selectBatch} currentBatchId={currentBatchId} currentStageFee={currentStageFee} changeClassName={changeClassName}></FormStartStage>}
+      {currentBatchId && formStartStage && <FormStartStage setProccessedBatch={setProccessedBatch} userList={userList} selectBatch={selectBatch} currentBatchId={currentBatchId}
+       currentStageFee={currentStageFee} changeClassName={changeClassName}  changeFormStartStageState={changeFormStartStageState}></FormStartStage>}
   </div>
 
   );

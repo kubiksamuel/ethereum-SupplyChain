@@ -8,7 +8,7 @@ describe("SupplyChain", function () {
   const initialDocHash = "IPFS_HASH_1"
   
   const productName = "product_name";
-  const stage1name = "Order stage";
+  const stage1name = "Etapa objednania";
   const stage2Name = "Stage2";
   const stage3Name = "Stage3";
   const provider = waffle.provider;

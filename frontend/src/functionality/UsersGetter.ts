@@ -68,11 +68,30 @@ export const getUsers = async (supplychain: SymfoniSupplyChain) => {
     if (!supplychain.instance) throw Error("SupplyChain instance not ready");
     if (supplychain.instance) {
         try{
-            const batchLengthBN = await supplychain.instance.getListLength();
-            const batchLength = batchLengthBN.toNumber();
+            // const batchLengthBN = await supplychain.instance.getListLength();
+            // const batchLength = batchLengthBN.toNumber();
+            let finishedBatchLength = 0 ;
+            let inProccessBatchLength = 0 ;
+
+
+            const listLengthBN = await supplychain.instance.getListLength();
+            const listLength = listLengthBN.toNumber();
+            for(let i = 0; i < listLength; i++){
+                let batchId = await supplychain.instance.listOfIds(i);
+                let batch = await supplychain.instance.batches(batchId);
+                let isFinished = batch.isFinished;
+                let stageCount = batch.stageCount.toNumber();
+                const stageState = (await supplychain.instance.batchStages(batchId, stageCount)).state;
+                if(isFinished && stageState == 2) {
+                    finishedBatchLength++;
+                } else {
+                    inProccessBatchLength++;
+                }
+            }
+            
             const userLengthBN =  await supplychain.instance.roleId();
             const userLength = userLengthBN.toNumber();
-            return [batchLength, userLength];
+            return [inProccessBatchLength, finishedBatchLength, userLength];
             }
       catch {
             console.log("Nastala neocakavana chyba");
