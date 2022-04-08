@@ -11275,6 +11275,11 @@
     "punycode" "1.3.2"
     "querystring" "0.2.0"
 
+"use-state-if-mounted@^1.0.4":
+  "integrity" "sha512-odkuB5IZxABvag46XZmUyY+FrienKt+6f2JAo52pvpU5C32K99EvADg1VxjIUaVbh5eHhOVQQ6q4wWm2WEZYyg=="
+  "resolved" "https://registry.npmjs.org/use-state-if-mounted/-/use-state-if-mounted-1.0.4.tgz"
+  "version" "1.0.4"
+
 "use@^3.1.0":
   "integrity" "sha512-cwESVXlO3url9YWlFW/TA9cshCEhtu7IKJ/p5soJ/gGpj7vbvFrAY/eIioQ6Dw23KjZhYgiIo8HOs1nQ2vr/oQ=="
   "resolved" "https://registry.npmjs.org/use/-/use-3.1.1.tgz"

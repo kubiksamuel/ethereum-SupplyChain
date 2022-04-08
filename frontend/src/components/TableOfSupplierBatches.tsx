@@ -8,6 +8,8 @@ import { ContractReceipt, ContractTransaction } from 'ethers';
 import * as ipfs from '../functionality/Ipfs';
 import { Buffer } from 'buffer';
 import { ethers } from 'ethers';
+import * as usersGetter from '../functionality/UsersGetter';
+
 
 
 interface Batch {
@@ -16,16 +18,17 @@ interface Batch {
     stageName: string;
     stageOrder: number;
     supplierFee: string;
+    toProccess: boolean;
   }
 
 interface TableOfSupplierBatchesProps {
     selectBatch: (arg: string) => void;
     changeClassName: (classComponentName: string) => void;
-    changedBatch: string;
+    changedSupplierBatch: string;
 }
 
 
-export const TableOfSupplierBatches: React.FC<TableOfSupplierBatchesProps> = ({selectBatch, changeClassName, changedBatch}) => {
+export const TableOfSupplierBatches: React.FC<TableOfSupplierBatchesProps> = ({selectBatch, changeClassName, changedSupplierBatch}) => {
     const supplychain = useContext(SupplyChainContext);
     // const [currentBatchId, setCurrentBatchId] = useState("");
     const [batchList, setBatchList] = useState<Array<Batch>>([]);
@@ -41,38 +44,44 @@ export const TableOfSupplierBatches: React.FC<TableOfSupplierBatchesProps> = ({s
 
     useEffect(() => {
         // while(!supplychain.instance){
-            
-        // }
-         getBatchesItems();
-      },[changedBatch]); 
-
-
-
-       const getBatchesItems = async () => {
-        console.log("ASYNC");
-        if (!supplychain.instance) throw Error("SupplyChain instance not ready");
-        if (supplychain.instance) {
-            try{
-                const batchParsedList = [];
-                const listOfWaitingBatches = await supplychain.instance.getSupplierView();
-                for(let i = 0; i < listOfWaitingBatches.length; i++){
-                    let batch = listOfWaitingBatches[i];
-                    console.log("Batch" + i + ":" + listOfWaitingBatches[i]);
-                    let batchId = batch.batchId;
-                    let productName = batch.productName;
-                    let stageName = batch.stageName;
-                    let stageOrder = batch.stage.toNumber();
-                    let supplierFee = batch.supplierFee.toString();
-                    let batchItem: Batch = {batchId: batchId, productName: productName, stageOrder: stageOrder, stageName: stageName, supplierFee: supplierFee};
-                    console.log("Batch: " + batchItem);
-                    batchParsedList.push(batchItem)
-                }
+        usersGetter.getBatchesItems(supplychain, "supplier").then((batchParsedList) => {
+            if(batchParsedList) {
                 setBatchList(batchParsedList);
-            } catch {
-                console.log("Nastala neocakavana chyba");
+
             }
-        }
-     };
+        });
+        //  getBatchesItems();
+      },[changedSupplierBatch]); 
+
+
+
+    //    const getBatchesItems = async () => {
+    //     console.log("ASYNC");
+    //     if (!supplychain.instance) throw Error("SupplyChain instance not ready");
+    //     if (supplychain.instance) {
+    //         try{
+    //             const batchParsedList = [];
+    //             const listOfWaitingBatches = await supplychain.instance.getSupplierView();
+    //             for(let i = 0; i < listOfWaitingBatches.length; i++){
+    //                 let batch = listOfWaitingBatches[i];
+    //                 console.log("Batch" + i + ":" + listOfWaitingBatches[i]);
+    //                 let batchId = batch.batchId;
+    //                 let productName = batch.productName;
+    //                 let stageName = batch.stageName;
+    //                 let stageOrder = batch.stage.toNumber();
+    //                 let supplierFee = batch.supplierFee.toString();
+    //                 let toProccess = batch.toProccess;
+    //                 let batchItem: Batch = {batchId: batchId, productName: productName, stageOrder: stageOrder, stageName: stageName, supplierFee: supplierFee,
+    //                     toProccess: toProccess};
+    //                 console.log("Batch: " + batchItem);
+    //                 batchParsedList.push(batchItem)
+    //             }
+    //             setBatchList(batchParsedList);
+    //         } catch {
+    //             console.log("Nastala neocakavana chyba");
+    //         }
+    //     }
+    //  };
 
      const printBatchId = (batchId: string) => {
         console.log("Button: " + batchId);
@@ -102,12 +111,12 @@ export const TableOfSupplierBatches: React.FC<TableOfSupplierBatchesProps> = ({s
                 <td>{batch.stageName}</td>
                 <td>{batch.stageOrder}</td>
                 <td key={batch.productName} ><div className={"pinkClass"}>{ethers.utils.formatEther(batch.supplierFee)}</div></td>
-                <td><Button onClick={() =>{
+                <td>{batch.toProccess && <Button onClick={() =>{
                     printBatchId(batch.batchId);
                     selectBatch(batch.batchId);
                     changeClassName("belowLayer");
                 } 
-                    } >Vybaviť</Button></td>
+                    } >Vybaviť</Button>}</td>
             </tr>
             ))}
             </tbody>

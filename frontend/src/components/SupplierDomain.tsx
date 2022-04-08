@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext, useEffect, useRef, useState } from 'react';
 // import { SupplyChain } from './hardhat/typechain/SupplyChain';
 // import { Greeter } from './components/Greeter';
 // import { Greeter } from './components/Greeter';
@@ -15,7 +15,7 @@ import { FormAddDocument } from './FormAddDocument';
 export const SupplierDomain = () => {
     const [currentBatchId, setCurrentBatchId] = useState("");
     const [classComponentName, setClassComponentName] = useState("App");
-    const [changedBatch, setChangedBatch] = useState("");
+    const [changedSupplierBatch, setChangedSupplierBatch] = useState("");
     const supplychain = useContext(SupplyChainContext);
     
     const selectBatch = (batchId: string):void => {
@@ -26,21 +26,24 @@ export const SupplierDomain = () => {
       setClassComponentName(classComponentName);
     }
 
-   if(supplychain.instance){
-    supplychain.instance.on("BatchStageDocumentAdded", (batchId, stageName, docHash) => {
-        if(batchId == currentBatchId) {
-          setChangedBatch("");
-        }
-        console.log("Odchyteny event s argumentami: " + batchId, stageName, docHash);
-    });
-}    
+    const setProccessedBatch = (batchId: string):void => {
+      setChangedSupplierBatch(batchId);
+    }
+//    if(supplychain.instance){
+//     supplychain.instance.on("BatchStageDocumentAdded", (batchId, stageName, docHash) => {
+//         // if(batchId == currentBatchId) {
+//           setChangedSupplierBatch(batchId);
+//         // }
+//         console.log("Odchyteny event BatchStageDocumentAdded s argumentami: " + batchId, stageName, docHash);
+//     });
+// }    
 
   return (
     <div>
       <div className={classComponentName}>
-        <TableOfSupplierBatches changedBatch={changedBatch} selectBatch={selectBatch} changeClassName={changeClassName}></TableOfSupplierBatches>
+        <TableOfSupplierBatches changedSupplierBatch={changedSupplierBatch} selectBatch={selectBatch} changeClassName={changeClassName}></TableOfSupplierBatches>
       </div>
-      {currentBatchId && <FormAddDocument currentBatchId={currentBatchId} selectBatch={selectBatch} changeClassName={changeClassName}></FormAddDocument> }
+      {currentBatchId && <FormAddDocument setProccessedBatch={setProccessedBatch} currentBatchId={currentBatchId} selectBatch={selectBatch} changeClassName={changeClassName}></FormAddDocument> }
     </div>
   );
 }

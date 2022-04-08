@@ -36,13 +36,16 @@ const App = () => {
   const [adminLogin, setAdminLogin] = useState(false);
   const [signatoryLogin, setSignatoryLogin] = useState(false);
   const [supplierLogin, setSupplierLogin] = useState(false);
+  const [currentRole, setCurrentRole] = useState("");
   const [currentAccount, setCurrentAccount] = useState("");
   let supplychain = useContext(SupplyChainContext);
+
 
   const changeAccount = (account: string, loadingState: boolean) => {
     setCurrentAccount(account);
     setLoading(loadingState);
   }
+
 
 
   const login = async () => {
@@ -66,14 +69,17 @@ const App = () => {
         console.log("Account has Admin Role")
         setAdminLogin(true);
         setLoading(false);
+        setCurrentRole("admin")
       } else if(await supplychain.instance.hasRole(signatorRole, signerAddress)){
         console.log("Account has Signatory Role")
         setSignatoryLogin(true);
         setLoading(false);
+        setCurrentRole("signatory")
       }else if(await supplychain.instance.hasRole(supplierRole, signerAddress)){
         console.log("Account has Supplier Role")
         setSupplierLogin(true);
         setLoading(false);
+        setCurrentRole("supplier")
       }
       setCurrentAccount(signerAddress);
 
@@ -101,11 +107,12 @@ const App = () => {
       </div> */}
 
        {currentAccount ? adminLogin === true ? <div><HeaderMenu changeAccount={changeAccount} currentAccount={currentAccount}></HeaderMenu><AdminDomain></AdminDomain><Footer></Footer></div>  :
-                  signatoryLogin === true ? <div><HeaderMenu changeAccount={changeAccount} currentAccount={currentAccount}></HeaderMenu><SignatoryDomain></SignatoryDomain><Footer></Footer></div>  : 
+                  signatoryLogin === true  ? <div><HeaderMenu changeAccount={changeAccount} currentAccount={currentAccount}></HeaderMenu><SignatoryDomain></SignatoryDomain><Footer></Footer></div>  : 
                   supplierLogin === true ? <div><HeaderMenu changeAccount={changeAccount} currentAccount={currentAccount}></HeaderMenu><SupplierDomain></SupplierDomain><Footer></Footer></div>  :
                   <div className="alert alert-warning" role="alert">Neexistuje žiadna rola pre adresu {currentAccount}. <br/> Zmeňte účet v Metamask peňaženke.</div>
                   : <div></div>
        }
+       {/* || supplierLogin == true */}
        {/* <Symfoni autoInit={true}>
         </Symfoni> */}
       {/* <TableOfBatches></TableOfBatches> */}

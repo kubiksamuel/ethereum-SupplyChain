@@ -138,6 +138,14 @@ export const AdminDomain = () => {
     setUserList(currentUserList);
   }
 
+  const addBatchCounter = ():void => {
+    setBatchCounter(batchCounter+1);
+  }
+
+  const addUserCounter = ():void => {
+      setUserCounter(userCounter+1);
+}
+
   const resetState = () => {
     setFormCreateBatch(false);
     setFormPrivillege(false);
@@ -150,19 +158,19 @@ export const AdminDomain = () => {
       setClassComponentName(classComponentName);
   }
 
-  if(supplychain.instance){
-    supplychain.instance.on("MemberAdded", (account, name, role) => {
-        setUserCounter(userCounter+1);
-        console.log("Odchyteny event MemberAdded s argumentami: " + account, name, role);
-      }); 
-  }    
+  // if(supplychain.instance){
+  //   supplychain.instance.on("MemberAdded", (account, name, role) => {
+  //       setUserCounter(userCounter+1);
+  //       console.log("Odchyteny event MemberAdded s argumentami: " + account, name, role);
+  //     }); 
+  // }    
 
-  if(supplychain.instance){
-    supplychain.instance.on("BatchCreated", (batchId, productName) => {
-        setBatchCounter(batchCounter+1);
-        console.log("Odchyteny event BatchCreated s argumentami: " + batchId, productName);
-      }); 
-  }    
+  // if(supplychain.instance){
+  //   supplychain.instance.on("BatchCreated", (batchId, productName) => {
+  //       setBatchCounter(batchCounter+1);
+  //       console.log("Odchyteny event BatchCreated s argumentami: " + batchId, productName);
+  //     }); 
+  // }    
 
   return (
     <div>
@@ -175,8 +183,8 @@ export const AdminDomain = () => {
         tableUsers ? <TableOfUsers userList={userList} changeUserListState={changeUserListState} userCounter={userCounter}></TableOfUsers> : <div></div>
         }
       </div>
-      {formPrivillege && <FormPrivillege changeFormPrivillegeState={changeFormPrivillegeState} changeClassName={changeClassName}></FormPrivillege>}
-      {formCreateBatch && <FormCreateBatch userList={userList} changeFormCreateBatchState={changeFormCreateBatchState} changeClassName={changeClassName}></FormCreateBatch>}
+      {formPrivillege && <FormPrivillege addUserCounter={addUserCounter}  changeFormPrivillegeState={changeFormPrivillegeState} changeClassName={changeClassName}></FormPrivillege>}
+      {formCreateBatch && <FormCreateBatch addBatchCounter={addBatchCounter} userList={userList} changeFormCreateBatchState={changeFormCreateBatchState} changeClassName={changeClassName}></FormCreateBatch>}
     </div>
   );
 }

@@ -7,11 +7,12 @@ import ReactDOM from "react-dom";
 import { ContractReceipt, ContractTransaction } from 'ethers';
 
 interface FormPrivillegeProps {
+    addUserCounter: () => void;
     changeFormPrivillegeState: (arg: boolean) => void;
     changeClassName: (arg: string) => void;
 }
 
-export const FormPrivillege: React.FC<FormPrivillegeProps> = ({changeFormPrivillegeState, changeClassName}) => {
+export const FormPrivillege: React.FC<FormPrivillegeProps> = ({addUserCounter, changeFormPrivillegeState, changeClassName}) => {
     const supplychain = useContext(SupplyChainContext);
     const addressInput= useRef<HTMLInputElement>(null);
     const nameInput = useRef<HTMLInputElement>(null);
@@ -31,11 +32,13 @@ export const FormPrivillege: React.FC<FormPrivillegeProps> = ({changeFormPrivill
                 if(role === "Signatory"){
                     setPrivillegeTx = await supplychain.instance.setPrivillegeSignatory(address, name);
                     const receipt: ContractReceipt = await setPrivillegeTx.wait();
+                    addUserCounter();
                     // @ts-ignore
                     console.log("Adresa:" , receipt.events[0].args[0], "Meno clen: ", receipt.events[0].args[1], "Rola: " , receipt.events[0].args[2]);
                 } else if (role === "Supplier") {
                     setPrivillegeTx = await supplychain.instance.setPrivillegeSupplier(address, name);
                     const receipt: ContractReceipt = await setPrivillegeTx.wait();
+                    addUserCounter();
                     // @ts-ignore
                     console.log("Adresa:" , receipt.events[0].args[0], "Meno clen: ", receipt.events[0].args[1], "Rola: " , receipt.events[0].args[2]);
                 } else {

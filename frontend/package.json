@@ -23,6 +23,7 @@
     "react-qr-reader": "^3.0.0-beta-1",
     "react-scripts": "3.4.3",
     "typescript": "^3.9.7",
+    "use-state-if-mounted": "^1.0.4",
     "web3modal": "^1.9.1"
   },
   "scripts": {

@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext, useEffect, useRef, useState } from 'react';
 // import { SupplyChain } from './hardhat/typechain/SupplyChain';
 // import { Greeter } from './components/Greeter';
 // import { Greeter } from './components/Greeter';
@@ -20,9 +20,12 @@ interface User {
   supplierRole: boolean;
 }
 
+
+
 export const SignatoryDomain = () => {
+
     const [currentBatchId, setCurrentBatchId] = useState("");
-    const [changedBatch, setChangedBatch] = useState("");
+    const [changedSignatoryBatch, setSignatoryChangedBatch] = useState("");
     const [currentStageFee, setCurrentStageFee] = useState("");
     const [classComponentName, setClassComponentName] = useState("App");
     const [userList, setUserList] = useState<Array<User>>([]);
@@ -39,13 +42,17 @@ export const SignatoryDomain = () => {
       setClassComponentName(classComponentName);
     } 
 
-   if(supplychain.instance){
-    supplychain.instance.on("StageCompleted", (batchId, stageName) => {
-      setChangedBatch(batchId);
-          // setCurrentBatchId("");
-        console.log("Odchyteny event s argumentami: " + batchId, stageName);
-    });
-}    
+    const setProccessedBatch = (batchId: string):void => {
+      setSignatoryChangedBatch(batchId);
+    }
+
+//    if(supplychain.instance){
+//     supplychain.instance.on("StageCompleted", (batchId, stageName) => {
+//       setSignatoryChangedBatch(batchId);
+//           // setCurrentBatchId("");
+//       console.log("Odchyteny event StageCompleted s argumentami: " + batchId, stageName);
+//     });
+// }    
 
   useEffect(() => {
     // while(!supplychain.instance){
@@ -112,9 +119,9 @@ export const SignatoryDomain = () => {
   return (
     <div>     
       <div className={classComponentName}>
-        <TableOfSignatoryBatches changedBatch={changedBatch} changeClassName={changeClassName} selectBatch={selectBatch}></TableOfSignatoryBatches>
+        <TableOfSignatoryBatches changedSignatoryBatch={changedSignatoryBatch} changeClassName={changeClassName} selectBatch={selectBatch}></TableOfSignatoryBatches>
       </div>
-      {currentBatchId && <FormStartStage userList={userList} selectBatch={selectBatch} currentBatchId={currentBatchId} currentStageFee={currentStageFee} changeClassName={changeClassName}></FormStartStage>}
+      {currentBatchId && <FormStartStage setProccessedBatch={setProccessedBatch} userList={userList} selectBatch={selectBatch} currentBatchId={currentBatchId} currentStageFee={currentStageFee} changeClassName={changeClassName}></FormStartStage>}
   </div>
 
   );

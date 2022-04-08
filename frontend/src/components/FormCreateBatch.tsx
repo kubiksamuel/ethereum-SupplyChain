@@ -18,12 +18,13 @@ interface User {
   }
 
 interface FormCreateBatchProps {
+    addBatchCounter: () => void;
     changeFormCreateBatchState: (arg: boolean) => void;
     changeClassName: (arg: string) => void;
     userList: Array<User>;
 }
 
-export const FormCreateBatch: React.FC<FormCreateBatchProps> = ({changeFormCreateBatchState, changeClassName, userList}) => {
+export const FormCreateBatch: React.FC<FormCreateBatchProps> = ({addBatchCounter, changeFormCreateBatchState, changeClassName, userList}) => {
     const supplychain = useContext(SupplyChainContext);
     const addressInput= useRef<HTMLSelectElement>(null);
     const nameInput = useRef<HTMLInputElement>(null);
@@ -45,6 +46,7 @@ export const FormCreateBatch: React.FC<FormCreateBatchProps> = ({changeFormCreat
             try{
                 createBatchTx = await supplychain.instance.createBatch(name, address, date, ipfsHash);
                 const receipt: ContractReceipt = await createBatchTx.wait();
+                addBatchCounter();
                 // @ts-ignore
                 console.log("Batch id:" , receipt.events[2].args[0], "Nazov stagu: ", receipt.events[2].args[1], "Ipfs hash: " , receipt.events[2].args[2]);
             } catch {
@@ -76,7 +78,7 @@ export const FormCreateBatch: React.FC<FormCreateBatchProps> = ({changeFormCreat
                      <Form.Select id="memberRole" ref={addressInput} >
                      { 
                         userList.map(user => (
-                            user.signatoryRole && <option key={user.userAddress} value={user.userAddress}>{user.userName}</option>
+                            user.signatoryRole && user.userId != 1 && <option key={user.userAddress} value={user.userAddress}>{user.userName}</option>
                         ))}
                      </Form.Select>
                      {/* <Form.Label htmlFor="signatoryAddress">Adresa schvaľovateľa:</Form.Label>

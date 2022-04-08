@@ -36,6 +36,7 @@
   "homepage": "https://github.com/symfoni/hardhat-react-boilerplate#readme",
   "dependencies": {
     "@openzeppelin/contracts": "^4.5.0",
-    "ipfs-http-client": "^56.0.1"
+    "ipfs-http-client": "^56.0.1",
+    "use-state-if-mounted": "^1.0.4"
   }
 }

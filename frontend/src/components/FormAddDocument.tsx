@@ -9,12 +9,13 @@ import * as ipfs from '../functionality/Ipfs';
 import { Buffer } from 'buffer';
 
 interface FormAddDocumentProps {
+    setProccessedBatch: (batchId: string) => void;
     currentBatchId: string;
     changeClassName: (classComponentName: string) => void;
     selectBatch: (batchId: string) => void; 
 }
 
-export const FormAddDocument: React.FC<FormAddDocumentProps> = ({currentBatchId, changeClassName, selectBatch}) => {
+export const FormAddDocument: React.FC<FormAddDocumentProps> = ({setProccessedBatch, currentBatchId, changeClassName, selectBatch}) => {
     const supplychain = useContext(SupplyChainContext);
     const temporaryBatchId = useRef<HTMLInputElement>(null);
     const textInput = useRef<HTMLTextAreaElement>(null);
@@ -34,6 +35,8 @@ export const FormAddDocument: React.FC<FormAddDocumentProps> = ({currentBatchId,
             try{
                 addDocumentTx = await supplychain.instance.addDocumentBySupplier(batchId, ipfsHash, date);
                 const receipt: ContractReceipt = await addDocumentTx.wait();
+                // @ts-ignore
+                setProccessedBatch(receipt.events[0].args[0]);
                 // @ts-ignore
                 console.log("Batch id:" , receipt.events[0].args[0], "Nazov stagu: ", receipt.events[0].args[1], "Ipfs hash: " , receipt.events[0].args[2]);
             } catch {
@@ -67,7 +70,7 @@ export const FormAddDocument: React.FC<FormAddDocumentProps> = ({currentBatchId,
                 </div>
                 <hr/>
                 <div className='submitButton'>
-                    <Button type="button" onClick={(e) => addDocument(e)}>Potvrdiť</Button>
+                    <Button variant="outline-primary" type="button" onClick={(e) => addDocument(e)}>Potvrdiť</Button>
                 </div>
             </fieldset>
         </Form>

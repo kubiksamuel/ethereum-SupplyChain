@@ -131,7 +131,7 @@ const receiveFinishedBatch = async (batchId: string, stageCount: number) => {
                         } 
                             } icon={faClipboardList} />
                     {
-                        batch.isFinished && <FontAwesomeIcon onClick={() =>{
+                        batch.isFinished && batch.stageCount == 1 && <FontAwesomeIcon onClick={() =>{
                             receiveFinishedBatch(batch.batchId, batch.stageCount);
                         } 
                             } icon={faBoxOpen} />

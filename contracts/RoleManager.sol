@@ -28,7 +28,7 @@ contract RoleManager is AccessControlEnumerable {
         roleId = 1;
         _grantRole(DEFAULT_ADMIN_ROLE, msg.sender);
         _grantRole(SIGNATORY_ROLE, msg.sender);
-        _grantRole(SUPPLIER_ROLE, msg.sender);
+        // _grantRole(SUPPLIER_ROLE, msg.sender);
         rolesInfo[msg.sender].name = name;
         rolesInfo[msg.sender].id = roleId;
         roles.push(msg.sender);
@@ -37,26 +37,34 @@ contract RoleManager is AccessControlEnumerable {
     function setPrivillegeSupplier(address account, string memory name) public 
         onlyRole(DEFAULT_ADMIN_ROLE)
     {
+        require(rolesInfo[account].id == 0, "Account already have some privillege");
         _grantRole(SUPPLIER_ROLE, account);
+        roleId++;
+        rolesInfo[account].id = roleId;
         rolesInfo[account].name = name;
-        if(rolesInfo[account].id == 0) {
-            roleId++;
-            rolesInfo[account].id = roleId;
-            roles.push(account);
-        }
+        roles.push(account);
+        // if(rolesInfo[account].id == 0) {
+        //     roleId++;
+        //     rolesInfo[account].id = roleId;
+        //     roles.push(account);
+        // }
         emit MemberAdded(account, name, "supplier");
     }
 
     function setPrivillegeSignatory(address account, string memory name) public
         onlyRole(DEFAULT_ADMIN_ROLE) 
     {
+        require(rolesInfo[account].id == 0, "Account already have some privillege");
         _grantRole(SIGNATORY_ROLE, account);
+        roleId++;
+        rolesInfo[account].id = roleId;
         rolesInfo[account].name = name;
-        if(rolesInfo[account].id == 0) {
-            roleId++;
-            rolesInfo[account].id = roleId;
-            roles.push(account);
-        }
+        roles.push(account);
+        // if(rolesInfo[account].id == 0) {
+        //     roleId++;
+        //     rolesInfo[account].id = roleId;
+        //     roles.push(account);
+        // }
         emit MemberAdded(account, name, "signator");
     }
 }

@@ -51,6 +51,7 @@ contract SupplyChain is RoleManager("Administrator") {
         string stageName;
         uint256 stage;
         uint256 supplierFee;
+        bool toProccess;
     }
 
     modifier enoughEthers(bytes32 batchId) {
@@ -107,23 +108,41 @@ contract SupplyChain is RoleManager("Administrator") {
         }
 
         uint256 index = 0;
+        bool isIncluded;
 
         for (uint256 i = 0; i < getListLength(); i++) {
+            AddressStageView memory stageView;  
+            isIncluded = false;
             for (uint256 stage = 1; stage <= batches[listOfIds[i]].stageCount; stage++) {
                 if (
                     batchStages[listOfIds[i]][stage].signatory == msg.sender 
                     // && batchStages[listOfIds[i]][stage].state == State.PREPARED
                 ) {
-                    AddressStageView memory stageView;
+                    // if(isIncluded && batchStages[listOfIds[i]][stage].state == State.PREPARED) {
+                    //     stageView.toProccess = true;
+
+                    //     stageView.batchId = listOfIds[i];
+                    //     stageView.productName= batches[listOfIds[i]].productName;
+                    //     stageView.stage = stage;
+                    //     stageView.stageName = batchStages[listOfIds[i]][batches[listOfIds[i]].stageCount].name;
+                    //     stageView.supplierFee = batchStages[listOfIds[i]][batches[listOfIds[i]].stageCount].supplierFee;
+                    // } else {
+                    if (batchStages[listOfIds[i]][stage].state == State.PREPARED) {
+                        stageView.toProccess = true;    
+                    }
+                    isIncluded = true;
                     stageView.batchId = listOfIds[i];
                     stageView.productName= batches[listOfIds[i]].productName;
                     stageView.stage = stage;
                     stageView.stageName = batchStages[listOfIds[i]][batches[listOfIds[i]].stageCount].name;
                     stageView.supplierFee = batchStages[listOfIds[i]][batches[listOfIds[i]].stageCount].supplierFee;
-                    results[index] = stageView;
-                    index++;
-                    break;
+                    // }
+
                 }
+            }
+            if(isIncluded) {
+                results[index] = stageView;
+                index++;
             }
         }
         states = results;
@@ -154,24 +173,41 @@ contract SupplyChain is RoleManager("Administrator") {
         }
 
         uint256 index = 0;
+        bool isIncluded;
 
-        
         for (uint256 i = 0; i < getListLength(); i++) {
+            AddressStageView memory stageView;  
+            isIncluded = false;
             for (uint256 stage = 1; stage <= batches[listOfIds[i]].stageCount; stage++) {
                 if (
                     batchStages[listOfIds[i]][stage].supplier == msg.sender 
-                    // && batchStages[listOfIds[i]][stage].state == State.STARTED
+                    // && batchStages[listOfIds[i]][stage].state == State.PREPARED
                 ) {
-                    AddressStageView memory stageView;
+                    // if(isIncluded && batchStages[listOfIds[i]][stage].state == State.PREPARED) {
+                    //     stageView.toProccess = true;
+
+                    //     stageView.batchId = listOfIds[i];
+                    //     stageView.productName= batches[listOfIds[i]].productName;
+                    //     stageView.stage = stage;
+                    //     stageView.stageName = batchStages[listOfIds[i]][batches[listOfIds[i]].stageCount].name;
+                    //     stageView.supplierFee = batchStages[listOfIds[i]][batches[listOfIds[i]].stageCount].supplierFee;
+                    // } else {
+                    if (batchStages[listOfIds[i]][stage].state == State.STARTED) {
+                        stageView.toProccess = true;    
+                    }
+                    isIncluded = true;
                     stageView.batchId = listOfIds[i];
                     stageView.productName= batches[listOfIds[i]].productName;
                     stageView.stage = stage;
                     stageView.stageName = batchStages[listOfIds[i]][batches[listOfIds[i]].stageCount].name;
                     stageView.supplierFee = batchStages[listOfIds[i]][batches[listOfIds[i]].stageCount].supplierFee;
-                    results[index] = stageView;
-                    index++;
-                    break;
+                    // }
+
                 }
+            }
+            if(isIncluded) {
+                results[index] = stageView;
+                index++;
             }
         }
         states = results;

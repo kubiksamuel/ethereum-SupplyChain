@@ -19,6 +19,7 @@ interface User {
   }
 
 interface FormStartStageProps {
+    setProccessedBatch: (batchId: string) => void;
     currentBatchId: string;
     currentStageFee: string;
     changeClassName: (classComponentName: string) => void;
@@ -26,7 +27,7 @@ interface FormStartStageProps {
     userList: Array<User>;
 }
 
-export const FormStartStage: React.FC<FormStartStageProps> = ({currentBatchId, currentStageFee, changeClassName, selectBatch, userList}) => {
+export const FormStartStage: React.FC<FormStartStageProps> = ({setProccessedBatch, currentBatchId, currentStageFee, changeClassName, selectBatch, userList}) => {
     const supplychain = useContext(SupplyChainContext);
     const temporaryBatchId = useRef<HTMLInputElement>(null);
     const addressSupplierInput= useRef<HTMLSelectElement>(null);
@@ -55,7 +56,8 @@ export const FormStartStage: React.FC<FormStartStageProps> = ({currentBatchId, c
                 startStageTx = await supplychain.instance.startStage(batchId, addressSupplier, addressSignatory, stagePrice, stageName, date,
                                                                          {value: currentStageFee});
                 const receipt: ContractReceipt = await startStageTx.wait();
-
+                //@ts-ignore
+                setProccessedBatch(receipt.events[0].args[0]);
                 // @ts-ignore
                 console.log("Batch id:" , receipt.events[0].args[0], "Nazov ukonceneho stagu: ", receipt.events[0].args[1]);
                 // @ts-ignore
@@ -120,7 +122,7 @@ export const FormStartStage: React.FC<FormStartStageProps> = ({currentBatchId, c
                  </div>
                 <hr/>
                 <div className='submitButton'>
-                    <Button type="button" onClick={(e) => createBatch(e)}>Submit</Button>
+                    <Button variant="outline-primary" type="button" onClick={(e) => createBatch(e)}>Submit</Button>
                 </div>
 
             </fieldset>
