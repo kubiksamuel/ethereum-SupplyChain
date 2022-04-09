@@ -4,9 +4,11 @@ import React, { useContext, useEffect, useRef, useState } from 'react';
 // import { Greeter } from './components/Greeter';
 import { TableOfSignatoryBatches } from './TableOfSignatoryBatches';
 import { FormStartStage } from './FormStartStage';
+import { FormAddDocument } from './FormAddDocument';
+import {EmployerInfohead} from './EmployerInfohead'
 import { SupplyChainContext } from "./../hardhat/SymfoniContext";
 import * as usersGetter from '../functionality/UsersGetter';
-
+import {RoleContext} from "../App";
 
 import { Button } from 'react-bootstrap';
 import ReactDOM from "react-dom";
@@ -21,9 +23,19 @@ interface User {
   supplierRole: boolean;
 }
 
+interface Batch {
+  batchId: string;
+  productName: string;
+  stageName: string;
+  stageOrder: number;
+  supplierFee: string;
+  toProccess: boolean;
+}
+
 
 
 export const SignatoryDomain = () => {
+    const currentRole = useContext(RoleContext);
 
     const [currentBatchId, setCurrentBatchId] = useState("");
     const [changedSignatoryBatch, setSignatoryChangedBatch] = useState("");
@@ -31,12 +43,24 @@ export const SignatoryDomain = () => {
     const [classComponentName, setClassComponentName] = useState("App");
     const [userList, setUserList] = useState<Array<User>>([]);
     const [formStartStage, setFormStartStage] = useState(false);
+    const [formAddDocument, setFormAddDocument] = useState(false);
+    const [inProccessBatchCounter, setInProccessBatchCounter] = useState(0);
+    const [finishedBatchCounter, setFinishedBatchCounter] = useState(0);
     const supplychain = useContext(SupplyChainContext);
-
-    const [tableFinishedBatches, setTableFinishedBatches] = useState(false);
     const [tableInProccessBatches, setTableInProccessBatches] = useState(false);
+    const [tableFinishedBatches, setTableFinishedBatches] = useState(false);
+    const [batchList, setBatchList] = useState<Array<Batch>>([]);
 
-    
+
+
+    const changeTableInProccessBatchesState = (showTable: boolean):void => {
+      setTableInProccessBatches(showTable);
+    }
+
+    const changeTableFinishedBatchesState = (showTable: boolean):void => {
+      setTableFinishedBatches(showTable);
+    }
+
     const selectBatch = (batchId: string, stageFee: string):void => {
         setCurrentBatchId(batchId);
         setCurrentStageFee(stageFee)
@@ -47,30 +71,49 @@ export const SignatoryDomain = () => {
     } 
 
     const setProccessedBatch = (batchId: string):void => {
+      for(let i = 0 ; i < inProccessBatchCounter+finishedBatchCounter; i++){
+        if(batchList[i].batchId === batchId){
+          batchList[i].toProccess = false;
+        }
+      }
       setSignatoryChangedBatch(batchId);
+      setInProccessBatchCounter(inProccessBatchCounter-1);
+      setFinishedBatchCounter(finishedBatchCounter+1);
     }
 
     const changeFormStartStageState = (showForm: boolean):void => {
       setFormStartStage(showForm);
     } 
 
-//    if(supplychain.instance){
-//     supplychain.instance.on("StageCompleted", (batchId, stageName) => {
-//       setSignatoryChangedBatch(batchId);
-//           // setCurrentBatchId("");
-//       console.log("Odchyteny event StageCompleted s argumentami: " + batchId, stageName);
-//     });
-// }    
+    const changeFormAddDocumentState = (showForm: boolean):void => {
+      setFormAddDocument(showForm);
+    } 
 
-  useEffect(() => {
-    // while(!supplychain.instance){
-        
-    // }
+    const changeBatchListsLength = (inProccessBatchLength: number, finishedBatchLength: number):void => {
+      setInProccessBatchCounter(inProccessBatchLength);
+      setFinishedBatchCounter(finishedBatchLength);
+    } 
+
+  const resetState = () => {
+      setFormAddDocument(false);
+      setFormStartStage(false);
+      changeTableFinishedBatchesState(false);
+      setTableInProccessBatches(false);
+      setCurrentBatchId("");
+    } 
+
+  useEffect(() => {        
     usersGetter.getUsers(supplychain).then((gotUserList) => {
       if(gotUserList) {
         setUserList(gotUserList);
       }
     });
+    usersGetter.getBatchesItems(supplychain, currentRole).then((data) => {
+      if(data) {
+          setBatchList(data.batchList);
+          changeBatchListsLength(data.inProccessBatchLength, data.finishedBatchLength)
+      }
+  });
   },[supplychain.instance]); 
 
 //   useEffect(() => {
@@ -125,14 +168,21 @@ export const SignatoryDomain = () => {
 //   };
 
   return (
-    <div>     
+    <div>
+      <EmployerInfohead inProccessBatchCounter={inProccessBatchCounter} finishedBatchCounter={finishedBatchCounter} changeClassName={changeClassName} resetState={resetState}
+           changeTableFinishedBatchesState={changeTableFinishedBatchesState} changeTableInProccessBatchesState= {changeTableInProccessBatchesState}></EmployerInfohead>     
       <div className={classComponentName}>
-      {currentBatchId && !formStartStage ?<StackOfStages selectedBatchId={currentBatchId}></StackOfStages> :
-        <TableOfSignatoryBatches changedSignatoryBatch={changedSignatoryBatch} changeClassName={changeClassName} selectBatch={selectBatch}
-          changeFormStartStageState={changeFormStartStageState}></TableOfSignatoryBatches>}
+      {currentBatchId && !formStartStage && !formAddDocument ?<StackOfStages selectedBatchId={currentBatchId}></StackOfStages> :
+        tableInProccessBatches ? <TableOfSignatoryBatches batchesType={"inProccess"} changedSignatoryBatch={changedSignatoryBatch} changeClassName={changeClassName} selectBatch={selectBatch} batchList={batchList}
+          changeFormStartStageState={changeFormStartStageState} changeFormAddDocumentState={changeFormAddDocumentState} changeBatchListsLength={changeBatchListsLength}></TableOfSignatoryBatches> :
+          tableFinishedBatches ? <TableOfSignatoryBatches batchesType={"finished"} changedSignatoryBatch={changedSignatoryBatch} changeClassName={changeClassName} selectBatch={selectBatch} batchList={batchList}
+          changeFormStartStageState={changeFormStartStageState} changeFormAddDocumentState={changeFormAddDocumentState} changeBatchListsLength={changeBatchListsLength}></TableOfSignatoryBatches> :
+          <div></div>}
       </div>
       {currentBatchId && formStartStage && <FormStartStage setProccessedBatch={setProccessedBatch} userList={userList} selectBatch={selectBatch} currentBatchId={currentBatchId}
        currentStageFee={currentStageFee} changeClassName={changeClassName}  changeFormStartStageState={changeFormStartStageState}></FormStartStage>}
+      {currentBatchId && formAddDocument &&<FormAddDocument setProccessedBatch={setProccessedBatch} currentBatchId={currentBatchId} 
+                                                selectBatch={selectBatch} changeClassName={changeClassName}></FormAddDocument>}
   </div>
 
   );

@@ -10,8 +10,8 @@ import { Buffer } from 'buffer';
 import { ethers } from 'ethers';
 import * as usersGetter from '../functionality/UsersGetter';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faClipboardList, faPeopleCarryBox } from '@fortawesome/free-solid-svg-icons';
-
+import { faClipboardList, faPeopleCarryBox, faPenToSquare } from '@fortawesome/free-solid-svg-icons';
+import {RoleContext} from "../App";
 
 interface Batch {
     batchId: string;
@@ -23,38 +23,38 @@ interface Batch {
   }
 
 interface TableOfSignatoryBatchesProps {
+    batchesType: string;
     selectBatch: (currentBatchId: string, stageFee: string ) => void;
     changeClassName: (classComponentName: string) => void;
     changedSignatoryBatch: string;
     changeFormStartStageState: (showTable: boolean) => void;
+    changeFormAddDocumentState: (showTable: boolean) => void;
+    changeBatchListsLength: (inProccessBatchLength: number, finishedBatchLength: number) => void;
+    batchList: Array<Batch>;
 }
 
 
-export const TableOfSignatoryBatches: React.FC<TableOfSignatoryBatchesProps> = ({selectBatch, changeClassName, changedSignatoryBatch, changeFormStartStageState}) => {
+export const TableOfSignatoryBatches: React.FC<TableOfSignatoryBatchesProps> = ({batchesType, selectBatch, changeClassName, changedSignatoryBatch,
+     changeFormStartStageState, changeFormAddDocumentState, changeBatchListsLength, batchList}) => {
+    const currentRole = useContext(RoleContext);
     const supplychain = useContext(SupplyChainContext);
     // const [currentBatchId, setCurrentBatchId] = useState("");
-    const [batchList, setBatchList] = useState<Array<Batch>>([]);
+    // const [batchList, setBatchList] = useState<Array<Batch>>([]);
     const [buttonTitle, setButtonTitle] = useState("");
     const batchIdCell = useRef("");
 
-    // if(supplychain.instance){
-    //     supplychain.instance.on("BatchCreated", (batchId, productName) => {
-    //         setCurrentBatchId(batchId);
-    //         console.log("Odchyteny event s argumentami: " + batchId, productName);
+
+    // useEffect(() => {
+    //     console.log("USEEFFECT V SIGNATORY");
+    //     // while(!supplychain.instance){
+    //     usersGetter.getBatchesItems(supplychain, currentRole).then((data) => {
+    //         if(data) {
+    //             setBatchList(data.batchList);
+    //             changeBatchListsLength(data.inProccessBatchLength, data.finishedBatchLength)
+    //         }
     //     });
-    // }
-
-    useEffect(() => {
-        console.log("USEEFFECT V SIGNATORY");
-        // while(!supplychain.instance){
-        usersGetter.getBatchesItems(supplychain, "supplier").then((batchParsedList) => {
-            if(batchParsedList) {
-                setBatchList(batchParsedList);
-
-            }
-        });
-        //  getBatchesItems();
-      },[changedSignatoryBatch]); 
+    //     //  getBatchesItems();
+    //   },[changedSignatoryBatch]); 
 
 
 
@@ -90,12 +90,9 @@ export const TableOfSignatoryBatches: React.FC<TableOfSignatoryBatchesProps> = (
         console.log("Button: " + batchId);
      }
 
-//0x3a29d55240ac7bee227031e99145c06379bc38eccc9fd284e379afdd74ba3e62
-//0xdc0139ade58967564f05e409f527e73079686e7b21fade2366fbc1f526a6b16d
-
 
     return (
-        <div>
+        <div className='Table'>
             {/* <Button onClick={getBatchesItems}>Submit console</Button> */}
             <Table striped bordered hover variant="dark">
             <thead>
@@ -104,13 +101,14 @@ export const TableOfSignatoryBatches: React.FC<TableOfSignatoryBatchesProps> = (
                 <th>Názov produktu</th>
                 <th>Názov etapy</th>
                 <th>Poradie etapy</th>
-                <th>Platba za etapu</th>
+                <th>{currentRole == "signatory" ? "Poplatok za etapu" : "Odmena za etapu" }</th>
                 <th>Akcie</th>
                 </tr>
             </thead>
             <tbody>
             {
             batchList.map(batch => (
+            ((batchesType == "finished" && batch.toProccess == false) || (batchesType=="inProccess" && batch.toProccess)) && 
             <tr key={batch.batchId}>
                 <td>{batch.batchId}</td>
                 <td>{batch.productName}</td>
@@ -129,7 +127,7 @@ export const TableOfSignatoryBatches: React.FC<TableOfSignatoryBatchesProps> = (
                     </OverlayTrigger>
 
                     
-                    {batch.toProccess && 
+                    {batch.toProccess && currentRole == "signatory" ?
                 //  <Button onClick={() =>{
                 //     printBatchId(batch.batchId);
                 //     selectBatch(batch.batchId, batch.supplierFee);    
@@ -149,7 +147,23 @@ export const TableOfSignatoryBatches: React.FC<TableOfSignatoryBatchesProps> = (
                             changeClassName("belowLayer");
                             changeFormStartStageState(true);
                     }}><FontAwesomeIcon size="lg" icon={faPeopleCarryBox}/></Button>
-                    </OverlayTrigger>}
+                    </OverlayTrigger> : 
+                                        batch.toProccess &&
+                                        <OverlayTrigger
+                                        placement="top"
+                                        overlay={
+                                            <Tooltip id="tooltip-top">
+                                            Pridať <strong>údaje o výrobe</strong> v danej etape.  
+                                            </Tooltip>
+                                        }>
+                                            <Button className='iconButtons' variant="light" onClick={() =>{
+                                                printBatchId(batch.batchId);
+                                                selectBatch(batch.batchId, batch.supplierFee);    
+                                                changeClassName("belowLayer");
+                                                changeFormAddDocumentState(true);
+                                        }}><FontAwesomeIcon size="lg" icon={faPenToSquare}/></Button>
+                        </OverlayTrigger>                
+                    }
                     </div>
                     </td>
 

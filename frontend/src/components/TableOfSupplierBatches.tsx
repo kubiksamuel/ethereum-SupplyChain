@@ -46,7 +46,7 @@ export const TableOfSupplierBatches: React.FC<TableOfSupplierBatchesProps> = ({s
         // while(!supplychain.instance){
         usersGetter.getBatchesItems(supplychain, "supplier").then((batchParsedList) => {
             if(batchParsedList) {
-                setBatchList(batchParsedList);
+                setBatchList(batchParsedList.batchList);
 
             }
         });

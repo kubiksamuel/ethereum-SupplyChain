@@ -1,4 +1,5 @@
 import { Children } from 'react';
+import { finished } from 'stream';
 import { SymfoniSupplyChain } from "./../hardhat/SymfoniContext";
 
 
@@ -19,6 +20,12 @@ interface Batch {
     supplierFee: string;
     toProccess: boolean;
     }   
+
+interface SignatoryData{
+    batchList: Array<Batch>;
+    inProccessBatchLength: number;
+    finishedBatchLength: number;
+    }  
 
 
 export const getUsers = async (supplychain: SymfoniSupplyChain) => {
@@ -73,7 +80,6 @@ export const getUsers = async (supplychain: SymfoniSupplyChain) => {
             let finishedBatchLength = 0 ;
             let inProccessBatchLength = 0 ;
 
-
             const listLengthBN = await supplychain.instance.getListLength();
             const listLength = listLengthBN.toNumber();
             for(let i = 0; i < listLength; i++){
@@ -104,7 +110,10 @@ export const getUsers = async (supplychain: SymfoniSupplyChain) => {
     if (!supplychain.instance) throw Error("SupplyChain instance not ready");
     if (supplychain.instance) {
         try{
-            const batchParsedList = [];
+            let batchParsedList: Array<Batch>;
+            batchParsedList = [];
+            let inProccessBatchLength = 0;
+            let finishedBatchLength = 0;
             let listOfWaitingBatches;
             if(typeOfView == "signatory") {
                 listOfWaitingBatches = await supplychain.instance.getSignatoryView();
@@ -120,13 +129,20 @@ export const getUsers = async (supplychain: SymfoniSupplyChain) => {
                 let stageOrder = batch.stage.toNumber();
                 let supplierFee = batch.supplierFee.toString();
                 let toProccess = batch.toProccess;
+                if(toProccess) {
+                    inProccessBatchLength++;
+                } else {
+                    finishedBatchLength++;
+                }
                 console.log("To proceess: " + batch.toProccess);
                 let batchItem: Batch = {batchId: batchId, productName: productName, stageOrder: stageOrder, stageName: stageName, supplierFee: supplierFee,
                     toProccess: toProccess};
                 console.log("Batch: " + batchItem);
                 batchParsedList.push(batchItem)
             }
-            return batchParsedList;
+            const signatortData: SignatoryData = { batchList: batchParsedList, inProccessBatchLength: inProccessBatchLength, finishedBatchLength: finishedBatchLength};
+
+            return signatortData;
         } catch {
             console.log("Nastala neocakavana chyba");
         }

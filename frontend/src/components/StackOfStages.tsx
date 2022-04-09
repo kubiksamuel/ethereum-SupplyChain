@@ -113,7 +113,7 @@ const printStages = async() => {
         <Stack gap={3}>
             {stageList.map(stage => (
             <div key={stage.stageOrder}>
-            {stage.stageOrder>1 && <FontAwesomeIcon icon={faAnglesDown} size="lg"/>}
+            {stage.stageOrder>1 && <FontAwesomeIcon icon={faAnglesDown} size="4x"/>}
             <StageCard stage={stage}></StageCard>
             </div>
             ))}

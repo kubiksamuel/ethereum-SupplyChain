@@ -117,9 +117,7 @@ export const AdminDomain = () => {
 
     
   const selectBatch = (batchId: string):void => {
-    console.log("Batch pred: " + selectedBatchId)
     setSelectedBatchId(batchId);
-    console.log("Batch po: " + selectedBatchId)
   }
 
   const changeFormCreateBatchState = (showForm: boolean):void => {

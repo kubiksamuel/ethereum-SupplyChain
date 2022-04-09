@@ -22,6 +22,7 @@
     "react-dom": "^16.14.0",
     "react-qr-reader": "^3.0.0-beta-1",
     "react-scripts": "3.4.3",
+    "react-table-filter": "^2.0.2",
     "typescript": "^3.9.7",
     "use-state-if-mounted": "^1.0.4",
     "web3modal": "^1.9.1"
@@ -50,6 +51,7 @@
   "devDependencies": {
     "@ethersproject/contracts": "^5.4.1",
     "@ethersproject/providers": "^5.4.3",
-    "@types/identicon.js": "^2.3.1"
+    "@types/identicon.js": "^2.3.1",
+    "@types/react-table-filter": "^1.0.2"
   }
 }

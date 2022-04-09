@@ -12,7 +12,7 @@ interface FormAddDocumentProps {
     setProccessedBatch: (batchId: string) => void;
     currentBatchId: string;
     changeClassName: (classComponentName: string) => void;
-    selectBatch: (batchId: string) => void; 
+    selectBatch: (batchId: string, stageFee: string) => void; 
 }
 
 export const FormAddDocument: React.FC<FormAddDocumentProps> = ({setProccessedBatch, currentBatchId, changeClassName, selectBatch}) => {
@@ -49,7 +49,7 @@ export const FormAddDocument: React.FC<FormAddDocumentProps> = ({setProccessedBa
         <Form>
             <div className="bg-dark p-1 closeButton">
                 <CloseButton onClick={() =>{
-                                selectBatch("");
+                                selectBatch("", "");
                                 changeClassName("App");
                             }}  variant="white" />
             </div>

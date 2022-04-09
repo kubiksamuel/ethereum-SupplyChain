@@ -51,7 +51,6 @@ export const AdminInfohead: React.FC<AdminInfoheadProps> = ({changeFormCreateBat
                 <div className='adminInfobody'>
                     <div>
                         <FontAwesomeIcon icon={faUsers} size="4x" />
-
                     </div>
                     <div className='adminInfocounter'>
                         {userCounter}
@@ -78,7 +77,7 @@ export const AdminInfohead: React.FC<AdminInfoheadProps> = ({changeFormCreateBat
                 </div>
                 <div className='adminInfobody'>
                     <div>
-                        <FontAwesomeIcon icon={faBoxesStacked} size="4x" />
+                        <FontAwesomeIcon className='inProccess' icon={faBoxesStacked} size="4x" />
                     </div>
                     <div className='adminInfocounter'>
                         {inProccessBatchCounter}
@@ -106,7 +105,7 @@ export const AdminInfohead: React.FC<AdminInfoheadProps> = ({changeFormCreateBat
                 </div>
                 <div className='adminInfobody'>
                     <div>
-                        <FontAwesomeIcon icon={faBoxesStacked} size="4x" />
+                        <FontAwesomeIcon className='success' icon={faBoxesStacked} size="4x"/>
                     </div>
                     <div className='adminInfocounter'>
                         {finishedBatchCounter}

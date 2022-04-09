@@ -4,8 +4,9 @@ import { SupplyChainContext, Symfoni } from "./../hardhat/SymfoniContext";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faClipboardList } from '@fortawesome/free-solid-svg-icons'
 import { faCircleCheck } from '@fortawesome/free-solid-svg-icons'
-import { faBan } from '@fortawesome/free-solid-svg-icons'
-
+import { faBan } from '@fortawesome/free-solid-svg-icons';
+import TableFilter from 'react-table-filter';
+import "react-table-filter/lib/styles.css";
 
 import { useRef, useContext, useState, useEffect } from "react";
 import ReactDOM from "react-dom";
@@ -31,6 +32,9 @@ interface TableOfUsersProps {
 
 export const TableOfUsers: React.FC<TableOfUsersProps> = ({userList}) => {
     const supplychain = useContext(SupplyChainContext);
+
+
+
     // const [userList, setUserList] = useState<Array<User>>([]);
 
     // const [currentBatchId, setCurrentBatchId] = useState("");
@@ -45,16 +49,17 @@ export const TableOfUsers: React.FC<TableOfUsersProps> = ({userList}) => {
 
 
     return (
+    <div>
         <div className='Table'>
             <Table striped bordered hover variant="dark">
                 <thead>
                     <tr>
-                    <th>ID používateľa</th>
-                    <th>Meno používateľa</th>
-                    <th>Adresa používateľa</th>
-                    <th>Výrobca</th>
-                    <th>Schvaľovateľ</th>
-                    <th>Admin</th>
+                        <th>ID používateľa</th>
+                        <th>Meno používateľa</th>
+                        <th>Adresa používateľa</th>
+                        <th>Výrobca</th>
+                        <th>Schvaľovateľ</th>
+                        <th>Admin</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -64,16 +69,17 @@ export const TableOfUsers: React.FC<TableOfUsersProps> = ({userList}) => {
                     <td>{user.userId}</td>
                     <td>{user.userName}</td>
                     <td>{user.userAddress}</td>
-                    <td>{user.supplierRole ?<FontAwesomeIcon icon={faCircleCheck}/> :
+                    <td>{user.supplierRole ?<FontAwesomeIcon className='success' icon={faCircleCheck}/> :
                          <FontAwesomeIcon icon={faBan}/>}</td>
-                    <td>{user.signatoryRole  ?<FontAwesomeIcon icon={faCircleCheck}/> :
+                    <td>{user.signatoryRole  ?<FontAwesomeIcon className='success' icon={faCircleCheck}/> :
                          <FontAwesomeIcon icon={faBan}/>}</td>
-                    <td>{user.userId == 1 ?<FontAwesomeIcon icon={faCircleCheck}/> :
+                    <td>{user.userId == 1 ?<FontAwesomeIcon className='success' icon={faCircleCheck}/> :
                          <FontAwesomeIcon icon={faBan}/>}</td>
                 </tr>
                 ))}
                 </tbody>
             </Table> 
         </div>
+    </div>
     );
 }

@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { createContext, useContext, useEffect, useState } from 'react';
 import logo from './logo.svg';
 import metamaskLogin from './img/loginMetamask.png';
 import './App.css';
@@ -28,6 +28,9 @@ import ReactDOM from "react-dom";
 import { ethers } from 'ethers';
 import { AdminDomain } from './components/AdminDomain';
 import Identicon from 'identicon.js';
+
+
+export const RoleContext = createContext("Any role");
 
 
 const App = () => {
@@ -107,7 +110,8 @@ const App = () => {
       </div> */}
 
        {currentAccount ? adminLogin === true ? <div><HeaderMenu changeAccount={changeAccount} currentAccount={currentAccount}></HeaderMenu><AdminDomain></AdminDomain><Footer></Footer></div>  :
-                  signatoryLogin === true || supplierLogin === true  ? <div><HeaderMenu changeAccount={changeAccount} currentAccount={currentAccount}></HeaderMenu><SignatoryDomain></SignatoryDomain><Footer></Footer></div>  : 
+                  signatoryLogin === true || supplierLogin === true  ? <RoleContext.Provider value={currentRole}> <div><HeaderMenu changeAccount={changeAccount} currentAccount={currentAccount}></HeaderMenu><SignatoryDomain></SignatoryDomain>
+                                                                          <Footer></Footer></div>  </RoleContext.Provider> : 
                   // supplierLogin === true ? <div><HeaderMenu changeAccount={changeAccount} currentAccount={currentAccount}></HeaderMenu><SupplierDomain></SupplierDomain><Footer></Footer></div>  :
                   <div className="alert alert-warning" role="alert">Neexistuje žiadna rola pre adresu {currentAccount}. <br/> Zmeňte účet v Metamask peňaženke.</div>
                   : <div></div>

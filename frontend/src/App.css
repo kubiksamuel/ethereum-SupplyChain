@@ -91,6 +91,14 @@ td {
   font-size: 300%;
 }
 
+.success {
+  color: green;
+}
+
+.inProccess {
+  color: #E8C500;
+}
+
 .Table {
   margin: 20px;
   padding: 20px;
