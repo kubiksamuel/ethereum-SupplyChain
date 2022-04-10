@@ -1,8 +1,10 @@
 import * as React from 'react';
-import { Form, Button, Table, OverlayTrigger, Tooltip, Overlay } from 'react-bootstrap'
+import { Form, Button, Table, OverlayTrigger, Tooltip, Overlay } from 'react-bootstrap';
 import { SupplyChainContext, Symfoni } from "./../hardhat/SymfoniContext";
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faBoxOpen, faFilter, faClipboardList } from '@fortawesome/free-solid-svg-icons'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faBoxOpen, faFilter, faClipboardList } from '@fortawesome/free-solid-svg-icons';
+import { ModalAlert } from './ModalAlert';
+
 
 
 import { useRef, useContext, useState, useEffect } from "react";
@@ -45,15 +47,18 @@ interface TableOfBatchesProps {
     selectBatch: (arg: string) => void;
     batchCounter: number;
     batchToFilter: string;
-    showScanner: () => void
+    changeScannerState: () => void
 }
 
-export const TableOfBatches: React.FC<TableOfBatchesProps> = ({finishBatch, batchesType, selectBatch, batchCounter, batchToFilter, showScanner}) => {
+export const TableOfBatches: React.FC<TableOfBatchesProps> = ({finishBatch, batchesType, selectBatch, batchCounter, batchToFilter, changeScannerState}) => {
     const supplychain = useContext(SupplyChainContext);
     // const [currentBatchId, setCurrentBatchId] = useState("");
     const [batchList, setBatchList] = useState<Array<Batch>>([]);
     const [filteredBatchList, setFilteredBatchList] = useState<Array<Batch>>([]);
     // const [filterState, setFilterState] = useState(false);
+    const [modalState, setModalState] = useState(false);
+
+    const closeModal = () => setModalState(false);
 
 
     // if(supplychain.instance){
@@ -140,6 +145,7 @@ const receiveFinishedBatch = async (batchId: string, stageCount: number) => {
                 // @ts-ignore
                 console.log("Prevzaty balik s batch id:" , receipt.events[0].args[0]);
         } catch {
+            setModalState(true);
             console.log("Nastala neocakavana chyba");
         }
     }
@@ -156,58 +162,61 @@ const receiveFinishedBatch = async (batchId: string, stageCount: number) => {
 
 
     return (
-        <div className='Table'>
-            <Table striped bordered hover variant="dark">
-                <thead>
-                    <tr>
-                    <th>ID šarže
-                        <Button className='iconButtons' variant="light" onClick={() =>{showScanner()}}><FontAwesomeIcon size="lg" icon={faFilter}/></Button>               
-                    </th>
-                    <th>Názov produktu</th>
-                    <th>Etapa</th>
-                    <th>Akcie</th>
-                    </tr>
-                </thead>
-                <tbody>
-                {
-                filteredBatchList.map(batch => (
-                <tr key={batch.batchId}>
-                    <td>{batch.batchId}</td>
-                    <td>{batch.productName}</td>
-                    <td>{batch.stageName}</td>
-                    <td>
-                    <div className='actions'>
+        <div>
+            <div className='Table'>
+                <Table striped bordered hover variant="dark">
+                    <thead>
+                        <tr>
+                        <th>ID šarže
+                            <Button className='iconButtons' variant="light" onClick={() =>{changeScannerState()}}><FontAwesomeIcon size="lg" icon={faFilter}/></Button>               
+                        </th>
+                        <th>Názov produktu</th>
+                        <th>Etapa</th>
+                        <th>Akcie</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    {
+                    filteredBatchList.map(batch => (
+                    <tr key={batch.batchId}>
+                        <td>{batch.batchId}</td>
+                        <td>{batch.productName}</td>
+                        <td>{batch.stageName}</td>
+                        <td>
+                        <div className='actions'>
+                        <OverlayTrigger
+                        placement="top"
+                        overlay={
+                            <Tooltip id="tooltip-top">
+                            Prezrieť  <strong>etapy</strong>
+                            </Tooltip>
+                        }>
+                            <Button className='iconButtons' variant="light" onClick={() =>{selectBatch(batch.batchId);}}><FontAwesomeIcon size="lg" icon={faClipboardList}/></Button>
+                        </OverlayTrigger>
+
+                    
+                        {   
+                            batch.isFinished && batch.stageState == 1 && 
+
                     <OverlayTrigger
-                    placement="top"
-                    overlay={
-                        <Tooltip id="tooltip-top">
-                        Prezrieť  <strong>etapy</strong>
-                        </Tooltip>
-                    }>
-                        <Button className='iconButtons' variant="light" onClick={() =>{selectBatch(batch.batchId);}}><FontAwesomeIcon size="lg" icon={faClipboardList}/></Button>
-                    </OverlayTrigger>
+                        placement="top"
+                        overlay={
+                            <Tooltip id="tooltip-top">
+                            Prevziať <strong>šaržu</strong>
+                            </Tooltip>
+                        }>
+                            <Button className='iconButtons' variant="light" onClick={() =>{receiveFinishedBatch(batch.batchId, batch.stageCount);}}><FontAwesomeIcon size="lg" icon={faBoxOpen}/></Button>
+                        </OverlayTrigger>  
+                        }
+                        </div>
 
-                   
-                    {   
-                        batch.isFinished && batch.stageState == 1 && 
-
-                <OverlayTrigger
-                    placement="top"
-                    overlay={
-                        <Tooltip id="tooltip-top">
-                        Prevziať <strong>šaržu</strong>
-                        </Tooltip>
-                    }>
-                        <Button className='iconButtons' variant="light" onClick={() =>{receiveFinishedBatch(batch.batchId, batch.stageCount);}}><FontAwesomeIcon size="lg" icon={faBoxOpen}/></Button>
-                    </OverlayTrigger>  
-                    }
-                    </div>
-
-                    </td>
-                </tr>
-                ))}
-                </tbody>
-            </Table> 
+                        </td>
+                    </tr>
+                    ))}
+                    </tbody>
+                </Table> 
+            </div>
+            <ModalAlert modalState={modalState} closeModal={closeModal}></ModalAlert>
         </div>
     );
 }

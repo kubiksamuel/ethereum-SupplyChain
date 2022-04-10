@@ -158,8 +158,13 @@ export const AdminDomain = () => {
     setQrScannerState(false);
   }
 
-  const showScanner = () => {
-    setQrScannerState(true);
+  const changeScannerState = () => {
+    if(qrScannerState) {
+      setQrScannerState(false);
+
+    } else {
+      setQrScannerState(true);
+    }
     // setBatchToFilter("none");
   }
 
@@ -215,13 +220,13 @@ export const AdminDomain = () => {
         <QRCode value={"Ahoj svjete!"}  />
       </div> */}
       <div className={classComponentName}>
-        {qrScannerState && <QrcodeReader changeBatchToFilter={changeBatchToFilter} ></QrcodeReader>}
+        {qrScannerState && <div className="qrReader"><QrcodeReader changeBatchToFilter={changeBatchToFilter} ></QrcodeReader></div>}
         <AdminInfohead changeFormCreateBatchState={changeFormCreateBatchState} changeFormPrivillegeState={changeFormPrivillegeState} changeClassName={changeClassName} 
         inProccessBatchCounter={inProccessBatchCounter} changeTableInProccessBatchesState={changeTableInProccessBatchesState} finishedBatchCounter={finishedBatchCounter} userCounter={userCounter} resetState={resetState}
           changeTableUsersState={changeTableUsersState} changeTableFinishedBatchesState={changeTableFinishedBatchesState} selectBatch={selectBatch}></AdminInfohead>
         {selectedBatchId ? <StackOfStages selectedBatchId={selectedBatchId}></StackOfStages> :
-        tableInProccessBatches ? <div><TableOfBatches showScanner={showScanner} batchToFilter={batchToFilter} finishBatch={finishBatch} batchesType={"inProccess"}  batchCounter={inProccessBatchCounter} selectBatch={selectBatch}></TableOfBatches></div> :
-        tableFinishedBatches ? <div><TableOfBatches showScanner={showScanner} batchToFilter={batchToFilter} finishBatch={finishBatch} batchesType={"finished"} batchCounter={finishedBatchCounter} selectBatch={selectBatch}></TableOfBatches></div> :
+        tableInProccessBatches ? <div><TableOfBatches changeScannerState={changeScannerState} batchToFilter={batchToFilter} finishBatch={finishBatch} batchesType={"inProccess"}  batchCounter={inProccessBatchCounter} selectBatch={selectBatch}></TableOfBatches></div> :
+        tableFinishedBatches ? <div><TableOfBatches changeScannerState={changeScannerState} batchToFilter={batchToFilter} finishBatch={finishBatch} batchesType={"finished"} batchCounter={finishedBatchCounter} selectBatch={selectBatch}></TableOfBatches></div> :
         tableUsers ? <TableOfUsers userList={userList} changeUserListState={changeUserListState} userCounter={userCounter}></TableOfUsers> : <div></div>
         }
       </div>

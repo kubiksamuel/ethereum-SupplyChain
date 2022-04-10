@@ -79,9 +79,13 @@ export const SignatoryDomain = () => {
       setQrScannerState(false);
     }
 
-    const showScanner = () => {
-      setQrScannerState(true);
-      // setBatchToFilter("none");
+    const changeScannerState = () => {
+      if(qrScannerState) {
+        setQrScannerState(false);
+  
+      } else {
+        setQrScannerState(true);
+      }      // setBatchToFilter("none");
     }
   
 
@@ -191,9 +195,9 @@ export const SignatoryDomain = () => {
            changeTableFinishedBatchesState={changeTableFinishedBatchesState} changeTableInProccessBatchesState= {changeTableInProccessBatchesState}></EmployerInfohead>     
       <div className={classComponentName}>
       {currentBatchId && !formStartStage && !formAddDocument ?<StackOfStages selectedBatchId={currentBatchId}></StackOfStages> :
-        tableInProccessBatches ? <TableOfSignatoryBatches showScanner={showScanner} batchToFilter={batchToFilter} batchesType={"inProccess"} changedSignatoryBatch={changedSignatoryBatch} changeClassName={changeClassName} selectBatch={selectBatch} batchList={batchList}
+        tableInProccessBatches ? <TableOfSignatoryBatches changeScannerState={changeScannerState} batchToFilter={batchToFilter} batchesType={"inProccess"} changedSignatoryBatch={changedSignatoryBatch} changeClassName={changeClassName} selectBatch={selectBatch} batchList={batchList}
           changeFormStartStageState={changeFormStartStageState} changeFormAddDocumentState={changeFormAddDocumentState} changeBatchListsLength={changeBatchListsLength}></TableOfSignatoryBatches> :
-          tableFinishedBatches ? <TableOfSignatoryBatches showScanner={showScanner} batchToFilter={batchToFilter} batchesType={"finished"} changedSignatoryBatch={changedSignatoryBatch} changeClassName={changeClassName} selectBatch={selectBatch} batchList={batchList}
+          tableFinishedBatches ? <TableOfSignatoryBatches changeScannerState={changeScannerState} batchToFilter={batchToFilter} batchesType={"finished"} changedSignatoryBatch={changedSignatoryBatch} changeClassName={changeClassName} selectBatch={selectBatch} batchList={batchList}
           changeFormStartStageState={changeFormStartStageState} changeFormAddDocumentState={changeFormAddDocumentState} changeBatchListsLength={changeBatchListsLength}></TableOfSignatoryBatches> :
           <div></div>}
       </div>

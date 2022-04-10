@@ -147,6 +147,10 @@ Form {
 
 .StagesWrapper {
   margin: 25px;
+  color: white;
+  background-color: #212529;
+  padding: 25px;
+  border: 12px solid black;
 }
 
 .footer {
@@ -184,3 +188,21 @@ td,th {
   text-align: center !important;
   vertical-align: middle !important;
 }
+
+.qrCodeImg {
+  width: 630px; 
+  height: 85px;
+}
+
+.stagesHeader {
+  display: flex;
+  text-align: left;
+  justify-content: space-between;
+}
+
+
+
+/* .qrReader {
+  width: 5%;
+  height: 100% !important;
+} */

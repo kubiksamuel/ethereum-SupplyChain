@@ -1,6 +1,8 @@
 import * as React from 'react';
 import { Form, Button, FormControl, InputGroup, CloseButton} from 'react-bootstrap'
 import { CurrentAddressContext, SupplyChainContext, Symfoni } from "./../hardhat/SymfoniContext";
+import { ModalAlert } from './ModalAlert';
+
 
 import { useRef, useContext, useState } from "react";
 import ReactDOM from "react-dom";
@@ -36,7 +38,9 @@ export const FormStartStage: React.FC<FormStartStageProps> = ({setProccessedBatc
     const addressSignatoryInput= useRef<HTMLSelectElement>(null);
     const stageNameInput= useRef<HTMLInputElement>(null);
     const stagePriceInput= useRef<HTMLInputElement>(null);
+    const [modalState, setModalState] = useState(false);
 
+    const closeModal = () => setModalState(false);
 
     const createBatch = async (
         e: React.MouseEvent<HTMLButtonElement, MouseEvent>
@@ -48,13 +52,15 @@ export const FormStartStage: React.FC<FormStartStageProps> = ({setProccessedBatc
         const stageName: string = stageNameInput.current!.value;
         let ethPrice = stagePriceInput.current!.value;
         ethPrice = ethPrice.replace(',', '.');
-        const stagePrice: ethers.BigNumber = ethers.utils.parseEther(ethPrice);
+
+
 
         const date = Date.now();
         if (!supplychain.instance) throw Error("Greeter instance not ready");
         if (supplychain.instance) {
             let startStageTx: ContractTransaction;
             try{
+                const stagePrice: ethers.BigNumber = ethers.utils.parseEther(ethPrice);
                 startStageTx = await supplychain.instance.startStage(batchId, addressSupplier, addressSignatory, stagePrice, stageName, date,
                                                                          {value: currentStageFee});
                 const receipt: ContractReceipt = await startStageTx.wait();
@@ -68,69 +74,72 @@ export const FormStartStage: React.FC<FormStartStageProps> = ({setProccessedBatc
                 console.log("Supplier address: ", receipt.events[1].args[3], "Signatory address: ", receipt.events[1].args[4], "Supplier fee: ", receipt.events[1].args[5]);
 
             } catch {
+                setModalState(true);
                 console.log("Transakcia bola vratena");
             }
         }
      };
 
     return (
-        <Form>
-            <div className="bg-dark p-1 closeButton">
-                <CloseButton onClick={() =>{
-                                selectBatch("", "")
-                                changeClassName("App");
-                                changeFormStartStageState(false);
-                            }}  variant="white" />
-            </div>
-            <div className='formHeader'>
-                <h3>Objednavka produktu</h3>
-            </div>
-            <hr/>
-            <fieldset >
-                <div className='formInputs'>
-                <Form.Group className="mb-3">
-                    <Form.Label htmlFor="disabledTextInput">Id šarže:</Form.Label>
-                        <Form.Control id="disabledTextInput" readOnly value={currentBatchId} ref={temporaryBatchId}/>
-                </Form.Group>
-                <Form.Group className="mb-3">
-                    <Form.Label htmlFor="signatoryAddress">Schvaľovateľ:</Form.Label>
-                     <Form.Select id="signatoryAddress" ref={addressSignatoryInput} >
-                     { 
-                        userList.map(user => (
-                            user.signatoryRole && <option key={user.userAddress} value={user.userAddress}>{user.userName}</option>
-                        ))}
-                     </Form.Select>
-                    {/* <Form.Label htmlFor="supplierAddress">Adresa výrobcu:</Form.Label>
-                        <Form.Control id="supplierAddress" placeholder="" ref={addressSupplierInput}/> */}
-                </Form.Group>
-                <Form.Group className="mb-3">
-                    <Form.Label htmlFor="supplierAddress">Výrobcu:</Form.Label>
-                     <Form.Select id="supplierAddress" ref={addressSupplierInput} >
-                     { 
-                        userList.map(user => (
-                            user.supplierRole && <option key={user.userAddress} value={user.userAddress}>{user.userName}</option>
-                        ))}
-                     </Form.Select>
-                     {/* <Form.Label htmlFor="signatoryAddress">Adresa schvaľovateľa:</Form.Label>
-                    //  <Form.Control id="signatoryAddress" placeholder="" ref={addressSignatoryInput} /> */}
-                 </Form.Group>
-                 <Form.Group className="mb-3">
-                     <Form.Label htmlFor="stageName">Názov novej etapy: </Form.Label>
-                     <Form.Control id="stageName" placeholder="" ref={stageNameInput} />
-                 </Form.Group>
-                 <Form.Group className="mb-3">
-                     <Form.Label htmlFor="supplierFee">Cena etapy v Ether: </Form.Label>
-                     <Form.Control id="supplierFee" placeholder="1.2345" ref={stagePriceInput} />
-                 </Form.Group>
-                 </div>
-                <hr/>
-                <div className='submitButton'>
-                    <Button variant="outline-primary" type="button" onClick={(e) => createBatch(e)}>Submit</Button>
+        <div>
+            <Form>
+                <div className="bg-dark p-1 closeButton">
+                    <CloseButton onClick={() =>{
+                                    selectBatch("", "")
+                                    changeClassName("App");
+                                    changeFormStartStageState(false);
+                                }}  variant="white" />
                 </div>
+                <div className='formHeader'>
+                    <h3>Objednavka produktu</h3>
+                </div>
+                <hr/>
+                <fieldset >
+                    <div className='formInputs'>
+                    <Form.Group className="mb-3">
+                        <Form.Label htmlFor="disabledTextInput">Id šarže:</Form.Label>
+                            <Form.Control id="disabledTextInput" readOnly value={currentBatchId} ref={temporaryBatchId}/>
+                    </Form.Group>
+                    <Form.Group className="mb-3">
+                        <Form.Label htmlFor="signatoryAddress">Schvaľovateľ:</Form.Label>
+                        <Form.Select id="signatoryAddress" ref={addressSignatoryInput} >
+                        { 
+                            userList.map(user => (
+                                user.signatoryRole && <option key={user.userAddress} value={user.userAddress}>{user.userName}</option>
+                            ))}
+                        </Form.Select>
+                        {/* <Form.Label htmlFor="supplierAddress">Adresa výrobcu:</Form.Label>
+                            <Form.Control id="supplierAddress" placeholder="" ref={addressSupplierInput}/> */}
+                    </Form.Group>
+                    <Form.Group className="mb-3">
+                        <Form.Label htmlFor="supplierAddress">Výrobcu:</Form.Label>
+                        <Form.Select id="supplierAddress" ref={addressSupplierInput} >
+                        { 
+                            userList.map(user => (
+                                user.supplierRole && <option key={user.userAddress} value={user.userAddress}>{user.userName}</option>
+                            ))}
+                        </Form.Select>
+                        {/* <Form.Label htmlFor="signatoryAddress">Adresa schvaľovateľa:</Form.Label>
+                        //  <Form.Control id="signatoryAddress" placeholder="" ref={addressSignatoryInput} /> */}
+                    </Form.Group>
+                    <Form.Group className="mb-3">
+                        <Form.Label htmlFor="stageName">Názov novej etapy: </Form.Label>
+                        <Form.Control id="stageName" placeholder="" ref={stageNameInput} />
+                    </Form.Group>
+                    <Form.Group className="mb-3">
+                        <Form.Label htmlFor="supplierFee">Cena etapy v Ether: </Form.Label>
+                        <Form.Control id="supplierFee" placeholder="1.2345" ref={stagePriceInput} />
+                    </Form.Group>
+                    </div>
+                    <hr/>
+                    <div className='submitButton'>
+                        <Button variant="outline-primary" type="button" onClick={(e) => createBatch(e)}>Submit</Button>
+                    </div>
 
-            </fieldset>
-        </Form>
-
+                </fieldset>
+            </Form>
+            <ModalAlert modalState={modalState} closeModal={closeModal}></ModalAlert>
+        </div>
     );
 }
 

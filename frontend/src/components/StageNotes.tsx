@@ -3,12 +3,12 @@ import React, { useContext, useEffect, useState } from 'react';
 import { Button, Offcanvas } from 'react-bootstrap';
 
 
-interface CanvasProps {
+interface StageNotesProps {
     stageNotes: string;
     stageName: string;
 }
 
-export const CanvasExample: React.FC<CanvasProps>= ({stageNotes, stageName}) => {
+export const StageNotes: React.FC<StageNotesProps>= ({stageNotes, stageName}) => {
     const [show, setShow] = useState(false);
   
     const handleClose = () => setShow(false);
@@ -16,7 +16,7 @@ export const CanvasExample: React.FC<CanvasProps>= ({stageNotes, stageName}) => 
   
     return (
       <>
-        <Button variant="primary" onClick={handleShow}>
+        <Button variant="outline-dark" onClick={handleShow}>
           Zobraziť údaje
         </Button>
   

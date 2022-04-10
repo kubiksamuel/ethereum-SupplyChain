@@ -185,9 +185,15 @@ const printStages = async() => {
       <div className="StagesWrapper" id = "stage">
 
         <div id="qrCodeEl" ><QRCode  value={"Ahoj svjete!"}/></div>
-        <img src="" alt="qr" width="400px" height="200px" className='qr' id='qr'/>
+        <div className="stagesHeader">
+            <div>
+                <h2>ID šarže: {selectedBatchId}</h2>
+            </div>
+            <div className="qrDivImg">
+                <img src="" alt="qrCode" className='qrCodeImg' id='qr'/>
+            </div>
+        </div>
 
-        <h2>ID šarže: {selectedBatchId}</h2>
         <Stack gap={3}>
             {stageList.map(stage => (
             <div key={stage.stageOrder}>

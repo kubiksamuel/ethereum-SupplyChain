@@ -1,6 +1,7 @@
 import * as React from 'react';
-import { Form, Button, CloseButton } from 'react-bootstrap'
+import { Form, Button, CloseButton, Modal } from 'react-bootstrap'
 import { CurrentAddressContext, SupplyChainContext, Symfoni } from "./../hardhat/SymfoniContext";
+import { ModalAlert } from './ModalAlert';
 
 import { useRef, useContext, useState } from "react";
 import ReactDOM from "react-dom";
@@ -29,7 +30,10 @@ export const FormCreateBatch: React.FC<FormCreateBatchProps> = ({addInProccessBa
     const addressInput= useRef<HTMLSelectElement>(null);
     const nameInput = useRef<HTMLInputElement>(null);
     const textInput = useRef<HTMLTextAreaElement>(null);
+    const [modalState, setModalState] = useState(false);
     console.log("Userlist" + userList);
+
+    const closeModal = () => setModalState(false);
 
     const createBatch = async (
         e: React.MouseEvent<HTMLButtonElement, MouseEvent>
@@ -50,12 +54,14 @@ export const FormCreateBatch: React.FC<FormCreateBatchProps> = ({addInProccessBa
                 // @ts-ignore
                 console.log("Batch id:" , receipt.events[2].args[0], "Nazov stagu: ", receipt.events[2].args[1], "Ipfs hash: " , receipt.events[2].args[2]);
             } catch {
+                setModalState(true);
                 console.log("Transakcia bola vratena");
             }
         }
      };
 
     return (
+    <div>
         <Form>
             <div className="bg-dark p-1 closeButton">
                 <CloseButton onClick={() =>{
@@ -94,7 +100,9 @@ export const FormCreateBatch: React.FC<FormCreateBatchProps> = ({addInProccessBa
                     <Button variant="outline-primary" type="button" onClick={(e) => createBatch(e)}>Submit</Button>
                 </div>
             </fieldset>
-        </Form>
+      </Form>
+      <ModalAlert modalState={modalState} closeModal={closeModal}></ModalAlert>
+    </div>
 
     );
 }

@@ -3,7 +3,7 @@ import React, { useContext, useEffect, useState } from 'react';
 // import { Greeter } from './components/Greeter';
 // import { Greeter } from './components/Greeter';
 import { TableOfSignatoryBatches } from './TableOfSignatoryBatches';
-import { CanvasExample } from './CanvasExample';
+import { StageNotes } from './StageNotes';
 import { FormStartStage } from './FormStartStage';
 import { SupplyChainContext } from "../hardhat/SymfoniContext";
 import { Badge } from 'react-bootstrap'
@@ -55,7 +55,7 @@ export const StageCard: React.FC<StackOfStagesProps> = ({stage}) => {
             {stage.state > 0 && <div><b>Datum vybavenia:</b> {stage.dateDone}</div>}
             {stage.state > 0 && <hr/>}
             <div><b>Výrobná cena:</b> {ethers.utils.formatEther(stage.supplierFee)} Ether</div>
-            {stage.state > 0 && <div style={{textAlign: "center"}}><CanvasExample stageNotes={stage.stageNotes} stageName={stage.stageName}></CanvasExample></div>}
+            {stage.state > 0 && <div style={{textAlign: "center"}}><StageNotes stageNotes={stage.stageNotes} stageName={stage.stageName}></StageNotes></div>}
         </div>
     );
 }

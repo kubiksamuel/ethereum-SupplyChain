@@ -32,12 +32,12 @@ interface TableOfSignatoryBatchesProps {
     changeBatchListsLength: (inProccessBatchLength: number, finishedBatchLength: number) => void;
     batchList: Array<Batch>;
     batchToFilter: string;
-    showScanner: () => void
+    changeScannerState: () => void
 }
 
 
 export const TableOfSignatoryBatches: React.FC<TableOfSignatoryBatchesProps> = ({batchesType, selectBatch, changeClassName, changedSignatoryBatch,
-     changeFormStartStageState, changeFormAddDocumentState, changeBatchListsLength, batchList, batchToFilter, showScanner}) => {
+     changeFormStartStageState, changeFormAddDocumentState, changeBatchListsLength, batchList, batchToFilter, changeScannerState}) => {
     const currentRole = useContext(RoleContext);
     const supplychain = useContext(SupplyChainContext);
     // const [currentBatchId, setCurrentBatchId] = useState("");
@@ -121,7 +121,7 @@ export const TableOfSignatoryBatches: React.FC<TableOfSignatoryBatchesProps> = (
             <thead>
                 <tr>
                 <th>ID šarže
-                    <Button className='iconButtons' variant="light" onClick={() =>{showScanner()}}><FontAwesomeIcon size="lg" icon={faFilter}/></Button>               
+                    <Button className='iconButtons' variant="light" onClick={() =>{changeScannerState()}}><FontAwesomeIcon size="lg" icon={faFilter}/></Button>               
                 </th>
                 <th>Názov produktu</th>
                 <th>Názov etapy</th>
