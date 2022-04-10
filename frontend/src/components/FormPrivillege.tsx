@@ -1,11 +1,9 @@
 import * as React from 'react';
-import { Form, Button, CloseButton, Modal } from 'react-bootstrap'
-import { SupplyChainContext, Symfoni } from "./../hardhat/SymfoniContext";
-import { ModalAlert } from './ModalAlert';
-
-
-import { useRef, useContext, useState } from "react";
 import ReactDOM from "react-dom";
+import { useRef, useContext, useState } from "react";
+import { Form, Button, CloseButton, Modal } from 'react-bootstrap'
+import { SupplyChainContext } from "./../hardhat/SymfoniContext";
+import { ModalAlert } from './ModalAlert';
 import { ContractReceipt, ContractTransaction } from 'ethers';
 
 interface FormPrivillegeProps {
@@ -83,7 +81,6 @@ export const FormPrivillege: React.FC<FormPrivillegeProps> = ({addUserCounter, c
                     <Form.Group className="mb-3">
                         <Form.Label htmlFor="memberRole">Rola používateľa:</Form.Label>
                         <Form.Select id="memberRole" ref={roleInput} >
-                            {/* <option></option> */}
                             <option value={"Signatory"}>Schvalovatel</option>
                             <option value={"Supplier"}>Výrobca</option>
                         </Form.Select>
@@ -97,7 +94,6 @@ export const FormPrivillege: React.FC<FormPrivillegeProps> = ({addUserCounter, c
             </Form>
             <ModalAlert modalState={modalState} closeModal={closeModal}></ModalAlert>
         </div>
-
     );
 }
 

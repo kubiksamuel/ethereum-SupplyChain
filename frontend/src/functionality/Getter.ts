@@ -1,5 +1,4 @@
-import { Children } from 'react';
-import { finished } from 'stream';
+import React from 'react';
 import { SymfoniSupplyChain } from "./../hardhat/SymfoniContext";
 
 

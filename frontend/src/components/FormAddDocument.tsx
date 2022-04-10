@@ -1,14 +1,11 @@
-import * as React from 'react';
-import { Form, Button, CloseButton } from 'react-bootstrap'
-import { SupplyChainContext, Symfoni } from "./../hardhat/SymfoniContext";
-import { ModalAlert } from './ModalAlert';
-
-
-import { useRef, useContext, useState } from "react";
+import React from 'react';
 import ReactDOM from "react-dom";
+import { useRef, useContext, useState } from "react";
+import { Form, Button, CloseButton } from 'react-bootstrap'
+import { SupplyChainContext } from "./../hardhat/SymfoniContext";
+import { ModalAlert } from './ModalAlert';
 import { ContractReceipt, ContractTransaction } from 'ethers';
 import * as ipfs from '../functionality/Ipfs';
-import { Buffer } from 'buffer';
 
 interface FormAddDocumentProps {
     setProccessedBatch: (batchId: string) => void;

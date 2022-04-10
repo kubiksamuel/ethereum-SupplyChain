@@ -12,7 +12,6 @@ import { FormStartStage } from './components/FormStartStage';
 import { FormAddDocument } from './components/FormAddDocument';
 import { TableOfBatches } from './components/TableOfBatches';
 import { SignatoryDomain } from './components/SignatoryDomain';
-import { SupplierDomain } from './components/SupplierDomain';
 import { Footer } from './components/Footer';
 // import { QrcodeReader } from './components/QrcodeReader';
 // import { QrReader } from 'react-qr-reader';
@@ -22,7 +21,6 @@ import * as ipfs from './functionality/Ipfs';
 
 import { HeaderMenu } from './components/HeaderMenu';
 import { TableOfSignatoryBatches } from './components/TableOfSignatoryBatches';
-import { SupplyChain } from './components/SupplyChain';
 import { Button } from 'react-bootstrap';
 import ReactDOM from "react-dom";
 import { ethers } from 'ethers';

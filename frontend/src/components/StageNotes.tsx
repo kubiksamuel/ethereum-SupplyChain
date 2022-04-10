@@ -1,7 +1,6 @@
-import React, { useContext, useEffect, useState } from 'react';
-
+import React from 'react';
+import { useState } from 'react';
 import { Button, Offcanvas } from 'react-bootstrap';
-
 
 interface StageNotesProps {
     stageNotes: string;
@@ -19,7 +18,6 @@ export const StageNotes: React.FC<StageNotesProps>= ({stageNotes, stageName}) =>
         <Button variant="outline-dark" onClick={handleShow}>
           Zobraziť údaje
         </Button>
-  
         <Offcanvas show={show} onHide={handleClose} placement={"top"} scroll={true} backdrop={true}>
           <Offcanvas.Header closeButton>
             <Offcanvas.Title>Údaje k etape: {stageName}</Offcanvas.Title>

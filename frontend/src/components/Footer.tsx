@@ -1,7 +1,6 @@
 
 import React from "react";
 
-
 export const Footer = () => (
     <footer className="footer">
         <div>&copy; Samuel Kubík</div> 

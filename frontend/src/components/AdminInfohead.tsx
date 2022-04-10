@@ -1,19 +1,10 @@
-import React, { useContext, useEffect, useState } from 'react';
-// import { SupplyChain } from './hardhat/typechain/SupplyChain';
-// import { Greeter } from './components/Greeter';
-// import { Greeter } from './components/Greeter';
-import { TableOfSignatoryBatches } from './TableOfSignatoryBatches';
-import { FormStartStage } from './FormStartStage';
+import React from 'react';
+import ReactDOM from "react-dom";
+import { useContext, useEffect, useState } from 'react';
 import { SupplyChainContext } from "./../hardhat/SymfoniContext";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faUsers, faBoxesStacked } from '@fortawesome/free-solid-svg-icons'
-
-import { Button, ButtonGroup, Dropdown, DropdownButton } from 'react-bootstrap';
-import ReactDOM from "react-dom";
-import { ethers } from 'ethers';
-import { StackOfStages } from './StackOfStages';
-import { TableOfBatches } from './TableOfBatches';
-
+import { Button, ButtonGroup } from 'react-bootstrap';
 
 interface AdminInfoheadProps {
     changeFormCreateBatchState: (arg: boolean) => void;
@@ -33,13 +24,6 @@ export const AdminInfohead: React.FC<AdminInfoheadProps> = ({changeFormCreateBat
     changeTableInProccessBatchesState, changeTableFinishedBatchesState, selectBatch, changeClassName, resetState, inProccessBatchCounter, finishedBatchCounter, userCounter}) => {
     const [currentBatchId, setCurrentBatchId] = useState("");
     const supplychain = useContext(SupplyChainContext);
-
-
-    // const selectBatch = (batchId: string): void => {
-    //     console.log("Function");
-
-    //     setCurrentBatchId(batchId);
-    // }
 
     return (
 

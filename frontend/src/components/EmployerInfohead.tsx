@@ -1,31 +1,19 @@
-import React, { useContext, useEffect, useState } from 'react';
-// import { SupplyChain } from './hardhat/typechain/SupplyChain';
-// import { Greeter } from './components/Greeter';
-// import { Greeter } from './components/Greeter';
-import { TableOfSignatoryBatches } from './TableOfSignatoryBatches';
-import { FormStartStage } from './FormStartStage';
+import React from 'react';
+import ReactDOM from "react-dom";
+import { useContext, useEffect, useState } from 'react';
 import { SupplyChainContext } from "./../hardhat/SymfoniContext";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faUsers, faBoxesStacked } from '@fortawesome/free-solid-svg-icons'
-
-import { Button, ButtonGroup, Dropdown, DropdownButton } from 'react-bootstrap';
-import ReactDOM from "react-dom";
-import { ethers } from 'ethers';
-import { StackOfStages } from './StackOfStages';
-import { TableOfBatches } from './TableOfBatches';
+import { faBoxesStacked } from '@fortawesome/free-solid-svg-icons'
+import { Button } from 'react-bootstrap';
 
 
 interface EmployerInfohead {
-    // changeFormCreateBatchState: (arg: boolean) => void;
-    // changeFormPrivillegeState: (arg: boolean) => void;
     changeTableInProccessBatchesState: (arg: boolean) => void;
     changeTableFinishedBatchesState: (arg: boolean) => void;
-    // selectBatch: (arg: string) => void;
     changeClassName: (arg: string) => void;
     resetState: () => void;
     inProccessBatchCounter: number;
     finishedBatchCounter: number;
-    // userCounter: number;
 }
 
 export const EmployerInfohead: React.FC<EmployerInfohead> = ({changeTableInProccessBatchesState, changeTableFinishedBatchesState, changeClassName,
@@ -33,15 +21,7 @@ export const EmployerInfohead: React.FC<EmployerInfohead> = ({changeTableInProcc
     const [currentBatchId, setCurrentBatchId] = useState("");
     const supplychain = useContext(SupplyChainContext);
 
-
-    // const selectBatch = (batchId: string): void => {
-    //     console.log("Function");
-
-    //     setCurrentBatchId(batchId);
-    // }
-
     return (
-
         <div className='adminInfohead'>
             <div className='adminInfoitem'>
                 <div>

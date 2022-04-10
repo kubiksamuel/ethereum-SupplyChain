@@ -1,14 +1,11 @@
 import * as React from 'react';
-import { Form, Button, CloseButton, Modal } from 'react-bootstrap'
-import { CurrentAddressContext, SupplyChainContext, Symfoni } from "./../hardhat/SymfoniContext";
-import { ModalAlert } from './ModalAlert';
-
-import { useRef, useContext, useState } from "react";
 import ReactDOM from "react-dom";
+import { useRef, useContext, useState } from "react";
+import { Form, Button, CloseButton, Modal } from 'react-bootstrap'
+import { SupplyChainContext } from "./../hardhat/SymfoniContext";
+import { ModalAlert } from './ModalAlert';
 import { ContractReceipt, ContractTransaction } from 'ethers';
 import * as ipfs from '../functionality/Ipfs';
-import { TableOfBatches } from './TableOfBatches';
-
 
 interface User {
     userId: number;
@@ -31,7 +28,6 @@ export const FormCreateBatch: React.FC<FormCreateBatchProps> = ({addInProccessBa
     const nameInput = useRef<HTMLInputElement>(null);
     const textInput = useRef<HTMLTextAreaElement>(null);
     const [modalState, setModalState] = useState(false);
-    console.log("Userlist" + userList);
 
     const closeModal = () => setModalState(false);
 
@@ -42,7 +38,6 @@ export const FormCreateBatch: React.FC<FormCreateBatchProps> = ({addInProccessBa
         const address: string = addressInput.current!.value;
         const name: string = nameInput.current!.value;
         const date = Date.now();
-        console.log(date);
         const ipfsHash =  await ipfs.addToIPFS(textInput.current!.value);
         if (!supplychain.instance) throw Error("SupplyChain instance not ready");
         if (supplychain.instance) {
@@ -87,8 +82,6 @@ export const FormCreateBatch: React.FC<FormCreateBatchProps> = ({addInProccessBa
                             user.signatoryRole && user.userId != 1 && <option key={user.userAddress} value={user.userAddress}>{user.userName}</option>
                         ))}
                      </Form.Select>
-                     {/* <Form.Label htmlFor="signatoryAddress">Adresa schvaľovateľa:</Form.Label>
-                     <Form.Control id="signatoryAddress" placeholder="0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266" ref={addressInput} /> */}
                  </Form.Group>
                  <Form.Group className="mb-3" controlId="exampleForm.ControlTextarea1">
                     <Form.Label>Poznámky k produktu</Form.Label>
@@ -103,7 +96,6 @@ export const FormCreateBatch: React.FC<FormCreateBatchProps> = ({addInProccessBa
       </Form>
       <ModalAlert modalState={modalState} closeModal={closeModal}></ModalAlert>
     </div>
-
     );
 }
 

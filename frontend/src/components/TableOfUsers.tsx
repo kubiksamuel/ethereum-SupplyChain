@@ -1,20 +1,11 @@
 import * as React from 'react';
-import { Form, Button, Table } from 'react-bootstrap'
-import { SupplyChainContext, Symfoni } from "./../hardhat/SymfoniContext";
+import ReactDOM from "react-dom";
+import { useContext } from "react";
+import { Table } from 'react-bootstrap'
+import { SupplyChainContext } from "./../hardhat/SymfoniContext";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faClipboardList } from '@fortawesome/free-solid-svg-icons'
 import { faCircleCheck } from '@fortawesome/free-solid-svg-icons'
 import { faBan } from '@fortawesome/free-solid-svg-icons';
-import TableFilter from 'react-table-filter';
-import "react-table-filter/lib/styles.css";
-
-import { useRef, useContext, useState, useEffect } from "react";
-import ReactDOM from "react-dom";
-import { ContractReceipt, ContractTransaction } from 'ethers';
-import * as ipfs from '../functionality/Ipfs';
-import { ethers } from 'ethers';
-import { sign } from 'crypto';
-
 
 interface User {
     userId: number;
@@ -32,21 +23,6 @@ interface TableOfUsersProps {
 
 export const TableOfUsers: React.FC<TableOfUsersProps> = ({userList}) => {
     const supplychain = useContext(SupplyChainContext);
-
-
-
-    // const [userList, setUserList] = useState<Array<User>>([]);
-
-    // const [currentBatchId, setCurrentBatchId] = useState("");
-
-    // if(supplychain.instance){
-    //     supplychain.instance.on("BatchCreated", (batchId, productName) => {
-    //         setCurrentBatchId(batchId);
-    //         console.log("Odchyteny event s argumentami: " + batchId, productName);
-    //     });
-    // }
-
-
 
     return (
     <div>

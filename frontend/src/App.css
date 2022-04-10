@@ -1,6 +1,7 @@
 .App {
   text-align: center;
   /* height: 100vh; */
+
 }
 
 .App-logo {
@@ -64,6 +65,7 @@ td {
   text-align: left;
   padding: 15px;
   margin: 10px;
+  font-size: larger !important;
 }
 
 .adminInfohead {
@@ -187,6 +189,9 @@ Form {
 td,th {
   text-align: center !important;
   vertical-align: middle !important;
+  /* font-size: large !important; */
+  /* font-size: larger !important; */
+
 }
 
 .qrCodeImg {
@@ -200,9 +205,6 @@ td,th {
   justify-content: space-between;
 }
 
-
-
-/* .qrReader {
-  width: 5%;
-  height: 100% !important;
-} */
+.badge {
+  /* font-size: large !important; */
+}

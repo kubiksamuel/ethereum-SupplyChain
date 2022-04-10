@@ -1,8 +1,7 @@
-import React, { Component } from 'react';
+import React from 'react';
 import Identicon from 'identicon.js'
 import { Navbar, Container, Button } from 'react-bootstrap';
 import  logoSupply from '../img/logoSupply.png'
-
 
 interface HeaderMenuProps {
     changeAccount: (cuurentAccount: string, loadingState: boolean) => void;
@@ -10,11 +9,10 @@ interface HeaderMenuProps {
 }
 
 export const HeaderMenu: React.FC<HeaderMenuProps> = ({changeAccount, currentAccount}) => {
-
     return (    
         <Navbar bg="dark" variant="dark">
         <Container>
-        <Navbar.Brand href='#' onClick={() => {console.log("ahoj")}}>
+        <Navbar.Brand>
                 <img
                 alt="logoSupply"
                 src={logoSupply}
@@ -44,6 +42,5 @@ export const HeaderMenu: React.FC<HeaderMenuProps> = ({changeAccount, currentAcc
         </Container>
         </Navbar>
     );
-  
 }
 

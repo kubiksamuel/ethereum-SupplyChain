@@ -1,16 +1,11 @@
 import * as React from 'react';
-import { Form, Button, FormControl, InputGroup, CloseButton} from 'react-bootstrap'
-import { CurrentAddressContext, SupplyChainContext, Symfoni } from "./../hardhat/SymfoniContext";
-import { ModalAlert } from './ModalAlert';
-
-
-import { useRef, useContext, useState } from "react";
 import ReactDOM from "react-dom";
+import { useRef, useContext, useState } from "react";
+import { Form, Button, FormControl, InputGroup, CloseButton} from 'react-bootstrap'
+import { SupplyChainContext } from "./../hardhat/SymfoniContext";
+import { ModalAlert } from './ModalAlert';
 import { ContractReceipt, ContractTransaction } from 'ethers';
-import * as ipfs from '../functionality/Ipfs';
-import { start } from 'repl';
 import { ethers } from 'ethers';
-
 
 interface User {
     userId: number;
@@ -52,9 +47,6 @@ export const FormStartStage: React.FC<FormStartStageProps> = ({setProccessedBatc
         const stageName: string = stageNameInput.current!.value;
         let ethPrice = stagePriceInput.current!.value;
         ethPrice = ethPrice.replace(',', '.');
-
-
-
         const date = Date.now();
         if (!supplychain.instance) throw Error("Greeter instance not ready");
         if (supplychain.instance) {

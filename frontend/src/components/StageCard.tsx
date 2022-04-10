@@ -1,21 +1,8 @@
-import React, { useContext, useEffect, useState } from 'react';
-// import { SupplyChain } from './hardhat/typechain/SupplyChain';
-// import { Greeter } from './components/Greeter';
-// import { Greeter } from './components/Greeter';
-import { TableOfSignatoryBatches } from './TableOfSignatoryBatches';
-import { StageNotes } from './StageNotes';
-import { FormStartStage } from './FormStartStage';
-import { SupplyChainContext } from "../hardhat/SymfoniContext";
-import { Badge } from 'react-bootstrap'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-
-
-import { Accordion, Button, Stack } from 'react-bootstrap';
+import React from 'react';
 import ReactDOM from "react-dom";
+import { StageNotes } from './StageNotes';
+import { Badge } from 'react-bootstrap'
 import { ethers } from 'ethers';
-import * as ipfs from '../functionality/Ipfs';
-
-
 
 interface Stage {
     stageName: string;
@@ -35,15 +22,13 @@ interface StackOfStagesProps {
     stage: Stage
 }
 
-
 export const StageCard: React.FC<StackOfStagesProps> = ({stage}) => {
     return (
         <div className="stageCard">
             <h1>#{stage.stageOrder} {stage.stageName}</h1>
-            <div><b>Stav:</b> {stage.state == 0 ? <Badge pill bg="warning" text="dark"> Vybavuje sa...</Badge> :
-                stage.state == 1 ? <Badge pill bg="info">Pripravené na prevzatie</Badge> :
-                <Badge pill bg="success">Ukončené</Badge>
-
+            <div><b>Stav:</b> {stage.state == 0 ? <Badge className="badge" pill bg="warning" text="dark"> Vybavuje sa...</Badge> :
+                stage.state == 1 ? <Badge className="badge" pill bg="info">Pripravené na prevzatie</Badge> :
+                <Badge className="badge" pill bg="success">Ukončené</Badge>
             }</div>
             <hr/>         
             <div><b>Datum prijatia:</b> {stage.dateReceive}</div>
@@ -59,29 +44,3 @@ export const StageCard: React.FC<StackOfStagesProps> = ({stage}) => {
         </div>
     );
 }
-
-
-//                let state = stage.state == 0? "Vybavuje sa" : stage.state == 1 ? "Vybavene, caka na prevzatie"  : "Ukoncene";
-
-
-
-
-// interface Stage {
-//     stageName: string;
-//     stageOrder: number;
-//     supplierFee: string;
-//     dateReceive: string;
-//     dateDone: string;
-//     state: number;
-//     signatoryAddress: string;
-//     signatoryName: string;
-//     supplierAddress: string;
-//     supplierName: string;
-//     stageNotes: string;
-// }  
-
-
-
-
-// {loading ? <TableOfBatches></TableOfBatches>
-// : <div>pracujem</div> }

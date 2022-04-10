@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { QrReader } from 'react-qr-reader';
 
 
@@ -7,8 +7,6 @@ interface QrcodeReaderProps {
 }
 
 export const QrcodeReader: React.FC<QrcodeReaderProps> = ({changeBatchToFilter}) => {
-//   const [data, setData] = useState('No result');
-
   return (
     <>
       <QrReader
@@ -16,36 +14,10 @@ export const QrcodeReader: React.FC<QrcodeReaderProps> = ({changeBatchToFilter})
             if (!!result) {
                 changeBatchToFilter(result.toString());
                 console.log("Result: " + result.toString());
-            }
-            // if (!!error) {
-            //     console.info("error");
-            //   }
-              } }
-              containerStyle={{ width: "420px", height: "420px", position: "fixed", top: "30%", left: "42%", border: "7px solid #FFC43D", backgroundColor: "black"
-               }} constraints={{facingMode: 'user' }}   scanDelay={1000}   />
-      {/* <p>{data}</p> */}
+              }   
+            }}
+              containerStyle={{ width: "420px", height: "420px", position: "fixed", top: "30%", left: "42%",
+               border: "7px solid #FFC43D", backgroundColor: "black"}} constraints={{facingMode: 'user' }} scanDelay={1000}/>
     </>
   );
-
-// const [data, setData] = useState('No result');
-
-// return (
-//   <>
-//     <QrReader
-//       onResult={(result) => {
-//         if (!!result) {
-//             console.log("Aha");
-//         //   setData(result?.toString());
-//         }
-
-//         // if (!!error) {
-//         //   console.info(error);
-//         // }
-//       }}
-//       containerStyle={{ width: '100%' }} constraints={{facingMode: 'user' }}
-//     />
-//     <p>{data}</p>
-//   </>
-// );
-
 };
