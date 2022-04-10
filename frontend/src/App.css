@@ -179,3 +179,8 @@ Form {
 .iconButtons {
   margin: 5px;
 }
+
+td,th {
+  text-align: center !important;
+  vertical-align: middle !important;
+}

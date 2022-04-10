@@ -12,6 +12,11 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faUsers, faBoxesStacked } from '@fortawesome/free-solid-svg-icons'
 import { HeaderMenu } from './HeaderMenu';
 import * as usersGetter from '../functionality/UsersGetter';
+import { QrcodeReader } from './QrcodeReader';
+import QRCode from "react-qr-code";
+import html2canvas from "html2canvas";
+
+
 
 
 import { Button } from 'react-bootstrap';
@@ -21,6 +26,7 @@ import { StackOfStages } from './StackOfStages';
 import { TableOfBatches } from './TableOfBatches';
 import { TableOfUsers } from './TableOfUsers';
 import { setIn } from 'formik';
+import _ from 'underscore';
 
 interface User {
   userId: number;
@@ -38,10 +44,12 @@ export const AdminDomain = () => {
     const [tableFinishedBatches, setTableFinishedBatches] = useState(false);
     const [tableInProccessBatches, setTableInProccessBatches] = useState(false);
     const [tableUsers, setTableUsers] = useState(false);
+    const [qrScannerState, setQrScannerState] = useState(false);
     const [inProccessBatchCounter, setInProccessBatchCounter] = useState(0);
     const [finishedBatchCounter, setFinishedBatchCounter] = useState(0);
     const [userCounter, setUserCounter] = useState(0);
     const [classComponentName, setClassComponentName] = useState("App");
+    const [batchToFilter, setBatchToFilter] = useState("");
     const [userList, setUserList] = useState<Array<User>>([]);
     const supplychain = useContext(SupplyChainContext);
 
@@ -144,6 +152,17 @@ export const AdminDomain = () => {
     setUserList(currentUserList);
   }
 
+  const changeBatchToFilter = (scannedBatch: string):void => {
+    console.log("Prijaty result: " + scannedBatch);
+    setBatchToFilter(scannedBatch);
+    setQrScannerState(false);
+  }
+
+  const showScanner = () => {
+    setQrScannerState(true);
+    // setBatchToFilter("none");
+  }
+
   const addInProccessBatchCounter = ():void => {
     setInProccessBatchCounter(inProccessBatchCounter+1);
   }
@@ -158,6 +177,8 @@ export const AdminDomain = () => {
   }
 
   const resetState = () => {
+    setQrScannerState(false);
+    setBatchToFilter("");
     setFormCreateBatch(false);
     setFormPrivillege(false);
     changeTableFinishedBatchesState(false);
@@ -183,15 +204,24 @@ export const AdminDomain = () => {
   //     }); 
   // }    
 
+  // var el: HTMLElement = document.getElementById('qrCodeEl')!;
+  // html2canvas(el).then(canvas => {
+  //   document.body.appendChild(canvas)
+  // });
+
   return (
     <div>
+      {/* <div id="qrCodeEl" style={{ background: 'white', padding: '16px' }}>
+        <QRCode value={"Ahoj svjete!"}  />
+      </div> */}
       <div className={classComponentName}>
+        {qrScannerState && <QrcodeReader changeBatchToFilter={changeBatchToFilter} ></QrcodeReader>}
         <AdminInfohead changeFormCreateBatchState={changeFormCreateBatchState} changeFormPrivillegeState={changeFormPrivillegeState} changeClassName={changeClassName} 
         inProccessBatchCounter={inProccessBatchCounter} changeTableInProccessBatchesState={changeTableInProccessBatchesState} finishedBatchCounter={finishedBatchCounter} userCounter={userCounter} resetState={resetState}
           changeTableUsersState={changeTableUsersState} changeTableFinishedBatchesState={changeTableFinishedBatchesState} selectBatch={selectBatch}></AdminInfohead>
         {selectedBatchId ? <StackOfStages selectedBatchId={selectedBatchId}></StackOfStages> :
-        tableInProccessBatches ? <TableOfBatches finishBatch={finishBatch} batchesType={"inProccess"}  batchCounter={inProccessBatchCounter} selectBatch={selectBatch}></TableOfBatches> :
-        tableFinishedBatches ? <TableOfBatches finishBatch={finishBatch} batchesType={"finished"} batchCounter={finishedBatchCounter} selectBatch={selectBatch}></TableOfBatches> :
+        tableInProccessBatches ? <div><TableOfBatches showScanner={showScanner} batchToFilter={batchToFilter} finishBatch={finishBatch} batchesType={"inProccess"}  batchCounter={inProccessBatchCounter} selectBatch={selectBatch}></TableOfBatches></div> :
+        tableFinishedBatches ? <div><TableOfBatches showScanner={showScanner} batchToFilter={batchToFilter} finishBatch={finishBatch} batchesType={"finished"} batchCounter={finishedBatchCounter} selectBatch={selectBatch}></TableOfBatches></div> :
         tableUsers ? <TableOfUsers userList={userList} changeUserListState={changeUserListState} userCounter={userCounter}></TableOfUsers> : <div></div>
         }
       </div>
@@ -205,6 +235,6 @@ export const AdminDomain = () => {
 
 
 
-
+{/* <Button onClick={() =>{setQrScannerState(true)}}>Vyhladat podla qr</Button> */}
 // {loading ? <TableOfBatches></TableOfBatches>
 // : <div>pracujem</div> }

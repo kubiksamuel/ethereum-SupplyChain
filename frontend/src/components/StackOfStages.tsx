@@ -7,8 +7,16 @@ import { FormStartStage } from './FormStartStage';
 import { StageCard } from './StageCard';
 import { SupplyChainContext } from "./../hardhat/SymfoniContext";
 import arrow from '../img/arrow.png';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faAnglesDown } from '@fortawesome/free-solid-svg-icons'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faAnglesDown } from '@fortawesome/free-solid-svg-icons';
+import QRCode from "react-qr-code";
+import html2canvas from "html2canvas";
+import { jsPDF } from "jspdf";
+import * as htmlToImage from 'html-to-image';
+import { toPng } from 'html-to-image';
+
+
+
 
 import { Button, Stack } from 'react-bootstrap';
 import ReactDOM from "react-dom";
@@ -106,9 +114,79 @@ const printStages = async() => {
         }
     }
 }
+    // const generateQrCanvas = () => {
+    //     console.log("CC");
+    //     var el: HTMLElement = document.getElementById("qrCodeEl")!;
+    //     let qrImage: HTMLElement = new HTMLDivElement();
+    //     html2canvas(el).then(canvas => {
+    //         qrImage = canvas; 
+    //     });
+    //     document.getElementById("qr")!.appendChild(qrImage);
+    //     console.log("canvas: " + qrImage)
+    //     document.getElementById("qr")!.appendChild(qrImage).innerHTML = "CAAAu";
+    // }
+
+    // const getPDF = () => {
+        // console.log("CC");
+        // var el: HTMLElement = document.getElementById("qrCodeEl")!;
+        // let qrImage: HTMLElement = new HTMLDivElement();
+        // html2canvas(el).then(canvas => {
+        // var img =canvas.toDataURL("image/png");
+        // var doc = new jsPDF('l', 'cm'); 
+        // doc.text("Hello world!", 10, 10);
+        // doc.save('reporte.pdf'); 
+    // });
+        // console.log("get pdf");
+
+//         html2canvas(document.getElementById("qrCodeEl")!).then(canvas =>  {
+//             console.log("canvas: " + canvas);
+//         var image = canvas.toDataURL("image/png").replace("image/png", "image/octet-stream");  // here is the most important part because if you dont replace you will get a DOM 18 exception.
+
+//         var doc = new jsPDF('l', 'cm');
+//         console.log("image: " + image);
+//         doc.text(document.getElementById("qrCodeEl")!.innerHTML, 1, 1);
+//         doc.save('sample-file.pdf');
+//       });
+//  }
+
+    //     htmlToImage.toPng(document.getElementById('qrCodeEl')!)
+    //     .then(function (dataUrl) {
+    //         console.log(dataUrl, ' dataurl');
+    //         // document.getElementById('qr')!.setAttribute("src", dataUrl);
+    //         return dataUrl;
+    //     });
+    //     return "ahoj";
+    // }
+
+
+    useEffect(() => {
+        htmlToImage.toPng(document.getElementById('qrCodeEl')!)
+        .then(function (dataUrl) {
+            console.log(dataUrl, ' dataurl');
+            document.getElementById('qr')!.setAttribute("src", dataUrl);
+            document.getElementById('qrCodeEl')!.style.display = "none";
+
+        });
+      },[]); 
+
+
+
+
+
+
+
+
 
   return (
-      <div className="StagesWrapper">
+      <div>
+      {/* <button  id="getPDF" type="button" className="btn btn-info" onClick={() =>{getPDF()}}>
+        Download PDF
+    </button> */}
+      <div className="StagesWrapper" id = "stage">
+
+        <div id="qrCodeEl" ><QRCode  value={"Ahoj svjete!"}/></div>
+        <img src="" alt="qr" width="400px" height="200px" className='qr' id='qr'/>
+
         <h2>ID šarže: {selectedBatchId}</h2>
         <Stack gap={3}>
             {stageList.map(stage => (
@@ -119,11 +197,12 @@ const printStages = async() => {
             ))}
         </Stack>
      </div>
+     </div>
   );
 }
 
 
-
+{/* <QRCode  value={"Ahoj svjete!"}/> */}
 
 
 

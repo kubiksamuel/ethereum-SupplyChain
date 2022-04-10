@@ -105,9 +105,7 @@ const App = () => {
          Supply Chain
        </h1> */}
        {loading && <div className='loginPage'><h2>Prihlásenie do zásobovacieho systému</h2><img src={metamaskLogin} alt="metamask_login" className='metamaskImage' id='loginImg' onClick={login}/></div>} 
-      {/* <div>
-      <QrReader constraints={{facingMode: 'user' }} containerStyle={{width: "200px", height: "200px"}}></QrReader>
-      </div> */}
+
 
        {currentAccount ? adminLogin === true ? <div><HeaderMenu changeAccount={changeAccount} currentAccount={currentAccount}></HeaderMenu><AdminDomain></AdminDomain><Footer></Footer></div>  :
                   signatoryLogin === true || supplierLogin === true  ? <RoleContext.Provider value={currentRole}> <div><HeaderMenu changeAccount={changeAccount} currentAccount={currentAccount}></HeaderMenu><SignatoryDomain></SignatoryDomain>

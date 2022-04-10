@@ -9,6 +9,7 @@ import {EmployerInfohead} from './EmployerInfohead'
 import { SupplyChainContext } from "./../hardhat/SymfoniContext";
 import * as usersGetter from '../functionality/UsersGetter';
 import {RoleContext} from "../App";
+import { QrcodeReader } from './QrcodeReader';
 
 import { Button } from 'react-bootstrap';
 import ReactDOM from "react-dom";
@@ -40,6 +41,7 @@ export const SignatoryDomain = () => {
     const [currentBatchId, setCurrentBatchId] = useState("");
     const [changedSignatoryBatch, setSignatoryChangedBatch] = useState("");
     const [currentStageFee, setCurrentStageFee] = useState("");
+    const [batchToFilter, setBatchToFilter] = useState("");
     const [classComponentName, setClassComponentName] = useState("App");
     const [userList, setUserList] = useState<Array<User>>([]);
     const [formStartStage, setFormStartStage] = useState(false);
@@ -49,6 +51,7 @@ export const SignatoryDomain = () => {
     const supplychain = useContext(SupplyChainContext);
     const [tableInProccessBatches, setTableInProccessBatches] = useState(false);
     const [tableFinishedBatches, setTableFinishedBatches] = useState(false);
+    const [qrScannerState, setQrScannerState] = useState(false);
     const [batchList, setBatchList] = useState<Array<Batch>>([]);
 
 
@@ -69,6 +72,18 @@ export const SignatoryDomain = () => {
     const changeClassName = (classComponentName: string):void => {
       setClassComponentName(classComponentName);
     } 
+
+    const changeBatchToFilter = (scannedBatch: string):void => {
+      console.log("Prijaty result: " + scannedBatch);
+      setBatchToFilter(scannedBatch);
+      setQrScannerState(false);
+    }
+
+    const showScanner = () => {
+      setQrScannerState(true);
+      // setBatchToFilter("none");
+    }
+  
 
     const setProccessedBatch = (batchId: string):void => {
       for(let i = 0 ; i < inProccessBatchCounter+finishedBatchCounter; i++){
@@ -95,10 +110,12 @@ export const SignatoryDomain = () => {
     } 
 
   const resetState = () => {
+      setQrScannerState(false);
       setFormAddDocument(false);
       setFormStartStage(false);
       changeTableFinishedBatchesState(false);
       setTableInProccessBatches(false);
+      setBatchToFilter("");
       setCurrentBatchId("");
     } 
 
@@ -169,13 +186,14 @@ export const SignatoryDomain = () => {
 
   return (
     <div>
+      {qrScannerState && <QrcodeReader changeBatchToFilter={changeBatchToFilter} ></QrcodeReader>}
       <EmployerInfohead inProccessBatchCounter={inProccessBatchCounter} finishedBatchCounter={finishedBatchCounter} changeClassName={changeClassName} resetState={resetState}
            changeTableFinishedBatchesState={changeTableFinishedBatchesState} changeTableInProccessBatchesState= {changeTableInProccessBatchesState}></EmployerInfohead>     
       <div className={classComponentName}>
       {currentBatchId && !formStartStage && !formAddDocument ?<StackOfStages selectedBatchId={currentBatchId}></StackOfStages> :
-        tableInProccessBatches ? <TableOfSignatoryBatches batchesType={"inProccess"} changedSignatoryBatch={changedSignatoryBatch} changeClassName={changeClassName} selectBatch={selectBatch} batchList={batchList}
+        tableInProccessBatches ? <TableOfSignatoryBatches showScanner={showScanner} batchToFilter={batchToFilter} batchesType={"inProccess"} changedSignatoryBatch={changedSignatoryBatch} changeClassName={changeClassName} selectBatch={selectBatch} batchList={batchList}
           changeFormStartStageState={changeFormStartStageState} changeFormAddDocumentState={changeFormAddDocumentState} changeBatchListsLength={changeBatchListsLength}></TableOfSignatoryBatches> :
-          tableFinishedBatches ? <TableOfSignatoryBatches batchesType={"finished"} changedSignatoryBatch={changedSignatoryBatch} changeClassName={changeClassName} selectBatch={selectBatch} batchList={batchList}
+          tableFinishedBatches ? <TableOfSignatoryBatches showScanner={showScanner} batchToFilter={batchToFilter} batchesType={"finished"} changedSignatoryBatch={changedSignatoryBatch} changeClassName={changeClassName} selectBatch={selectBatch} batchList={batchList}
           changeFormStartStageState={changeFormStartStageState} changeFormAddDocumentState={changeFormAddDocumentState} changeBatchListsLength={changeBatchListsLength}></TableOfSignatoryBatches> :
           <div></div>}
       </div>

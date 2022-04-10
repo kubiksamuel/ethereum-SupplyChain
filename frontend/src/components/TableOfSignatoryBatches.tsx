@@ -10,7 +10,7 @@ import { Buffer } from 'buffer';
 import { ethers } from 'ethers';
 import * as usersGetter from '../functionality/UsersGetter';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faClipboardList, faPeopleCarryBox, faPenToSquare } from '@fortawesome/free-solid-svg-icons';
+import { faClipboardList, faPeopleCarryBox, faPenToSquare, faFilter } from '@fortawesome/free-solid-svg-icons';
 import {RoleContext} from "../App";
 
 interface Batch {
@@ -31,17 +31,40 @@ interface TableOfSignatoryBatchesProps {
     changeFormAddDocumentState: (showTable: boolean) => void;
     changeBatchListsLength: (inProccessBatchLength: number, finishedBatchLength: number) => void;
     batchList: Array<Batch>;
+    batchToFilter: string;
+    showScanner: () => void
 }
 
 
 export const TableOfSignatoryBatches: React.FC<TableOfSignatoryBatchesProps> = ({batchesType, selectBatch, changeClassName, changedSignatoryBatch,
-     changeFormStartStageState, changeFormAddDocumentState, changeBatchListsLength, batchList}) => {
+     changeFormStartStageState, changeFormAddDocumentState, changeBatchListsLength, batchList, batchToFilter, showScanner}) => {
     const currentRole = useContext(RoleContext);
     const supplychain = useContext(SupplyChainContext);
     // const [currentBatchId, setCurrentBatchId] = useState("");
     // const [batchList, setBatchList] = useState<Array<Batch>>([]);
     const [buttonTitle, setButtonTitle] = useState("");
+    const [filteredBatchList, setFilteredBatchList] = useState<Array<Batch>>([]);
     const batchIdCell = useRef("");
+
+    useEffect(() => {
+        console.log("Use effect batch id string: " + batchToFilter);
+        filterRecords(batchToFilter);
+    }, [batchToFilter])
+
+    
+    const filterRecords = (filterString: any) => {
+        if (filterString === "") {
+            // console.log(filterState)
+            // setFilterState(false);
+            setFilteredBatchList(batchList);
+            console.log("Use effect if vetva");
+        } else if(filterString != "") {
+            console.log("Use effect else vetva");
+            // setFilterState(true);
+            const filtered = batchList.filter(batch => batch.batchId.indexOf(filterString) >= 0);
+            setFilteredBatchList(filtered);  //This will trigger a re-render    
+        }
+    }
 
 
     // useEffect(() => {
@@ -97,7 +120,9 @@ export const TableOfSignatoryBatches: React.FC<TableOfSignatoryBatchesProps> = (
             <Table striped bordered hover variant="dark">
             <thead>
                 <tr>
-                <th>ID šarže</th>
+                <th>ID šarže
+                    <Button className='iconButtons' variant="light" onClick={() =>{showScanner()}}><FontAwesomeIcon size="lg" icon={faFilter}/></Button>               
+                </th>
                 <th>Názov produktu</th>
                 <th>Názov etapy</th>
                 <th>Poradie etapy</th>
@@ -107,7 +132,7 @@ export const TableOfSignatoryBatches: React.FC<TableOfSignatoryBatchesProps> = (
             </thead>
             <tbody>
             {
-            batchList.map(batch => (
+            filteredBatchList.map(batch => (
             ((batchesType == "finished" && batch.toProccess == false) || (batchesType=="inProccess" && batch.toProccess)) && 
             <tr key={batch.batchId}>
                 <td>{batch.batchId}</td>

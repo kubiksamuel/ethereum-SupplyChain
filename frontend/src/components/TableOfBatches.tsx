@@ -2,8 +2,7 @@ import * as React from 'react';
 import { Form, Button, Table, OverlayTrigger, Tooltip, Overlay } from 'react-bootstrap'
 import { SupplyChainContext, Symfoni } from "./../hardhat/SymfoniContext";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faClipboardList } from '@fortawesome/free-solid-svg-icons'
-import { faBoxOpen } from '@fortawesome/free-solid-svg-icons'
+import { faBoxOpen, faFilter, faClipboardList } from '@fortawesome/free-solid-svg-icons'
 
 
 import { useRef, useContext, useState, useEffect } from "react";
@@ -12,6 +11,10 @@ import { ContractReceipt, ContractTransaction } from 'ethers';
 import * as ipfs from '../functionality/Ipfs';
 import { Buffer } from 'buffer';
 import { ethers } from 'ethers';
+import QRCode from "react-qr-code";
+import html2canvas from "html2canvas";
+
+
 
 
 
@@ -41,12 +44,17 @@ interface TableOfBatchesProps {
     batchesType: string;
     selectBatch: (arg: string) => void;
     batchCounter: number;
+    batchToFilter: string;
+    showScanner: () => void
 }
 
-export const TableOfBatches: React.FC<TableOfBatchesProps> = ({finishBatch, batchesType, selectBatch, batchCounter}) => {
+export const TableOfBatches: React.FC<TableOfBatchesProps> = ({finishBatch, batchesType, selectBatch, batchCounter, batchToFilter, showScanner}) => {
     const supplychain = useContext(SupplyChainContext);
     // const [currentBatchId, setCurrentBatchId] = useState("");
     const [batchList, setBatchList] = useState<Array<Batch>>([]);
+    const [filteredBatchList, setFilteredBatchList] = useState<Array<Batch>>([]);
+    // const [filterState, setFilterState] = useState(false);
+
 
     // if(supplychain.instance){
     //     supplychain.instance.on("BatchCreated", (batchId, productName) => {
@@ -62,6 +70,26 @@ export const TableOfBatches: React.FC<TableOfBatchesProps> = ({finishBatch, batc
          getBatchesItems();
       },[supplychain.instance, batchCounter]); 
       //
+
+    useEffect(() => {
+        console.log("Use effect batch id string: " + batchToFilter);
+        filterRecords(batchToFilter);
+    }, [batchToFilter])
+
+    
+    const filterRecords = (filterString: any) => {
+        if (filterString === "") {
+            // console.log(filterState)
+            // setFilterState(false);
+            setFilteredBatchList(batchList);
+            console.log("Use effect if vetva");
+        } else if(filterString != "") {
+            console.log("Use effect else vetva");
+            // setFilterState(true);
+            const filtered = batchList.filter(batch => batch.batchId.indexOf(filterString) >= 0);
+            setFilteredBatchList(filtered);  //This will trigger a re-render    
+        }
+    }
 
 
     const getBatchesItems = async () => {
@@ -93,6 +121,7 @@ export const TableOfBatches: React.FC<TableOfBatchesProps> = ({finishBatch, batc
                 // let currentStageName = await supplychain.instance.batchStages(batchId, )
             }
             setBatchList(batchParsedList);
+            setFilteredBatchList(batchParsedList);
         } catch {
             console.log("Nastala neocakavana chyba");
         }
@@ -116,13 +145,24 @@ const receiveFinishedBatch = async (batchId: string, stageCount: number) => {
     }
 };
 
+    // const generateQrCanvas = () => {
+    //     var el: HTMLElement = document.getElementById("qrCodeEl")!;
+    //     let qrImage
+    //     html2canvas(el).then(canvas => {
+    //         qrImage = canvas; 
+    //     });
+    //     return qrImage
+    // }
+
 
     return (
         <div className='Table'>
             <Table striped bordered hover variant="dark">
                 <thead>
                     <tr>
-                    <th>ID šarže</th>
+                    <th>ID šarže
+                        <Button className='iconButtons' variant="light" onClick={() =>{showScanner()}}><FontAwesomeIcon size="lg" icon={faFilter}/></Button>               
+                    </th>
                     <th>Názov produktu</th>
                     <th>Etapa</th>
                     <th>Akcie</th>
@@ -130,7 +170,7 @@ const receiveFinishedBatch = async (batchId: string, stageCount: number) => {
                 </thead>
                 <tbody>
                 {
-                batchList.map(batch => (
+                filteredBatchList.map(batch => (
                 <tr key={batch.batchId}>
                     <td>{batch.batchId}</td>
                     <td>{batch.productName}</td>
@@ -171,3 +211,4 @@ const receiveFinishedBatch = async (batchId: string, stageCount: number) => {
         </div>
     );
 }
+
