@@ -1,16 +1,13 @@
 import React from 'react';
-import ReactDOM from "react-dom";
 import { useContext, useEffect, useState } from 'react';
 import { FormPrivillege } from './FormPrivillege';
 import { FormCreateBatch } from './FormCreateBatch';
 import { AdminInfohead } from './AdminInfohead';
 import { SupplyChainContext } from "./../hardhat/SymfoniContext";
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faUsers, faBoxesStacked } from '@fortawesome/free-solid-svg-icons'
 import * as getter from '../functionality/Getter';
 import { QrcodeReader } from './QrcodeReader';
 import { StackOfStages } from './StackOfStages';
-import { TableOfBatches } from './TableOfBatches';
+import { TableOfBatches } from './TableOfAllBatches';
 import { TableOfUsers } from './TableOfUsers';
 
 interface User {
@@ -19,6 +16,15 @@ interface User {
   userName: string;
   signatoryRole: boolean;
   supplierRole: boolean;
+}
+
+interface Batch {
+  batchId: string;
+  productName: string;
+  stageName: string;
+  isFinished: boolean;
+  stageCount: number;
+  stageState: number;
 }
 
 export const AdminDomain = () => {
@@ -34,24 +40,27 @@ export const AdminDomain = () => {
     const [userCounter, setUserCounter] = useState(0);
     const [classComponentName, setClassComponentName] = useState("App");
     const [batchToFilter, setBatchToFilter] = useState("");
+    const [batchesType, setBatchesType] = useState("");
+    const [batchList, setBatchList] = useState<Array<Batch>>([]);
     const [userList, setUserList] = useState<Array<User>>([]);
     const supplychain = useContext(SupplyChainContext);
 
 
     useEffect(() => {
-      getter.getListsLength(supplychain).then((listsLength) => {
+      getter.getAllBatches(supplychain).then((listsLength) => {
         if(listsLength) {
-          setInProccessBatchCounter(listsLength[0]);
-          setFinishedBatchCounter(listsLength[1])
-          setUserCounter(listsLength[2]);
+          setBatchList(listsLength.batchParsedList);
+          setInProccessBatchCounter(listsLength.inProccessBatchLength);
+          setFinishedBatchCounter(listsLength.finishedBatchLength)
         }
       });
-    },[]); 
+    },[inProccessBatchCounter]); 
 
     useEffect(() => {
       getter.getUsers(supplychain).then((gotUserList) => {
         if(gotUserList) {
           setUserList(gotUserList);
+          setUserCounter(gotUserList.length)
         }
       });
     },[userCounter]); 
@@ -74,10 +83,12 @@ export const AdminDomain = () => {
 
   const changeTableFinishedBatchesState = (showTable: boolean):void => {
     setTableFinishedBatches(showTable);
+    setBatchesType("finished");
   }
 
   const changeTableInProccessBatchesState = (showTable: boolean):void => {
     setTableInProccessBatches(showTable);
+    setBatchesType("inProccess");
   }
 
   const changeUserListState = (currentUserList: Array<User>):void => {
@@ -117,7 +128,8 @@ export const AdminDomain = () => {
     setBatchToFilter("");
     setFormCreateBatch(false);
     setFormPrivillege(false);
-    changeTableFinishedBatchesState(false);
+    setTableUsers(false);
+    setTableFinishedBatches(false);
     setTableInProccessBatches(false);
     setSelectedBatchId("");
   } 
@@ -133,10 +145,10 @@ export const AdminDomain = () => {
         <AdminInfohead changeFormCreateBatchState={changeFormCreateBatchState} changeFormPrivillegeState={changeFormPrivillegeState} changeClassName={changeClassName} 
         inProccessBatchCounter={inProccessBatchCounter} changeTableInProccessBatchesState={changeTableInProccessBatchesState} finishedBatchCounter={finishedBatchCounter} userCounter={userCounter} resetState={resetState}
           changeTableUsersState={changeTableUsersState} changeTableFinishedBatchesState={changeTableFinishedBatchesState} selectBatch={selectBatch}></AdminInfohead>
-        {selectedBatchId ? <StackOfStages selectedBatchId={selectedBatchId}></StackOfStages> :
-        tableInProccessBatches ? <div><TableOfBatches changeScannerState={changeScannerState} batchToFilter={batchToFilter} finishBatch={finishBatch} batchesType={"inProccess"}  batchCounter={inProccessBatchCounter} selectBatch={selectBatch}></TableOfBatches></div> :
-        tableFinishedBatches ? <div><TableOfBatches changeScannerState={changeScannerState} batchToFilter={batchToFilter} finishBatch={finishBatch} batchesType={"finished"} batchCounter={finishedBatchCounter} selectBatch={selectBatch}></TableOfBatches></div> :
-        tableUsers ? <TableOfUsers userList={userList} changeUserListState={changeUserListState} userCounter={userCounter}></TableOfUsers> : <div></div>
+        {selectedBatchId ? <StackOfStages selectedBatchId={selectedBatchId}></StackOfStages> : 
+        tableInProccessBatches ? <div><TableOfBatches batchList={batchList} changeScannerState={changeScannerState} batchToFilter={batchToFilter} finishBatch={finishBatch} batchesType={"inProccess"} selectBatch={selectBatch}></TableOfBatches></div> :
+        tableUsers ? <TableOfUsers userList={userList}  changeUserListState={changeUserListState} userCounter={userCounter}></TableOfUsers>:
+        tableFinishedBatches ? <div><TableOfBatches batchList={batchList} changeScannerState={changeScannerState} batchToFilter={batchToFilter} finishBatch={finishBatch} batchesType={"finished"} selectBatch={selectBatch}></TableOfBatches></div> : <div></div>
         }
       </div>
       {formPrivillege && <FormPrivillege addUserCounter={addUserCounter}  changeFormPrivillegeState={changeFormPrivillegeState} changeClassName={changeClassName}></FormPrivillege>}

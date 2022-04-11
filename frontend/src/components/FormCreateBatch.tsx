@@ -1,7 +1,6 @@
 import * as React from 'react';
-import ReactDOM from "react-dom";
 import { useRef, useContext, useState } from "react";
-import { Form, Button, CloseButton, Modal } from 'react-bootstrap'
+import { Form, Button, CloseButton } from 'react-bootstrap'
 import { SupplyChainContext } from "./../hardhat/SymfoniContext";
 import { ModalAlert } from './ModalAlert';
 import { ContractReceipt, ContractTransaction } from 'ethers';
@@ -79,7 +78,7 @@ export const FormCreateBatch: React.FC<FormCreateBatchProps> = ({addInProccessBa
                      <Form.Select id="memberRole" ref={addressInput} >
                      { 
                         userList.map(user => (
-                            user.signatoryRole && user.userId != 1 && <option key={user.userAddress} value={user.userAddress}>{user.userName}</option>
+                            user.signatoryRole && user.userId !== 1 && <option key={user.userAddress} value={user.userAddress}>{user.userName}</option>
                         ))}
                      </Form.Select>
                  </Form.Group>
@@ -94,7 +93,7 @@ export const FormCreateBatch: React.FC<FormCreateBatchProps> = ({addInProccessBa
                 </div>
             </fieldset>
       </Form>
-      <ModalAlert modalState={modalState} closeModal={closeModal}></ModalAlert>
+      <ModalAlert modalState={modalState} closeModal={closeModal} type={"transaction"}></ModalAlert>
     </div>
     );
 }

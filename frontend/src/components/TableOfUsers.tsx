@@ -1,8 +1,5 @@
 import * as React from 'react';
-import ReactDOM from "react-dom";
-import { useContext } from "react";
 import { Table } from 'react-bootstrap'
-import { SupplyChainContext } from "./../hardhat/SymfoniContext";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCircleCheck } from '@fortawesome/free-solid-svg-icons'
 import { faBan } from '@fortawesome/free-solid-svg-icons';
@@ -22,7 +19,6 @@ interface TableOfUsersProps {
 }
 
 export const TableOfUsers: React.FC<TableOfUsersProps> = ({userList}) => {
-    const supplychain = useContext(SupplyChainContext);
 
     return (
     <div>
@@ -49,7 +45,7 @@ export const TableOfUsers: React.FC<TableOfUsersProps> = ({userList}) => {
                          <FontAwesomeIcon icon={faBan}/>}</td>
                     <td>{user.signatoryRole  ?<FontAwesomeIcon className='success' icon={faCircleCheck}/> :
                          <FontAwesomeIcon icon={faBan}/>}</td>
-                    <td>{user.userId == 1 ?<FontAwesomeIcon className='success' icon={faCircleCheck}/> :
+                    <td>{user.userId === 1 ?<FontAwesomeIcon className='success' icon={faCircleCheck}/> :
                          <FontAwesomeIcon icon={faBan}/>}</td>
                 </tr>
                 ))}

@@ -1,12 +1,6 @@
 .App {
   text-align: center;
   /* height: 100vh; */
-
-}
-
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
 }
 
 @media (prefers-reduced-motion: no-preference) {
@@ -18,13 +12,29 @@
 .App-header {
   background-color: #282c34;
   min-height: 100vh;
-  display: flex;
-  flex-direction: column;
+  /* display: flex; */
+  /* flex-direction: column; */
   align-items: center;
   justify-content: center;
   font-size: calc(10px + 2vmin);
   color: white;
+  /* padding-top: 50px; */
+  border: 5px solid black;
 }
+
+.appTitle {
+  text-align: center;
+  /* text-decoration: underline; */
+  background-color: white;
+  padding: 25px;
+  color: black;
+  /* border-bottom: 10px solid white; */
+  /* height: 100%;
+  width: 100%;
+  display: flex;
+  align-items: center; */
+}
+
 
 .App-link {
   color: #61dafb;
@@ -148,7 +158,7 @@ Form {
 }
 
 .StagesWrapper {
-  margin: 25px;
+  margin: 20px;
   color: white;
   background-color: #212529;
   padding: 25px;
@@ -175,6 +185,7 @@ Form {
   top: 45%;
   left: 50%;
   transform: translate(-50%, -50%);
+  color: white;
 }
 
 .identicon {
@@ -205,6 +216,6 @@ td,th {
   justify-content: space-between;
 }
 
-.badge {
-  /* font-size: large !important; */
+.alertCss {
+  z-index: 99 !important;
 }

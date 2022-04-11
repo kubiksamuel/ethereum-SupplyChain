@@ -1,38 +1,19 @@
-import React, { createContext, useContext, useEffect, useState } from 'react';
-import logo from './logo.svg';
+import React from 'react';
+import { createContext, useContext, useEffect, useState } from 'react';
 import metamaskLogin from './img/loginMetamask.png';
-import './App.css';
-import { Symfoni, SupplyChainContext, CurrentAddressContext, ProviderContext } from "./hardhat/SymfoniContext";
-// import { SupplyChain } from './hardhat/typechain/SupplyChain';
-// import { Greeter } from './components/Greeter';
-// import { Greeter } from './components/Greeter';
-import { FormCreateBatch } from './components/FormCreateBatch';
-import { FormPrivillege } from './components/FormPrivillege';
-import { FormStartStage } from './components/FormStartStage';
-import { FormAddDocument } from './components/FormAddDocument';
-import { TableOfBatches } from './components/TableOfBatches';
-import { SignatoryDomain } from './components/SignatoryDomain';
-import { Footer } from './components/Footer';
-// import { QrcodeReader } from './components/QrcodeReader';
-// import { QrReader } from 'react-qr-reader';
-
-
-import * as ipfs from './functionality/Ipfs';
-
-import { HeaderMenu } from './components/HeaderMenu';
-import { TableOfSignatoryBatches } from './components/TableOfSignatoryBatches';
-import { Button } from 'react-bootstrap';
-import ReactDOM from "react-dom";
-import { ethers } from 'ethers';
+import { SupplyChainContext } from "./hardhat/SymfoniContext";
 import { AdminDomain } from './components/AdminDomain';
-import Identicon from 'identicon.js';
+import { EmployerDomain } from './components/EmployerDomain';
+import { Footer } from './components/Footer';
+import { HeaderMenu } from './components/HeaderMenu';
+import { ethers } from 'ethers';
+import './App.css';
+import { ModalAlert } from './components/ModalAlert'
 
 
 export const RoleContext = createContext("Any role");
 
-
 const App = () => {
-  const signerAddress = useContext(CurrentAddressContext)[0];
   const [loading, setLoading] = useState(false);
   const [adminLogin, setAdminLogin] = useState(false);
   const [signatoryLogin, setSignatoryLogin] = useState(false);
@@ -41,23 +22,21 @@ const App = () => {
   const [currentAccount, setCurrentAccount] = useState("");
   let supplychain = useContext(SupplyChainContext);
 
+  const resetAccount = () => {
+    setCurrentAccount("");
+  }
 
   const changeAccount = (account: string, loadingState: boolean) => {
     setCurrentAccount(account);
     setLoading(loadingState);
   }
 
-
-
   const login = async () => {
-    //Ked sa budem chciet prihlasit este raz
     setAdminLogin(false);
     setSignatoryLogin(false);
     setSupplierLogin(false);
     console.log("LOGIIIN");
-
     const provider = new ethers.providers.Web3Provider(window.ethereum, "any");
-    // Prompt user for account connections
     await provider.send("eth_requestAccounts", []);
     const signer = provider.getSigner();
     let signerAddress = await signer.getAddress();
@@ -83,10 +62,7 @@ const App = () => {
         setCurrentRole("supplier")
       }
       setCurrentAccount(signerAddress);
-
     }
-
-
     console.log("Logged account:", signerAddress);
   }
 
@@ -96,50 +72,23 @@ const App = () => {
   }, [supplychain]);
 
   return (
-
       <div className="App">
-       {/* <header className="App-header">
-       <h1>
-         Supply Chain
-       </h1> */}
-       {loading && <div className='loginPage'><h2>Prihlásenie do zásobovacieho systému</h2><img src={metamaskLogin} alt="metamask_login" className='metamaskImage' id='loginImg' onClick={login}/></div>} 
-
-
+        {loading &&
+        <div>
+        <header className="App-header">
+        <h1 className="appTitle">
+          Prihlásenie do zásobovacieho systému
+        </h1>
+        </header>
+        <div className='loginPage'><img src={metamaskLogin} alt="metamask_login" className='metamaskImage' id='loginImg' onClick={login}/></div></div>} 
        {currentAccount ? adminLogin === true ? <div><HeaderMenu changeAccount={changeAccount} currentAccount={currentAccount}></HeaderMenu><AdminDomain></AdminDomain><Footer></Footer></div>  :
-                  signatoryLogin === true || supplierLogin === true  ? <RoleContext.Provider value={currentRole}> <div><HeaderMenu changeAccount={changeAccount} currentAccount={currentAccount}></HeaderMenu><SignatoryDomain></SignatoryDomain>
+                  signatoryLogin === true || supplierLogin === true  ? <RoleContext.Provider value={currentRole}> <div><HeaderMenu changeAccount={changeAccount} currentAccount={currentAccount}></HeaderMenu><EmployerDomain></EmployerDomain>
                                                                           <Footer></Footer></div>  </RoleContext.Provider> : 
-                  // supplierLogin === true ? <div><HeaderMenu changeAccount={changeAccount} currentAccount={currentAccount}></HeaderMenu><SupplierDomain></SupplierDomain><Footer></Footer></div>  :
-                  <div className="alert alert-warning" role="alert">Neexistuje žiadna rola pre adresu {currentAccount}. <br/> Zmeňte účet v Metamask peňaženke.</div>
+                    <ModalAlert modalState={true} closeModal={resetAccount} type={"login"}></ModalAlert>
                   : <div></div>
        }
-       {/* || supplierLogin == true */}
-       {/* <Symfoni autoInit={true}>
-        </Symfoni> */}
-      {/* <TableOfBatches></TableOfBatches> */}
-       {/* autoInit={true}  */}
-       {/* <Symfoni autoInit={true}> */}
-       {/* <SignatoryDomain></SignatoryDomain> */}
-         {/* <SupplyChain></SupplyChain> */}
-       {/* <Button onClick={renderGen}></Button> */}
-          {/* <TableOfSignatoryBatches></TableOfSignatoryBatches> */}
-           {/* <FormStartStage></FormStartStage> */}
-         {/* <FormCreateBatch></FormCreateBatch> */}
-         {/* <FormAddDocument></FormAddDocument> */}
-         {/* <FormPrivillege></FormPrivillege> */}
-           {/* <SupplyChain></SupplyChain> */}
-         {/* </Symfoni> */}
-       {/* </header> */}
     </div>
-
-
   );
 }
 
 export default App;
-
-
-
-
-
-// {loading ? <TableOfBatches></TableOfBatches>
-// : <div>pracujem</div> }

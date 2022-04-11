@@ -1,8 +1,6 @@
 import * as React from 'react';
-import ReactDOM from "react-dom";
-import { useRef, useContext, useState, useEffect } from "react";
+import { useContext, useState, useEffect } from "react";
 import { Button, Table, OverlayTrigger, Tooltip } from 'react-bootstrap'
-import { SupplyChainContext } from "./../hardhat/SymfoniContext";
 import { ethers } from 'ethers';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faClipboardList, faPeopleCarryBox, faPenToSquare, faFilter } from '@fortawesome/free-solid-svg-icons';
@@ -17,7 +15,7 @@ interface Batch {
     toProccess: boolean;
   }
 
-interface TableOfSignatoryBatchesProps {
+interface TableOfEmployerBatchesProps {
     batchesType: string;
     selectBatch: (currentBatchId: string, stageFee: string ) => void;
     changeClassName: (classComponentName: string) => void;
@@ -30,13 +28,10 @@ interface TableOfSignatoryBatchesProps {
     changeScannerState: () => void
 }
 
-export const TableOfSignatoryBatches: React.FC<TableOfSignatoryBatchesProps> = ({batchesType, selectBatch, changeClassName, changedSignatoryBatch,
+export const TableOfEmployerBatches: React.FC<TableOfEmployerBatchesProps> = ({batchesType, selectBatch, changeClassName, changedSignatoryBatch,
         changeFormStartStageState, changeFormAddDocumentState, changeBatchListsLength, batchList, batchToFilter, changeScannerState}) => {
     const currentRole = useContext(RoleContext);
-    const supplychain = useContext(SupplyChainContext);
-    const [buttonTitle, setButtonTitle] = useState("");
     const [filteredBatchList, setFilteredBatchList] = useState<Array<Batch>>([]);
-    const batchIdCell = useRef("");
 
     useEffect(() => {
         console.log("Use effect batch id string: " + batchToFilter);
@@ -47,7 +42,7 @@ export const TableOfSignatoryBatches: React.FC<TableOfSignatoryBatchesProps> = (
         if (filterString === "") {
             setFilteredBatchList(batchList);
             console.log("Use effect if vetva");
-        } else if(filterString != "") {
+        } else if(filterString !== "") {
             console.log("Use effect else vetva");
             const filtered = batchList.filter(batch => batch.batchId.indexOf(filterString) >= 0);
             setFilteredBatchList(filtered);
@@ -65,14 +60,14 @@ export const TableOfSignatoryBatches: React.FC<TableOfSignatoryBatchesProps> = (
                     <th>Názov produktu</th>
                     <th>Názov etapy</th>
                     <th>Poradie etapy</th>
-                    <th>{currentRole == "signatory" ? "Poplatok za etapu" : "Odmena za etapu" }</th>
+                    <th>{currentRole === "signatory" ? "Poplatok za etapu" : "Odmena za etapu" }</th>
                     <th>Akcie</th>
                     </tr>
                 </thead>
                 <tbody>
                 {
                 filteredBatchList.map(batch => (
-                ((batchesType == "finished" && batch.toProccess == false) || (batchesType=="inProccess" && batch.toProccess)) && 
+                ((batchesType === "finished" && batch.toProccess === false) || (batchesType === "inProccess" && batch.toProccess)) && 
                 <tr key={batch.batchId}>
                     <td>{batch.batchId}</td>
                     <td>{batch.productName}</td>
@@ -91,7 +86,7 @@ export const TableOfSignatoryBatches: React.FC<TableOfSignatoryBatchesProps> = (
                         </OverlayTrigger>
 
                         
-                        {batch.toProccess && currentRole == "signatory" ?                    
+                        {batch.toProccess && currentRole === "signatory" ?                    
                         <OverlayTrigger
                         placement="top"
                         overlay={

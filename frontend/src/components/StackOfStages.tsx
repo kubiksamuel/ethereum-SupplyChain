@@ -1,5 +1,4 @@
 import React from 'react';
-import ReactDOM from "react-dom";
 import { useContext, useEffect, useState } from 'react';
 import { StageCard } from './StageCard';
 import { SupplyChainContext } from "./../hardhat/SymfoniContext";
@@ -7,7 +6,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faAnglesDown } from '@fortawesome/free-solid-svg-icons';
 import QRCode from "react-qr-code";
 import * as htmlToImage from 'html-to-image';
-import { toPng } from 'html-to-image';
+// import { toPng } from 'html-to-image';
 import { Stack } from 'react-bootstrap';
 import * as ipfs from '../functionality/Ipfs';
 import * as dateParser from '../functionality/DateParser';
@@ -62,7 +61,7 @@ export const StackOfStages: React.FC<StackOfStagesProps> = ({selectedBatchId}) =
                     let supplier = await supplychain.instance.rolesInfo(supplierAddress);
                     let supplierName = supplier.name.toString();
                     let stageNotes = "";
-                    if(stage.state != 0) {
+                    if(stage.state !== 0) {
                         stageNotes = await ipfs.getFromIPFS(stage.docHash);
                     }
                     console.log("Stage: " + state);
@@ -91,7 +90,7 @@ export const StackOfStages: React.FC<StackOfStagesProps> = ({selectedBatchId}) =
 
     return (
         <div className="StagesWrapper" id = "stage">
-            <div id="qrCodeEl" ><QRCode  value={"Ahoj svjete!"}/></div>
+            <div id="qrCodeEl" ><QRCode  value={selectedBatchId}/></div>
             <div className="stagesHeader">
                 <div>
                     <h2>ID šarže: {selectedBatchId}</h2>

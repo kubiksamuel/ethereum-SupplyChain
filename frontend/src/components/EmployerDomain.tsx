@@ -1,11 +1,10 @@
 import React from 'react';
-import ReactDOM from "react-dom";
-import { useContext, useEffect, useRef, useState } from 'react';
-import { TableOfSignatoryBatches } from './TableOfSignatoryBatches';
+import { useContext, useEffect, useState } from 'react';
+import { TableOfEmployerBatches } from './TableOfEmployerBatches';
 import { FormStartStage } from './FormStartStage';
 import { FormAddDocument } from './FormAddDocument';
 import {EmployerInfohead} from './EmployerInfohead'
-import { SupplyChainContext } from "./../hardhat/SymfoniContext";
+import { SupplyChainContext } from "../hardhat/SymfoniContext";
 import * as getter from '../functionality/Getter';
 import {RoleContext} from "../App";
 import { QrcodeReader } from './QrcodeReader';
@@ -28,7 +27,7 @@ interface Batch {
   toProccess: boolean;
 }
 
-export const SignatoryDomain = () => {
+export const EmployerDomain = () => {
     const currentRole = useContext(RoleContext);
     const [currentBatchId, setCurrentBatchId] = useState("");
     const [changedSignatoryBatch, setSignatoryChangedBatch] = useState("");
@@ -119,7 +118,7 @@ export const SignatoryDomain = () => {
         setUserList(gotUserList);
       }
     });
-    getter.getBatchesItems(supplychain, currentRole).then((data) => {
+    getter.getEmployerBatchesItems(supplychain, currentRole).then((data) => {
       if(data) {
           setBatchList(data.batchList);
           changeBatchListsLength(data.inProccessBatchLength, data.finishedBatchLength)
@@ -134,10 +133,14 @@ export const SignatoryDomain = () => {
            changeTableFinishedBatchesState={changeTableFinishedBatchesState} changeTableInProccessBatchesState= {changeTableInProccessBatchesState}></EmployerInfohead>     
       <div className={classComponentName}>
       {currentBatchId && !formStartStage && !formAddDocument ?<StackOfStages selectedBatchId={currentBatchId}></StackOfStages> :
-        tableInProccessBatches ? <TableOfSignatoryBatches changeScannerState={changeScannerState} batchToFilter={batchToFilter} batchesType={"inProccess"} changedSignatoryBatch={changedSignatoryBatch} changeClassName={changeClassName} selectBatch={selectBatch} batchList={batchList}
-          changeFormStartStageState={changeFormStartStageState} changeFormAddDocumentState={changeFormAddDocumentState} changeBatchListsLength={changeBatchListsLength}></TableOfSignatoryBatches> :
-          tableFinishedBatches ? <TableOfSignatoryBatches changeScannerState={changeScannerState} batchToFilter={batchToFilter} batchesType={"finished"} changedSignatoryBatch={changedSignatoryBatch} changeClassName={changeClassName} selectBatch={selectBatch} batchList={batchList}
-          changeFormStartStageState={changeFormStartStageState} changeFormAddDocumentState={changeFormAddDocumentState} changeBatchListsLength={changeBatchListsLength}></TableOfSignatoryBatches> :
+        tableInProccessBatches ? <TableOfEmployerBatches
+       changeScannerState={changeScannerState} batchToFilter={batchToFilter} batchesType={"inProccess"} changedSignatoryBatch={changedSignatoryBatch} changeClassName={changeClassName} selectBatch={selectBatch} batchList={batchList}
+          changeFormStartStageState={changeFormStartStageState} changeFormAddDocumentState={changeFormAddDocumentState} changeBatchListsLength={changeBatchListsLength}></TableOfEmployerBatches
+        > :
+          tableFinishedBatches ? <TableOfEmployerBatches
+         changeScannerState={changeScannerState} batchToFilter={batchToFilter} batchesType={"finished"} changedSignatoryBatch={changedSignatoryBatch} changeClassName={changeClassName} selectBatch={selectBatch} batchList={batchList}
+          changeFormStartStageState={changeFormStartStageState} changeFormAddDocumentState={changeFormAddDocumentState} changeBatchListsLength={changeBatchListsLength}></TableOfEmployerBatches
+        > :
           <div></div>}
       </div>
       {currentBatchId && formStartStage && <FormStartStage setProccessedBatch={setProccessedBatch} userList={userList} selectBatch={selectBatch} currentBatchId={currentBatchId}

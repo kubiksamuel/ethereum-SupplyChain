@@ -1,7 +1,4 @@
 import React from 'react';
-import ReactDOM from "react-dom";
-import { useContext, useEffect, useState } from 'react';
-import { SupplyChainContext } from "./../hardhat/SymfoniContext";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faBoxesStacked } from '@fortawesome/free-solid-svg-icons'
 import { Button } from 'react-bootstrap';
@@ -17,10 +14,7 @@ interface EmployerInfohead {
 }
 
 export const EmployerInfohead: React.FC<EmployerInfohead> = ({changeTableInProccessBatchesState, changeTableFinishedBatchesState, changeClassName,
-    resetState, inProccessBatchCounter, finishedBatchCounter}) => {
-    const [currentBatchId, setCurrentBatchId] = useState("");
-    const supplychain = useContext(SupplyChainContext);
-
+        resetState, inProccessBatchCounter, finishedBatchCounter}) => {
     return (
         <div className='adminInfohead'>
             <div className='adminInfoitem'>

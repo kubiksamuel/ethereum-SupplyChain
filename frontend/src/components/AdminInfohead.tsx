@@ -1,7 +1,4 @@
 import React from 'react';
-import ReactDOM from "react-dom";
-import { useContext, useEffect, useState } from 'react';
-import { SupplyChainContext } from "./../hardhat/SymfoniContext";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faUsers, faBoxesStacked } from '@fortawesome/free-solid-svg-icons'
 import { Button, ButtonGroup } from 'react-bootstrap';
@@ -21,12 +18,8 @@ interface AdminInfoheadProps {
 }
 
 export const AdminInfohead: React.FC<AdminInfoheadProps> = ({changeFormCreateBatchState, changeFormPrivillegeState, changeTableUsersState,
-    changeTableInProccessBatchesState, changeTableFinishedBatchesState, selectBatch, changeClassName, resetState, inProccessBatchCounter, finishedBatchCounter, userCounter}) => {
-    const [currentBatchId, setCurrentBatchId] = useState("");
-    const supplychain = useContext(SupplyChainContext);
-
+        changeTableInProccessBatchesState, changeTableFinishedBatchesState, selectBatch, changeClassName, resetState, inProccessBatchCounter, finishedBatchCounter, userCounter}) => {
     return (
-
         <div className='adminInfohead'>
             <div className='adminInfoitem'>
                 <div>
@@ -47,7 +40,6 @@ export const AdminInfohead: React.FC<AdminInfoheadProps> = ({changeFormCreateBat
                                 changeClassName("App");
                             }} variant="outline-info">Zobraziť</Button>
                             <Button onClick={() =>{
-                                resetState();
                                 changeFormPrivillegeState(true);
                                 changeClassName("belowLayer");
                             }} variant="outline-primary">Pridať</Button>
@@ -70,11 +62,10 @@ export const AdminInfohead: React.FC<AdminInfoheadProps> = ({changeFormCreateBat
                         <ButtonGroup vertical>
                         <Button onClick={() =>{
                                 resetState();
-                                changeTableInProccessBatchesState(true);
                                 changeClassName("App");
+                                changeTableInProccessBatchesState(true);
                             }} variant="outline-info">Zobraziť</Button>
                         <Button onClick={() =>{
-                                resetState();
                                 changeFormCreateBatchState(true);
                                 changeClassName("belowLayer");
                             }} variant="outline-primary">Pridať</Button>
@@ -97,8 +88,8 @@ export const AdminInfohead: React.FC<AdminInfoheadProps> = ({changeFormCreateBat
                     <div className='buttonGroup'>
                         <Button onClick={() =>{
                             resetState();
-                            changeTableFinishedBatchesState(true);
                             changeClassName("App");
+                            changeTableFinishedBatchesState(true);
                         }} variant="outline-info">Zobraziť</Button>
                     </div>
                 </div>

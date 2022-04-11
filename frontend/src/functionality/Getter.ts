@@ -1,6 +1,4 @@
-import React from 'react';
 import { SymfoniSupplyChain } from "./../hardhat/SymfoniContext";
-
 
 
 interface User {
@@ -19,6 +17,21 @@ interface Batch {
     supplierFee: string;
     toProccess: boolean;
     }   
+
+interface BatchAdmin {
+    batchId: string;
+    productName: string;
+    stageName: string;
+    isFinished: boolean;
+    stageCount: number;
+    stageState: number;
+    }   
+
+interface AdminData {
+    inProccessBatchLength: number;
+    finishedBatchLength: number;
+    batchParsedList: Array<BatchAdmin>;
+}
 
 interface SignatoryData{
     batchList: Array<Batch>;
@@ -62,7 +75,6 @@ export const getUsers = async (supplychain: SymfoniSupplyChain) => {
                 userParsedList.push(newUser)
   
             }
-            // changeUserListState(userParsedList);
             return userParsedList;
         } catch {
             console.log("Nastala neocakavana chyba");
@@ -74,11 +86,8 @@ export const getUsers = async (supplychain: SymfoniSupplyChain) => {
     if (!supplychain.instance) throw Error("SupplyChain instance not ready");
     if (supplychain.instance) {
         try{
-            // const batchLengthBN = await supplychain.instance.getListLength();
-            // const batchLength = batchLengthBN.toNumber();
             let finishedBatchLength = 0 ;
             let inProccessBatchLength = 0 ;
-
             const listLengthBN = await supplychain.instance.getListLength();
             const listLength = listLengthBN.toNumber();
             for(let i = 0; i < listLength; i++){
@@ -87,7 +96,7 @@ export const getUsers = async (supplychain: SymfoniSupplyChain) => {
                 let isFinished = batch.isFinished;
                 let stageCount = batch.stageCount.toNumber();
                 const stageState = (await supplychain.instance.batchStages(batchId, stageCount)).state;
-                if(isFinished && stageState == 2) {
+                if(isFinished && stageState === 2) {
                     finishedBatchLength++;
                 } else {
                     inProccessBatchLength++;
@@ -104,7 +113,7 @@ export const getUsers = async (supplychain: SymfoniSupplyChain) => {
       }
   };
 
-  export const getBatchesItems = async (supplychain: SymfoniSupplyChain, typeOfView: string) => {
+  export const getEmployerBatchesItems = async (supplychain: SymfoniSupplyChain, typeOfView: string) => {
     console.log("ASYNC");
     if (!supplychain.instance) throw Error("SupplyChain instance not ready");
     if (supplychain.instance) {
@@ -114,7 +123,7 @@ export const getUsers = async (supplychain: SymfoniSupplyChain) => {
             let inProccessBatchLength = 0;
             let finishedBatchLength = 0;
             let listOfWaitingBatches;
-            if(typeOfView == "signatory") {
+            if(typeOfView === "signatory") {
                 listOfWaitingBatches = await supplychain.instance.getSignatoryView();
             } else {
                  listOfWaitingBatches = await supplychain.instance.getSupplierView();
@@ -147,3 +156,42 @@ export const getUsers = async (supplychain: SymfoniSupplyChain) => {
         }
     }
  };
+
+ export const getAllBatches = async (supplychain: SymfoniSupplyChain) => {
+    if (!supplychain.instance) throw Error("SupplyChain instance not ready");
+    if (supplychain.instance) {
+        try{
+            const batchParsedList = [];
+            let finishedBatchLength = 0 ;
+            let inProccessBatchLength = 0 ;
+            const listLengthBN = await supplychain.instance.getListLength();
+            const listLength = listLengthBN.toNumber();
+            for(let i = 0; i < listLength; i++){
+                let batchId = await supplychain.instance.listOfIds(i);
+                let batch = await supplychain.instance.batches(batchId);
+                let isFinished = batch.isFinished;
+                let stageCount = batch.stageCount.toNumber()
+                const stageState = (await supplychain.instance.batchStages(batchId, stageCount)).state;
+                let _productName = batch.productName.toString();
+                let stage = await supplychain.instance.batchStages(batchId, batch[3].toNumber());
+                let _stageName = stage.name;
+                let batchItem: BatchAdmin = {batchId: batchId, productName: _productName, stageName: _stageName.toString(), isFinished: isFinished,
+                                        stageCount: stageCount, stageState: stageState}
+                if(isFinished && stageState === 2) {
+                    finishedBatchLength++;
+                } else {
+                    inProccessBatchLength++;
+                }
+                batchParsedList.push(batchItem)
+                console.log(batch.batchId);
+            }
+            // return [inProccessBatchLength, finishedBatchLength, userLength];
+            let adminData: AdminData = {inProccessBatchLength: inProccessBatchLength, finishedBatchLength: finishedBatchLength,
+                 batchParsedList: batchParsedList};
+
+            return adminData;
+        } catch {
+            console.log("Nastala neocakavana chyba");
+        }
+    }
+};

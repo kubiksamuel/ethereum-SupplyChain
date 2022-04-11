@@ -1,7 +1,6 @@
 import * as React from 'react';
-import ReactDOM from "react-dom";
 import { useRef, useContext, useState } from "react";
-import { Form, Button, FormControl, InputGroup, CloseButton} from 'react-bootstrap'
+import { Form, Button, CloseButton} from 'react-bootstrap'
 import { SupplyChainContext } from "./../hardhat/SymfoniContext";
 import { ModalAlert } from './ModalAlert';
 import { ContractReceipt, ContractTransaction } from 'ethers';
@@ -100,8 +99,6 @@ export const FormStartStage: React.FC<FormStartStageProps> = ({setProccessedBatc
                                 user.signatoryRole && <option key={user.userAddress} value={user.userAddress}>{user.userName}</option>
                             ))}
                         </Form.Select>
-                        {/* <Form.Label htmlFor="supplierAddress">Adresa výrobcu:</Form.Label>
-                            <Form.Control id="supplierAddress" placeholder="" ref={addressSupplierInput}/> */}
                     </Form.Group>
                     <Form.Group className="mb-3">
                         <Form.Label htmlFor="supplierAddress">Výrobcu:</Form.Label>
@@ -111,8 +108,6 @@ export const FormStartStage: React.FC<FormStartStageProps> = ({setProccessedBatc
                                 user.supplierRole && <option key={user.userAddress} value={user.userAddress}>{user.userName}</option>
                             ))}
                         </Form.Select>
-                        {/* <Form.Label htmlFor="signatoryAddress">Adresa schvaľovateľa:</Form.Label>
-                        //  <Form.Control id="signatoryAddress" placeholder="" ref={addressSignatoryInput} /> */}
                     </Form.Group>
                     <Form.Group className="mb-3">
                         <Form.Label htmlFor="stageName">Názov novej etapy: </Form.Label>
@@ -130,7 +125,7 @@ export const FormStartStage: React.FC<FormStartStageProps> = ({setProccessedBatc
 
                 </fieldset>
             </Form>
-            <ModalAlert modalState={modalState} closeModal={closeModal}></ModalAlert>
+            <ModalAlert modalState={modalState} closeModal={closeModal} type={"transaction"}></ModalAlert>
         </div>
     );
 }

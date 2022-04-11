@@ -1,5 +1,4 @@
 import React from 'react';
-import ReactDOM from "react-dom";
 import { StageNotes } from './StageNotes';
 import { Badge } from 'react-bootstrap'
 import { ethers } from 'ethers';
@@ -26,8 +25,8 @@ export const StageCard: React.FC<StackOfStagesProps> = ({stage}) => {
     return (
         <div className="stageCard">
             <h1>#{stage.stageOrder} {stage.stageName}</h1>
-            <div><b>Stav:</b> {stage.state == 0 ? <Badge className="badge" pill bg="warning" text="dark"> Vybavuje sa...</Badge> :
-                stage.state == 1 ? <Badge className="badge" pill bg="info">Pripravené na prevzatie</Badge> :
+            <div><b>Stav:</b> {stage.state === 0 ? <Badge className="badge" pill bg="warning" text="dark"> Vybavuje sa...</Badge> :
+                stage.state === 1 ? <Badge className="badge" pill bg="info">Pripravené na prevzatie</Badge> :
                 <Badge className="badge" pill bg="success">Ukončené</Badge>
             }</div>
             <hr/>         

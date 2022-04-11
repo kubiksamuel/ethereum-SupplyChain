@@ -1,8 +1,7 @@
 import * as React from 'react';
-import ReactDOM from "react-dom";
 import { useContext, useState, useEffect } from "react";
-import { Button, Table, OverlayTrigger, Tooltip, Overlay } from 'react-bootstrap';
-import { SupplyChainContext } from "./../hardhat/SymfoniContext";
+import { Button, Table, OverlayTrigger, Tooltip } from 'react-bootstrap';
+import { SupplyChainContext } from "../hardhat/SymfoniContext";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBoxOpen, faFilter, faClipboardList } from '@fortawesome/free-solid-svg-icons';
 import { ModalAlert } from './ModalAlert';
@@ -30,70 +29,38 @@ interface Stage {
   }
 
 interface TableOfBatchesProps {
+    batchList : Array<Batch>;
     finishBatch: () => void;
     batchesType: string;
     selectBatch: (arg: string) => void;
-    batchCounter: number;
     batchToFilter: string;
     changeScannerState: () => void
 }
 
-export const TableOfBatches: React.FC<TableOfBatchesProps> = ({finishBatch, batchesType, selectBatch, batchCounter, batchToFilter, changeScannerState}) => {
+export const TableOfBatches: React.FC<TableOfBatchesProps> = ({ batchList, finishBatch, batchesType, selectBatch, batchToFilter, changeScannerState}) => {
     const supplychain = useContext(SupplyChainContext);
-    const [batchList, setBatchList] = useState<Array<Batch>>([]);
     const [filteredBatchList, setFilteredBatchList] = useState<Array<Batch>>([]);
     const [modalState, setModalState] = useState(false);
 
     const closeModal = () => setModalState(false);
 
     useEffect(() => {
-         getBatchesItems();
-      },[batchCounter]); 
+         setFilteredBatchList(batchList);
+      },[batchList]); 
 
     useEffect(() => {
         filterRecords(batchToFilter);
+        console.log("Zmenil sa counter")
     }, [batchToFilter])
-    
+
     const filterRecords = (filterString: any) => {
         if (filterString === "") {
             setFilteredBatchList(batchList);
-        } else if(filterString != "") {
+        } else if(filterString !== "") {
             const filtered = batchList.filter(batch => batch.batchId.indexOf(filterString) >= 0);
             setFilteredBatchList(filtered);
         }
     }
-
-    const getBatchesItems = async () => {
-        if (!supplychain.instance) throw Error("SupplyChain instance not ready");
-        if (supplychain.instance) {
-            try{
-                const batchParsedList = [];
-                const listLengthBN = await supplychain.instance.getListLength();
-                const listLength = listLengthBN.toNumber();
-                for(let i = 0; i < listLength; i++){
-                    let batchId = await supplychain.instance.listOfIds(i);
-                    let batch = await supplychain.instance.batches(batchId);
-                    let isFinished = batch.isFinished;
-                    let stageCount = batch.stageCount.toNumber()
-                    const stageState = (await supplychain.instance.batchStages(batchId, stageCount)).state;
-
-                    if((batchesType == "finished" && isFinished && stageState == 2) || (batchesType == "inProccess" && (!isFinished || stageState != 2))) {
-                        let _productName = batch.productName.toString();
-                        let stage = await supplychain.instance.batchStages(batchId, batch[3].toNumber());
-                        let _stageName = stage.name;
-                        let batchItem: Batch = {batchId: batchId, productName: _productName, stageName: _stageName.toString(), isFinished: isFinished,
-                                                stageCount: stageCount, stageState: stageState}
-                        batchParsedList.push(batchItem)
-                        console.log(batch.batchId);
-                    } 
-                }
-                setBatchList(batchParsedList);
-                setFilteredBatchList(batchParsedList);
-            } catch {
-                console.log("Nastala neocakavana chyba");
-            }
-        }
-    };
 
     const receiveFinishedBatch = async (batchId: string, stageCount: number) => {
         if (!supplychain.instance) throw Error("SupplyChain instance not ready");
@@ -130,6 +97,7 @@ export const TableOfBatches: React.FC<TableOfBatchesProps> = ({finishBatch, batc
                     <tbody>
                     {
                     filteredBatchList.map(batch => (
+                    ((batchesType === "finished" && batch.isFinished && batch.stageState === 2) || (batchesType === "inProccess" && (!batch.isFinished || batch.stageState !== 2))) && 
                     <tr key={batch.batchId}>
                         <td>{batch.batchId}</td>
                         <td>{batch.productName}</td>
@@ -148,7 +116,7 @@ export const TableOfBatches: React.FC<TableOfBatchesProps> = ({finishBatch, batc
 
                     
                         {   
-                            batch.isFinished && batch.stageState == 1 && 
+                            batch.isFinished && batch.stageState === 1 && 
 
                     <OverlayTrigger
                         placement="top"
@@ -168,7 +136,7 @@ export const TableOfBatches: React.FC<TableOfBatchesProps> = ({finishBatch, batc
                     </tbody>
                 </Table> 
             </div>
-            <ModalAlert modalState={modalState} closeModal={closeModal}></ModalAlert>
+            <ModalAlert modalState={modalState} closeModal={closeModal} type={"transaction"}></ModalAlert>
         </div>
     );
 }

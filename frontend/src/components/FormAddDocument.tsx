@@ -1,5 +1,4 @@
 import React from 'react';
-import ReactDOM from "react-dom";
 import { useRef, useContext, useState } from "react";
 import { Form, Button, CloseButton } from 'react-bootstrap'
 import { SupplyChainContext } from "./../hardhat/SymfoniContext";
@@ -78,7 +77,7 @@ export const FormAddDocument: React.FC<FormAddDocumentProps> = ({setProccessedBa
                     </div>
                 </fieldset>
             </Form>
-            <ModalAlert modalState={modalState} closeModal={closeModal}></ModalAlert>
+            <ModalAlert modalState={modalState} closeModal={closeModal} type={"transaction"}></ModalAlert>
         </div>
     );
 }

@@ -1,7 +1,6 @@
 import * as React from 'react';
-import ReactDOM from "react-dom";
 import { useRef, useContext, useState } from "react";
-import { Form, Button, CloseButton, Modal } from 'react-bootstrap'
+import { Form, Button, CloseButton } from 'react-bootstrap'
 import { SupplyChainContext } from "./../hardhat/SymfoniContext";
 import { ModalAlert } from './ModalAlert';
 import { ContractReceipt, ContractTransaction } from 'ethers';
@@ -81,7 +80,7 @@ export const FormPrivillege: React.FC<FormPrivillegeProps> = ({addUserCounter, c
                     <Form.Group className="mb-3">
                         <Form.Label htmlFor="memberRole">Rola používateľa:</Form.Label>
                         <Form.Select id="memberRole" ref={roleInput} >
-                            <option value={"Signatory"}>Schvalovatel</option>
+                            <option value={"Signatory"}>Schvaľovateľ</option>
                             <option value={"Supplier"}>Výrobca</option>
                         </Form.Select>
                     </Form.Group>
@@ -92,7 +91,7 @@ export const FormPrivillege: React.FC<FormPrivillegeProps> = ({addUserCounter, c
                     </div>
                 </fieldset>
             </Form>
-            <ModalAlert modalState={modalState} closeModal={closeModal}></ModalAlert>
+            <ModalAlert modalState={modalState} closeModal={closeModal} type={"transaction"}></ModalAlert>
         </div>
     );
 }
