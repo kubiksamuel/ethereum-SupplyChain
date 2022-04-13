@@ -35,21 +35,13 @@ export const FormPrivillege: React.FC<FormPrivillegeProps> = ({addUserCounter, c
                     setPrivillegeTx = await supplychain.instance.setPrivillegeSignatory(address, name);
                     const receipt: ContractReceipt = await setPrivillegeTx.wait();
                     addUserCounter();
-                    // @ts-ignore
-                    console.log("Adresa:" , receipt.events[0].args[0], "Meno clen: ", receipt.events[0].args[1], "Rola: " , receipt.events[0].args[2]);
                 } else if (role === "Supplier") {
                     setPrivillegeTx = await supplychain.instance.setPrivillegeSupplier(address, name);
                     const receipt: ContractReceipt = await setPrivillegeTx.wait();
                     addUserCounter();
-                    // @ts-ignore
-                    console.log("Adresa:" , receipt.events[0].args[0], "Meno clen: ", receipt.events[0].args[1], "Rola: " , receipt.events[0].args[2]);
-                } else {
-                    console.log("Nezadali ste ziadnu rolu");
-                    return;
                 }
             } catch {
                 setModalState(true);
-                console.log("Transakcia bola vratena");
             }
         }
      };

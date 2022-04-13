@@ -1,9 +1,12 @@
 // SPDX-License-Identifier: GPL-3.0
 
+// Smart contract for setting privillege (Admin privillege is set at the beginning in constructor,
+//and function for setting supplier and signatory privillege).
+// Import AccessControlEnumerable contract from openzeppeling that provides 
+//functionality to help handling this role system.  
 import "@openzeppelin/contracts/access/AccessControlEnumerable.sol";
 
 pragma solidity ^0.8.0;
-
 
 contract RoleManager is AccessControlEnumerable {
 
@@ -13,9 +16,8 @@ contract RoleManager is AccessControlEnumerable {
 
     event MemberAdded(address account, string name, string role);
 
-    // mapping(address => RoleInfo) public supplierRoles;
-    // mapping(address => RoleInfo) public signatoryRoles;
     mapping(address => RoleInfo) public rolesInfo;
+    // list of all addresses that has some role 
     address[] public roles;
 
     struct RoleInfo {
@@ -23,12 +25,11 @@ contract RoleManager is AccessControlEnumerable {
         string name;
     }
 
-    constructor(string memory name)
+    constructor(string memory name) 
     {
         roleId = 1;
         _grantRole(DEFAULT_ADMIN_ROLE, msg.sender);
         _grantRole(SIGNATORY_ROLE, msg.sender);
-        // _grantRole(SUPPLIER_ROLE, msg.sender);
         rolesInfo[msg.sender].name = name;
         rolesInfo[msg.sender].id = roleId;
         roles.push(msg.sender);
@@ -43,11 +44,6 @@ contract RoleManager is AccessControlEnumerable {
         rolesInfo[account].id = roleId;
         rolesInfo[account].name = name;
         roles.push(account);
-        // if(rolesInfo[account].id == 0) {
-        //     roleId++;
-        //     rolesInfo[account].id = roleId;
-        //     roles.push(account);
-        // }
         emit MemberAdded(account, name, "supplier");
     }
 
@@ -60,11 +56,6 @@ contract RoleManager is AccessControlEnumerable {
         rolesInfo[account].id = roleId;
         rolesInfo[account].name = name;
         roles.push(account);
-        // if(rolesInfo[account].id == 0) {
-        //     roleId++;
-        //     rolesInfo[account].id = roleId;
-        //     roles.push(account);
-        // }
         emit MemberAdded(account, name, "signator");
     }
 }

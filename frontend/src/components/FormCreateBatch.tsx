@@ -45,11 +45,8 @@ export const FormCreateBatch: React.FC<FormCreateBatchProps> = ({addInProccessBa
                 createBatchTx = await supplychain.instance.createBatch(name, address, date, ipfsHash);
                 const receipt: ContractReceipt = await createBatchTx.wait();
                 addInProccessBatchCounter();
-                // @ts-ignore
-                console.log("Batch id:" , receipt.events[2].args[0], "Nazov stagu: ", receipt.events[2].args[1], "Ipfs hash: " , receipt.events[2].args[2]);
             } catch {
                 setModalState(true);
-                console.log("Transakcia bola vratena");
             }
         }
      };

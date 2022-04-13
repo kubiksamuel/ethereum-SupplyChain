@@ -50,7 +50,6 @@ export const TableOfBatches: React.FC<TableOfBatchesProps> = ({ batchList, finis
 
     useEffect(() => {
         filterRecords(batchToFilter);
-        console.log("Zmenil sa counter")
     }, [batchToFilter])
 
     const filterRecords = (filterString: any) => {
@@ -71,11 +70,8 @@ export const TableOfBatches: React.FC<TableOfBatchesProps> = ({ batchList, finis
                     completeFinalStageTx = await supplychain.instance.completeFinalStage(batchId, {value: supplierFee});
                     const receipt: ContractReceipt = await completeFinalStageTx.wait();
                     finishBatch();
-                    // @ts-ignore
-                    console.log("Prevzaty balik s batch id:" , receipt.events[0].args[0]);
             } catch {
                 setModalState(true);
-                console.log("Nastala neocakavana chyba");
             }
         }
     };

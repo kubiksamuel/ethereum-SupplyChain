@@ -35,40 +35,33 @@ const App = () => {
     setAdminLogin(false);
     setSignatoryLogin(false);
     setSupplierLogin(false);
-    console.log("LOGIIIN");
     const provider = new ethers.providers.Web3Provider(window.ethereum, "any");
     await provider.send("eth_requestAccounts", []);
     const signer = provider.getSigner();
     let signerAddress = await signer.getAddress();
-    console.log(currentAccount + "  ==  " + signerAddress);
     if(supplychain.instance) {
       let adminRole = await supplychain.instance.DEFAULT_ADMIN_ROLE();
       let signatorRole = await supplychain.instance.SIGNATORY_ROLE();
       let supplierRole = await supplychain.instance.SUPPLIER_ROLE();
       if(await supplychain.instance.hasRole(adminRole, signerAddress)){
-        console.log("Account has Admin Role")
         setAdminLogin(true);
         setLoading(false);
         setCurrentRole("admin")
       } else if(await supplychain.instance.hasRole(signatorRole, signerAddress)){
-        console.log("Account has Signatory Role")
         setSignatoryLogin(true);
         setLoading(false);
         setCurrentRole("signatory")
       }else if(await supplychain.instance.hasRole(supplierRole, signerAddress)){
-        console.log("Account has Supplier Role")
         setSupplierLogin(true);
         setLoading(false);
         setCurrentRole("supplier")
       }
       setCurrentAccount(signerAddress);
     }
-    console.log("Logged account:", signerAddress);
   }
 
   useEffect(() => {
     setLoading(true);
-    console.log("SUPPLY INSTANCE: " + supplychain.instance);
   }, [supplychain]);
 
   return (

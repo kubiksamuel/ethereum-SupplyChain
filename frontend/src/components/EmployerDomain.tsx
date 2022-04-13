@@ -64,7 +64,6 @@ export const EmployerDomain = () => {
     } 
 
     const changeBatchToFilter = (scannedBatch: string):void => {
-      console.log("Prijaty result: " + scannedBatch);
       setBatchToFilter(scannedBatch);
       setQrScannerState(false);
     }

@@ -288,7 +288,7 @@ describe("SupplyChain", function () {
   });
 
   it("Get correct information for stage 3 of main batch", async function () {
-    const finalStage = await supplychain.getBatchStageState(batchId, 3);
+    const finalStage = await supplychain.getBatchStage(batchId, 3);
     expect(finalStage[0]).to.equal(3);
     expect(finalStage[1]).to.equal(stage3Name);
     expect(finalStage[2]).to.equal(ethers.utils.parseEther("2"));
@@ -301,7 +301,7 @@ describe("SupplyChain", function () {
   });
 
   it("Get name of all stages for main batch", async function () {
-    const stageNames = await supplychain.getStages(batchId);
+    const stageNames = await supplychain.getStagesNames(batchId);
     expect(stageNames[0]).to.equal(stage1name);
     expect(stageNames[1]).to.equal(stage2Name);
     expect(stageNames[2]).to.equal(stage3Name);

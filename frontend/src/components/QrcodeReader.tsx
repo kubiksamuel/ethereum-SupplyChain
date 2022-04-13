@@ -13,7 +13,6 @@ export const QrcodeReader: React.FC<QrcodeReaderProps> = ({changeBatchToFilter})
         onResult={(result, error) => {
             if (!!result) {
                 changeBatchToFilter(result.toString());
-                console.log("Result: " + result.toString());
               }   
             }}
               containerStyle={{ width: "420px", height: "420px", position: "fixed", top: "30%", left: "42%",

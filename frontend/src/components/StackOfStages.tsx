@@ -6,7 +6,6 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faAnglesDown } from '@fortawesome/free-solid-svg-icons';
 import QRCode from "react-qr-code";
 import * as htmlToImage from 'html-to-image';
-// import { toPng } from 'html-to-image';
 import { Stack } from 'react-bootstrap';
 import * as ipfs from '../functionality/Ipfs';
 import * as dateParser from '../functionality/DateParser';
@@ -40,11 +39,9 @@ export const StackOfStages: React.FC<StackOfStagesProps> = ({selectedBatchId}) =
     const printStages = async() => {
         if (!supplychain.instance) throw Error("SupplyChain instance not ready");
         if (supplychain.instance) {
-            try{
-                console.log("Selected Batch: " + selectedBatchId);
                 const stageParsedList = [];
                 const numberOfStages = ((await supplychain.instance.batches(selectedBatchId)).stageCount).toNumber();
-                for(let i = 1; i <= numberOfStages; i++){
+                for(let i = 1; i <= numberOfStages; i++) {
                     const stage = await supplychain.instance.batchStages(selectedBatchId, i);
                     let stageName = stage.name;
                     let stageOrder = stage.id.toNumber();
@@ -64,25 +61,19 @@ export const StackOfStages: React.FC<StackOfStagesProps> = ({selectedBatchId}) =
                     if(stage.state !== 0) {
                         stageNotes = await ipfs.getFromIPFS(stage.docHash);
                     }
-                    console.log("Stage: " + state);
                     let stageItem: Stage = {stageName: stageName, stageOrder: stageOrder, supplierFee: supplierFee, dateReceive: dateReceive, dateDone: dateDone,
                         state: state, signatoryAddress: signatoryAddress, signatoryName: signatoryName,
                         supplierAddress: supplierAddress, supplierName: supplierName, stageNotes: stageNotes};
                     
-                    console.log(Object.entries(stageItem).flat())        
                     stageParsedList.push(stageItem)
                 }
                 setStageList(stageParsedList);
-            } catch {
-                console.log("Nastala neocakavana chybaaaa");
             }
-        }
-    }
+        }   
 
     useEffect(() => {
         htmlToImage.toPng(document.getElementById('qrCodeEl')!)
         .then(function (dataUrl) {
-            console.log(dataUrl, ' dataurl');
             document.getElementById('qr')!.setAttribute("src", dataUrl);
             document.getElementById('qrCodeEl')!.style.display = "none";
         });

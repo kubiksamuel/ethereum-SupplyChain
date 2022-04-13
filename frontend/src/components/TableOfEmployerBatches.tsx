@@ -34,16 +34,13 @@ export const TableOfEmployerBatches: React.FC<TableOfEmployerBatchesProps> = ({b
     const [filteredBatchList, setFilteredBatchList] = useState<Array<Batch>>([]);
 
     useEffect(() => {
-        console.log("Use effect batch id string: " + batchToFilter);
         filterRecords(batchToFilter);
     }, [batchToFilter])
 
     const filterRecords = (filterString: any) => {
         if (filterString === "") {
             setFilteredBatchList(batchList);
-            console.log("Use effect if vetva");
         } else if(filterString !== "") {
-            console.log("Use effect else vetva");
             const filtered = batchList.filter(batch => batch.batchId.indexOf(filterString) >= 0);
             setFilteredBatchList(filtered);
         }

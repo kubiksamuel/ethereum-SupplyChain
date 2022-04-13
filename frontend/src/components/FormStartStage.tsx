@@ -57,16 +57,9 @@ export const FormStartStage: React.FC<FormStartStageProps> = ({setProccessedBatc
                 const receipt: ContractReceipt = await startStageTx.wait();
                 //@ts-ignore
                 setProccessedBatch(receipt.events[0].args[0]);
-                // @ts-ignore
-                console.log("Batch id:" , receipt.events[0].args[0], "Nazov ukonceneho stagu: ", receipt.events[0].args[1]);
-                // @ts-ignore
-                console.log("Batch id:" , receipt.events[1].args[0], "Poradie stagu: ", receipt.events[1].args[1], "Nazov noveho stagu: ", receipt.events[1].args[2])
-                // @ts-ignore
-                console.log("Supplier address: ", receipt.events[1].args[3], "Signatory address: ", receipt.events[1].args[4], "Supplier fee: ", receipt.events[1].args[5]);
 
             } catch {
                 setModalState(true);
-                console.log("Transakcia bola vratena");
             }
         }
      };

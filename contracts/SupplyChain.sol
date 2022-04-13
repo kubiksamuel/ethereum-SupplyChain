@@ -1,14 +1,13 @@
 // SPDX-License-Identifier: GPL-3.0
+
+// Smart contract that handle whole proccess of supply chain.
+// Inherit from RoleManager to better verify addresses that call different functions -
+// sending transactions or getting data from blockchain.
 pragma solidity ^0.8.0;
 
 import "./RoleManager.sol";
-import "@openzeppelin/contracts/utils/math/SafeMath.sol";
-
 
 contract SupplyChain is RoleManager("Administrator") {
-
-    using SafeMath for uint256;
-
     event BatchCreated(bytes32 batchId, string productName);
     event StageCompleted(bytes32 batchId, string stageName);
     event StageAdded(bytes32 batchId, uint stageCount, string stageName, address signatory, address supplier, uint supplierFee);
@@ -28,6 +27,7 @@ contract SupplyChain is RoleManager("Administrator") {
         uint stageCount;
     }
 
+    //list of all ids related to batches
     bytes32[] public listOfIds;
 
     mapping(bytes32 => Batch) public batches;
@@ -54,17 +54,19 @@ contract SupplyChain is RoleManager("Administrator") {
         bool toProccess;
     }
 
+    //Check if sender send enough ethers to change state of batch
     modifier enoughEthers(bytes32 batchId) {
         require(batchStages[batchId][batches[batchId].stageCount].supplierFee <= msg.value, "not enough ethers");
         _;
      } 
 
-  
+    // Check if batch is in state that provides functionality that is called
     modifier correctState(bytes32 batchId, State state){
         require(batchStages[batchId][batches[batchId].stageCount].state == state, "not valid state");
         _;
     }
-
+    
+    // Check if account has signatory role
     modifier validSignator(bytes32 batchId){
         require(batchStages[batchId][batches[batchId].stageCount].signatory == msg.sender, "Not valid signatory");
         _;
@@ -74,7 +76,7 @@ contract SupplyChain is RoleManager("Administrator") {
         return listOfIds.length;
     }
 
-    function getStages(bytes32 batchId) public view returns (string[] memory stages) {
+    function getStagesNames(bytes32 batchId) public view returns (string[] memory stages) {
         string[] memory loadedStages = new string[](batches[batchId].stageCount);
 
         for (uint256 i = 1; i <= batches[batchId].stageCount; i++) {
@@ -83,10 +85,10 @@ contract SupplyChain is RoleManager("Administrator") {
         stages = loadedStages;
     }
 
+    // Return all stages related to signatory that call this function and info about them
     function getSignatoryView() public view
         returns (AddressStageView[] memory states)
     {
-
         uint256 resultCount = 0;
         
         for (uint256 i = 0; i < getListLength(); i++) {
@@ -135,6 +137,7 @@ contract SupplyChain is RoleManager("Administrator") {
         states = results;
     }
 
+    // Return all stages related to supplier that call this function and info about them
     function getSupplierView() public view
         returns (AddressStageView[] memory states)
     {
@@ -187,12 +190,14 @@ contract SupplyChain is RoleManager("Administrator") {
         states = results;
     }
 
-    function getBatchStageState(bytes32 batchId, uint256 stage) public view
-        returns (BatchStage memory state)
+    // Return info about stage of batch according to order of stage -> stageCount and batch -> batchId
+    function getBatchStage(bytes32 batchId, uint256 stageCount) public view
+        returns (BatchStage memory stage)
     {
-        state = batchStages[batchId][stage];
+        stage = batchStages[batchId][stageCount];
     }
 
+    // Batch is received by signatory, current stage is finished and new stage is set
     function startStage(bytes32 batchId, address supplier, address signatory, uint256 supplierFee, string memory name, uint256 dateReceive) public payable
         correctState(batchId, State.PREPARED)
         validSignator(batchId)
@@ -208,6 +213,8 @@ contract SupplyChain is RoleManager("Administrator") {
         addNewStage(batchId, name, signatory, supplier, supplierFee, dateReceive);
     }
 
+    // Finish last stage of batch, so whole proccess of batch is at the end and
+    // no more transactions related to this batch can be sent
     function completeFinalStage(bytes32 batchId) public payable
         onlyRole(DEFAULT_ADMIN_ROLE)
         validSignator(batchId)
@@ -219,6 +226,7 @@ contract SupplyChain is RoleManager("Administrator") {
         emit FinalStageCompleted(batchId);
     }
 
+    // Finish current stage of batch
     function completeStage(bytes32 batchId, uint256 stage) private {
         batchStages[batchId][stage].state = State.COMPLETED;
 
@@ -232,6 +240,8 @@ contract SupplyChain is RoleManager("Administrator") {
         }
     }
 
+    // Admin can create batch that means that define info about product and
+    // generate id of batch through keccak256 hash function according to admin address and current time 
     function createBatch(string memory productName, address signatory, uint256 dateCreation, string memory docHash) public 
         onlyRole(DEFAULT_ADMIN_ROLE)
      {
@@ -247,6 +257,7 @@ contract SupplyChain is RoleManager("Administrator") {
         addBatchStageDocument(batchId, docHash, dateCreation);
     }
 
+    // Add new stage that batch has to follow and info about this stage
     function addNewStage(bytes32 batchId, string memory name, address signatory, address supplier, uint supplierFee, uint256 dateReceive) private
      {
         batches[batchId].stageCount++;
@@ -260,6 +271,8 @@ contract SupplyChain is RoleManager("Administrator") {
         emit StageAdded(batchId, batches[batchId].stageCount, name, signatory, supplier, supplierFee);
     }
 
+    // When suppplier write info about manufacture, data are saved in IPFS and
+    // hash of ipfs location is saved in blockchain  
     function addDocumentBySupplier(bytes32 batchId, string memory docHash, uint256 dateDone) public {
         require(batchStages[batchId][batches[batchId].stageCount].supplier == msg.sender, "not valid supplier");
         addBatchStageDocument(batchId, docHash, dateDone);
@@ -268,6 +281,7 @@ contract SupplyChain is RoleManager("Administrator") {
         }
     }
 
+    // Hash of ipfs location is saved and state will change.
     function addBatchStageDocument(bytes32 batchId, string memory docHash, uint256 dateDone) private 
         correctState(batchId, State.STARTED)
     {
@@ -277,5 +291,4 @@ contract SupplyChain is RoleManager("Administrator") {
         batchStages[batchId][batches[batchId].stageCount].dateDone = dateDone;
         emit BatchStageDocumentAdded(batchId, batchStages[batchId][batches[batchId].stageCount].name, docHash);
     }
-    
 }

@@ -38,11 +38,8 @@ export const FormAddDocument: React.FC<FormAddDocumentProps> = ({setProccessedBa
                 const receipt: ContractReceipt = await addDocumentTx.wait();
                 // @ts-ignore
                 setProccessedBatch(receipt.events[0].args[0]);
-                // @ts-ignore
-                console.log("Batch id:" , receipt.events[0].args[0], "Nazov stagu: ", receipt.events[0].args[1], "Ipfs hash: " , receipt.events[0].args[2]);
             } catch {
                 setModalState(true);
-                console.log("Transakcia bola vratena");
             }
         }
      };
@@ -63,7 +60,7 @@ export const FormAddDocument: React.FC<FormAddDocumentProps> = ({setProccessedBa
                 <fieldset >
                     <div className='formInputs'>
                     <Form.Group className="mb-3">
-                        <Form.Label htmlFor="disabledTextInput">Docasne batchId:</Form.Label>
+                        <Form.Label htmlFor="disabledTextInput">Id šarže:</Form.Label>
                             <Form.Control id="disabledTextInput" value={currentBatchId} readOnly ref={temporaryBatchId}/>
                     </Form.Group>
                     <Form.Group className="mb-3" controlId="exampleForm.ControlTextarea1">
