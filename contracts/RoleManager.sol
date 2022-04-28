@@ -4,11 +4,11 @@
 //and function for setting supplier and signatory privillege).
 // Import AccessControlEnumerable contract from openzeppeling that provides 
 //functionality to help handling this role system.  
-import "@openzeppelin/contracts/access/AccessControlEnumerable.sol";
+import "@openzeppelin/contracts/access/AccessControl.sol";
 
 pragma solidity ^0.8.0;
 
-contract RoleManager is AccessControlEnumerable {
+contract RoleManager is AccessControl {
 
     bytes32 public constant SUPPLIER_ROLE = keccak256("SUPPLIER_ROLE");
     bytes32 public constant SIGNATORY_ROLE = keccak256("SIGNATORY_ROLE");
