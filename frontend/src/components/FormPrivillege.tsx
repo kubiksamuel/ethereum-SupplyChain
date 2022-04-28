@@ -72,7 +72,7 @@ export const FormPrivillege: React.FC<FormPrivillegeProps> = ({addUserCounter, c
                     <Form.Group className="mb-3">
                         <Form.Label htmlFor="memberRole">Rola používateľa:</Form.Label>
                         <Form.Select id="memberRole" ref={roleInput} >
-                            <option value={"Signatory"}>Schvaľovateľ</option>
+                            <option value={"Signatory"}>Signatár</option>
                             <option value={"Supplier"}>Výrobca</option>
                         </Form.Select>
                     </Form.Group>

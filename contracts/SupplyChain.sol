@@ -199,9 +199,9 @@ contract SupplyChain is RoleManager("Administrator") {
 
     // Batch is received by signatory, current stage is finished and new stage is set
     function startStage(bytes32 batchId, address supplier, address signatory, uint256 supplierFee, string memory name, uint256 dateReceive) public payable
+        onlyRole(SIGNATORY_ROLE)
         correctState(batchId, State.PREPARED)
         validSignator(batchId)
-        enoughEthers(batchId)
      {
         require(!batches[batchId].isFinished , "Batch was already finished");
         require(hasRole(SIGNATORY_ROLE, signatory) , "Member doesnt have signatory privillege");
@@ -218,7 +218,6 @@ contract SupplyChain is RoleManager("Administrator") {
     function completeFinalStage(bytes32 batchId) public payable
         onlyRole(DEFAULT_ADMIN_ROLE)
         validSignator(batchId)
-        enoughEthers(batchId)
         correctState(batchId, State.PREPARED)
     {
         require(batches[batchId].isFinished , "Batch wasn't finished yet");
@@ -227,7 +226,9 @@ contract SupplyChain is RoleManager("Administrator") {
     }
 
     // Finish current stage of batch
-    function completeStage(bytes32 batchId, uint256 stage) private {
+    function completeStage(bytes32 batchId, uint256 stage) private 
+        enoughEthers(batchId)
+    {
         batchStages[batchId][stage].state = State.COMPLETED;
 
         if (batchStages[batchId][stage].supplierFee > 0) {
@@ -273,7 +274,9 @@ contract SupplyChain is RoleManager("Administrator") {
 
     // When suppplier write info about manufacture, data are saved in IPFS and
     // hash of ipfs location is saved in blockchain  
-    function addDocumentBySupplier(bytes32 batchId, string memory docHash, uint256 dateDone) public {
+    function addDocumentBySupplier(bytes32 batchId, string memory docHash, uint256 dateDone) public
+        onlyRole(SUPPLIER_ROLE)
+     {
         require(batchStages[batchId][batches[batchId].stageCount].supplier == msg.sender, "not valid supplier");
         addBatchStageDocument(batchId, docHash, dateDone);
         if(hasRole(DEFAULT_ADMIN_ROLE, batchStages[batchId][batches[batchId].stageCount].signatory)){

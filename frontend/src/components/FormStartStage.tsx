@@ -85,7 +85,7 @@ export const FormStartStage: React.FC<FormStartStageProps> = ({setProccessedBatc
                             <Form.Control id="disabledTextInput" readOnly value={currentBatchId} ref={temporaryBatchId}/>
                     </Form.Group>
                     <Form.Group className="mb-3">
-                        <Form.Label htmlFor="signatoryAddress">Schvaľovateľ:</Form.Label>
+                        <Form.Label htmlFor="signatoryAddress">Signatár:</Form.Label>
                         <Form.Select id="signatoryAddress" ref={addressSignatoryInput} >
                         { 
                             userList.map(user => (

@@ -71,7 +71,7 @@ export const FormCreateBatch: React.FC<FormCreateBatchProps> = ({addInProccessBa
                         <Form.Control id="productName" placeholder="Produkt A" ref={nameInput}/>
                 </Form.Group>
                 <Form.Group className="mb-3">
-                    <Form.Label htmlFor="memberRole">Schvaľovateľa:</Form.Label>
+                    <Form.Label htmlFor="memberRole">Signatár:</Form.Label>
                      <Form.Select id="memberRole" ref={addressInput} >
                      { 
                         userList.map(user => (

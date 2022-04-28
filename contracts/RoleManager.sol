@@ -29,7 +29,9 @@ contract RoleManager is AccessControlEnumerable {
     {
         roleId = 1;
         _grantRole(DEFAULT_ADMIN_ROLE, msg.sender);
-        _grantRole(SIGNATORY_ROLE, msg.sender);
+        grantRole(SIGNATORY_ROLE, msg.sender);
+        // _grantRole(DEFAULT_ADMIN_ROLE, msg.sender);
+        // _grantRole(SIGNATORY_ROLE, msg.sender);
         rolesInfo[msg.sender].name = name;
         rolesInfo[msg.sender].id = roleId;
         roles.push(msg.sender);
@@ -39,7 +41,7 @@ contract RoleManager is AccessControlEnumerable {
         onlyRole(DEFAULT_ADMIN_ROLE)
     {
         require(rolesInfo[account].id == 0, "Account already have some privillege");
-        _grantRole(SUPPLIER_ROLE, account);
+        grantRole(SUPPLIER_ROLE, account);
         roleId++;
         rolesInfo[account].id = roleId;
         rolesInfo[account].name = name;
@@ -51,7 +53,7 @@ contract RoleManager is AccessControlEnumerable {
         onlyRole(DEFAULT_ADMIN_ROLE) 
     {
         require(rolesInfo[account].id == 0, "Account already have some privillege");
-        _grantRole(SIGNATORY_ROLE, account);
+        grantRole(SIGNATORY_ROLE, account);
         roleId++;
         rolesInfo[account].id = roleId;
         rolesInfo[account].name = name;
