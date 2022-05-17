@@ -154,10 +154,9 @@ Form {
 .footer {
   flex-shrink: 0; 
   text-align: center;
-  background-color: black;
+  background-color: #262626;
   color: white; 
   clear: both;
-
 }
 
 .logoutButton {
@@ -204,4 +203,18 @@ td,th {
 
 .stagesLoader {
   padding: 100px;
+}
+
+#flaticonLink {
+  color: white;
+  font-style: italic;
+  outline: none;
+  text-decoration: none;
+}
+
+#flaticonLink:hover {
+  color: yellow;
+  font-style: italic;
+  outline: none;
+  text-decoration: none;
 }
