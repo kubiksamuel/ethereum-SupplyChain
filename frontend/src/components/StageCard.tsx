@@ -30,13 +30,13 @@ export const StageCard: React.FC<StackOfStagesProps> = ({stage}) => {
                 <Badge className="badge" pill bg="success">Ukončené</Badge>
             }</div>
             <hr/>         
-            <div><b>Datum prijatia:</b> {stage.dateReceive}</div>
+            <div><b>Dátum prijatia:</b> {stage.dateReceive}</div>
             <hr/>
             <div><b>Príjmateľ/Schvaľovateľ:</b> {stage.signatoryName} ({stage.signatoryAddress})</div>
             <hr/>
             {stage.stageOrder > 1 && <div><b>Výrobca:</b> {stage.supplierName} ({stage.supplierAddress})</div>}
             {stage.stageOrder > 1 && <hr/>}
-            {stage.state > 0 && <div><b>Datum vybavenia:</b> {stage.dateDone}</div>}
+            {stage.state > 0 && <div><b>Dátum vybavenia:</b> {stage.dateDone}</div>}
             {stage.state > 0 && <hr/>}
             <div><b>Výrobná cena:</b> {ethers.utils.formatEther(stage.supplierFee)} Ether</div>
             {stage.state > 0 && <div style={{textAlign: "center"}}><StageNotes stageNotes={stage.stageNotes} stageName={stage.stageName}></StageNotes></div>}

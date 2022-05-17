@@ -6,7 +6,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faAnglesDown } from '@fortawesome/free-solid-svg-icons';
 import QRCode from "react-qr-code";
 import * as htmlToImage from 'html-to-image';
-import { Stack } from 'react-bootstrap';
+import { Spinner, Stack } from 'react-bootstrap';
 import * as ipfs from '../functionality/Ipfs';
 import * as dateParser from '../functionality/DateParser';
 
@@ -31,9 +31,22 @@ interface Stage {
 export const StackOfStages: React.FC<StackOfStagesProps> = ({selectedBatchId}) => {
     const supplychain = useContext(SupplyChainContext);
     const [stageList, setStageList] = useState<Array<Stage>>([]);
+    const [loading, setLoading] = useState(true);
+
+
+    const loadPage = () => {
+        setLoading(false)
+        htmlToImage.toPng(document.getElementById('qrCodeEl')!)
+        .then(function (dataUrl) {
+            document.getElementById('qr')!.setAttribute("src", dataUrl);
+            document.getElementById('qrCodeEl')!.style.display = "none";
+        });
+    }
+
 
     useEffect(() => {
         printStages();
+        setTimeout(() => loadPage(), 2000)
     },[]); 
 
     const printStages = async() => {
@@ -71,17 +84,10 @@ export const StackOfStages: React.FC<StackOfStagesProps> = ({selectedBatchId}) =
             }
         }   
 
-    useEffect(() => {
-        htmlToImage.toPng(document.getElementById('qrCodeEl')!)
-        .then(function (dataUrl) {
-            document.getElementById('qr')!.setAttribute("src", dataUrl);
-            document.getElementById('qrCodeEl')!.style.display = "none";
-        });
-        },[]); 
 
     return (
-        <div className="StagesWrapper" id = "stage">
-            <div id="qrCodeEl" ><QRCode  value={selectedBatchId}/></div>
+        <>
+        {!loading? (<div className="StagesWrapper" id = "stage">
             <div className="stagesHeader">
                 <div>
                     <h2>ID šarže: {selectedBatchId}</h2>
@@ -98,6 +104,12 @@ export const StackOfStages: React.FC<StackOfStagesProps> = ({selectedBatchId}) =
                 </div>
                 ))}
             </Stack>
-        </div>
+            <div id="qrCodeEl" ><QRCode  value={selectedBatchId}/></div>
+        </div>) : ( <div className='stagesLoader'>  
+                        <Spinner animation="grow" variant="danger" />
+                        <Spinner animation="grow" variant="warning" />
+                        <Spinner animation="grow" variant="success" />
+                    </div>)}
+        </>
     );
 }

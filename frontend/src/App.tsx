@@ -80,7 +80,7 @@ const App = () => {
                     <ModalAlert modalState={true} closeModal={resetAccount} type={"login"}></ModalAlert>
                   : <div></div>
        }
-    </div>
+      </div>
   );
 }
 
