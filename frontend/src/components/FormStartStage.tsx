@@ -75,7 +75,7 @@ export const FormStartStage: React.FC<FormStartStageProps> = ({setProccessedBatc
                                 }}  variant="white" />
                 </div>
                 <div className='formHeader'>
-                    <h3>Objednavka produktu</h3>
+                    <h3>Prevzatie šarže</h3>
                 </div>
                 <hr/>
                 <fieldset >
@@ -113,7 +113,7 @@ export const FormStartStage: React.FC<FormStartStageProps> = ({setProccessedBatc
                     </div>
                     <hr/>
                     <div className='submitButton'>
-                        <Button variant="outline-primary" type="button" onClick={(e) => createBatch(e)}>Submit</Button>
+                        <Button variant="outline-primary" type="button" onClick={(e) => createBatch(e)}>Potvrdiť</Button>
                     </div>
 
                 </fieldset>

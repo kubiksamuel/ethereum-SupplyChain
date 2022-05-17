@@ -80,13 +80,13 @@ export const FormCreateBatch: React.FC<FormCreateBatchProps> = ({addInProccessBa
                      </Form.Select>
                  </Form.Group>
                  <Form.Group className="mb-3" controlId="exampleForm.ControlTextarea1">
-                    <Form.Label>Poznámky k produktu</Form.Label>
+                    <Form.Label>Poznámky k produktu:</Form.Label>
                     <Form.Control as="textarea" placeholder='Poznámky k produktu...' rows={10} cols={40} ref={textInput}/>
                 </Form.Group>
                 </div>
                 <hr/>
                 <div className='submitButton'>
-                    <Button variant="outline-primary" type="button" onClick={(e) => createBatch(e)}>Submit</Button>
+                    <Button variant="outline-primary" type="button" onClick={(e) => createBatch(e)}>Potvrdiť</Button>
                 </div>
             </fieldset>
       </Form>

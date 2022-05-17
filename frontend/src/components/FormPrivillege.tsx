@@ -79,7 +79,7 @@ export const FormPrivillege: React.FC<FormPrivillegeProps> = ({addUserCounter, c
                     </div>
                     <hr/>
                     <div className='submitButton'>
-                        <Button variant="outline-primary" type="button" onClick={(e) => setPrivillege(e)}>Submit</Button>
+                        <Button variant="outline-primary" type="button" onClick={(e) => setPrivillege(e)}>Potvrdiť</Button>
                     </div>
                 </fieldset>
             </Form>

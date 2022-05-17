@@ -54,7 +54,7 @@ export const FormAddDocument: React.FC<FormAddDocumentProps> = ({setProccessedBa
                                 }}  variant="white" />
                 </div>
                 <div className='formHeader'>
-                    <h3>Pridať údaje k etape:</h3>
+                    <h3>Pridať údaje k etape</h3>
                 </div>
                 <hr/>
                 <fieldset >
@@ -64,7 +64,7 @@ export const FormAddDocument: React.FC<FormAddDocumentProps> = ({setProccessedBa
                             <Form.Control id="disabledTextInput" value={currentBatchId} readOnly ref={temporaryBatchId}/>
                     </Form.Group>
                     <Form.Group className="mb-3" controlId="exampleForm.ControlTextarea1">
-                        <Form.Label>Poznamky k produktu</Form.Label>
+                        <Form.Label>Poznámky k produktu:</Form.Label>
                         <Form.Control as="textarea" rows={10} cols={40} ref={textInput}/>
                     </Form.Group>
                     </div>
