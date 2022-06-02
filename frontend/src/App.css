@@ -187,7 +187,6 @@ td,th {
 }
 
 .qrCodeImg {
-  width: 630px; 
   height: 85px;
 }
 
@@ -217,4 +216,9 @@ td,th {
   font-style: italic;
   outline: none;
   text-decoration: none;
+}
+
+#batchIdStages {
+  word-wrap: break-word;
+  max-width: 800px;
 }

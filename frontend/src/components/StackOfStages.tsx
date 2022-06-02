@@ -90,7 +90,7 @@ export const StackOfStages: React.FC<StackOfStagesProps> = ({selectedBatchId}) =
         {!loading? (<div className="StagesWrapper" id = "stage">
             <div className="stagesHeader">
                 <div>
-                    <h2>ID šarže: {selectedBatchId}</h2>
+                    <h2 id='batchIdStages'>ID šarže: {selectedBatchId}</h2>
                 </div>
                 <div className="qrDivImg">
                     <img src="" alt="qrCode" className='qrCodeImg' id='qr'/>

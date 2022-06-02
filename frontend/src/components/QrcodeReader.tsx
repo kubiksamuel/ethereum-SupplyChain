@@ -15,8 +15,8 @@ export const QrcodeReader: React.FC<QrcodeReaderProps> = ({changeBatchToFilter})
                 changeBatchToFilter(result.toString());
               }   
             }}
-              containerStyle={{ width: "420px", height: "420px", position: "fixed", top: "30%", left: "42%",
-               border: "7px solid #FFC43D", backgroundColor: "black"}} constraints={{facingMode: 'user' }} scanDelay={100}/>
+              containerStyle={{ width: "320px", height: "320px", position: "fixed", top: "30%", left: "40%",
+               border: "7px solid #FFC43D", backgroundColor: "black", zIndex: 99}} constraints={{facingMode: 'user' }} scanDelay={100}/>
     </>
   );
 };
